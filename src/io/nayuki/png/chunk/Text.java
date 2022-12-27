@@ -13,6 +13,9 @@ public record Text(String keyword, String text) implements Chunk {
 	
 	public Text {
 		checkString(keyword);
+		if (!(1 <= keyword.length() && keyword.length() <= 79) ||
+				keyword.startsWith(" ") || keyword.endsWith(" ") || keyword.contains("  ") || keyword.contains("\n"))
+			throw new IllegalArgumentException();
 		checkString(text);
 		if (1L + keyword.length() + text.length() > Integer.MAX_VALUE)
 			throw new IllegalArgumentException();
