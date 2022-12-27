@@ -42,11 +42,6 @@ public record Bkgd(byte[] data) implements Chunk {
 	}
 	
 	
-	@Override public int getDataLength() {
-		return data.length;
-	}
-	
-	
 	@Override public byte[] getData() {
 		return data;
 	}
