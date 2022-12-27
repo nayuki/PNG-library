@@ -9,7 +9,7 @@ import io.nayuki.png.Chunk;
 
 public record Bkgd(byte[] data) implements Chunk {
 	
-	/*---- Constructor ----*/
+	/*---- Constructors ----*/
 	
 	public Bkgd {
 		Objects.requireNonNull(data);

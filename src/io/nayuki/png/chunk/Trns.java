@@ -9,7 +9,7 @@ import io.nayuki.png.Chunk;
 
 public record Trns(byte[] data) implements Chunk {
 	
-	/*---- Constructor ----*/
+	/*---- Constructors ----*/
 	
 	public Trns {
 		Objects.requireNonNull(data);

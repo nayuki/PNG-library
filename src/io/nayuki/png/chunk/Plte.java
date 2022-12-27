@@ -8,7 +8,7 @@ import io.nayuki.png.Chunk;
 
 public record Plte(byte[] data) implements Chunk {
 	
-	/*---- Constructor ----*/
+	/*---- Constructors ----*/
 	
 	public Plte {
 		Objects.requireNonNull(data);

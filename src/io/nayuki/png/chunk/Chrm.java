@@ -13,7 +13,7 @@ public record Chrm(
 	implements Chunk {
 	
 	
-	/*---- Constructor ----*/
+	/*---- Constructors ----*/
 	
 	public Chrm {
 		if (whitePointX <= 0 || whitePointY <= 0)

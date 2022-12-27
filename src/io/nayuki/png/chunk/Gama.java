@@ -7,7 +7,7 @@ import io.nayuki.png.Chunk;
 
 public record Gama(int gamma) implements Chunk {
 	
-	/*---- Constructor ----*/
+	/*---- Constructors ----*/
 	
 	public Gama {
 		if (gamma <= 0)
