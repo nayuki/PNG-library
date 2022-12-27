@@ -1,0 +1,57 @@
+package io.nayuki.png.chunk;
+
+import java.io.DataOutput;
+import java.io.IOException;
+import io.nayuki.png.Chunk;
+
+
+public record Time(
+		int year,
+		int month,
+		int day,
+		int hour,
+		int minute,
+		int second)
+	implements Chunk {
+	
+	
+	/*---- Constructor ----*/
+	
+	public Time {
+		if (!(0 <= year && year <= Short.MAX_VALUE))
+			throw new IllegalArgumentException();
+		if (!(1 <= month && month <= 12))
+			throw new IllegalArgumentException();
+		if (!(1 <= day && day <= 31))
+			throw new IllegalArgumentException();
+		if (!(0 <= hour && hour <= 23))
+			throw new IllegalArgumentException();
+		if (!(0 <= minute && minute <= 59))
+			throw new IllegalArgumentException();
+		if (!(0 <= second && second <= 60))
+			throw new IllegalArgumentException();
+	}
+	
+	
+	/*---- Methods ----*/
+	
+	@Override public String getType() {
+		return "tIME";
+	}
+	
+	
+	@Override public int getDataLength() {
+		return 7;
+	}
+	
+	
+	@Override public void writeData(DataOutput out) throws IOException {
+		out.writeShort(year);
+		out.writeByte(month);
+		out.writeByte(day);
+		out.writeByte(hour);
+		out.writeByte(minute);
+		out.writeByte(second);
+	}
+	
+}
