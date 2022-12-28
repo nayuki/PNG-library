@@ -11,6 +11,19 @@ public interface Chunk {
 	public abstract String getType();
 	
 	
+	public default boolean isCritical() {
+		return (getType().charAt(0) & 0x20) == 0;
+	}
+	
+	public default boolean isPublic() {
+		return (getType().charAt(1) & 0x20) == 0;
+	}
+	
+	public default boolean isSafeToCopy() {
+		return (getType().charAt(3) & 0x20) == 1;
+	}
+	
+	
 	public default int getDataLength() {
 		return getData().length;
 	}
