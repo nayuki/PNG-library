@@ -9,7 +9,7 @@ import io.nayuki.png.Chunk;
 
 public record Plte(byte[] data) implements Chunk {
 	
-	public static final String TYPE = "PLTE";
+	static final String TYPE = "PLTE";
 	
 	
 	/*---- Constructors ----*/

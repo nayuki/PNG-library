@@ -18,7 +18,7 @@ public record Ihdr(
 	implements Chunk {
 	
 	
-	public static final String TYPE = "IHDR";
+	static final String TYPE = "IHDR";
 	
 	
 	/*---- Constructor ----*/

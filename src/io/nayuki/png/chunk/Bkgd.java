@@ -10,7 +10,7 @@ import io.nayuki.png.Chunk;
 
 public record Bkgd(byte[] data) implements Chunk {
 	
-	public static final String TYPE = "bKGD";
+	static final String TYPE = "bKGD";
 	
 	
 	/*---- Constructors ----*/

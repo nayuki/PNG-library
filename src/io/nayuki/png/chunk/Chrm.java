@@ -14,7 +14,7 @@ public record Chrm(
 	implements Chunk {
 	
 	
-	public static final String TYPE = "cHRM";
+	static final String TYPE = "cHRM";
 	
 	
 	/*---- Constructors ----*/

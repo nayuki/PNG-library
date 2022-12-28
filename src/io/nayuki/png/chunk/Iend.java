@@ -11,7 +11,7 @@ public enum Iend implements Chunk {
 	
 	SINGLETON;
 	
-	public static final String TYPE = "IEND";
+	static final String TYPE = "IEND";
 	
 	private static final byte[] DATA = {};
 	

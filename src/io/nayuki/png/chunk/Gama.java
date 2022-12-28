@@ -8,7 +8,7 @@ import io.nayuki.png.Chunk;
 
 public record Gama(int gamma) implements Chunk {
 	
-	public static final String TYPE = "gAMA";
+	static final String TYPE = "gAMA";
 	
 	
 	/*---- Constructors ----*/

@@ -11,7 +11,7 @@ import io.nayuki.png.Chunk;
 
 public record Text(String keyword, String text) implements Chunk {
 	
-	public static final String TYPE = "tEXt";
+	static final String TYPE = "tEXt";
 	
 	
 	/*---- Constructor ----*/

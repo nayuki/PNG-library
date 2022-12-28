@@ -9,7 +9,7 @@ import io.nayuki.png.Chunk;
 
 public record Hist(short[] frequencies) implements Chunk {
 	
-	public static final String TYPE = "hIST";
+	static final String TYPE = "hIST";
 	
 	
 	/*---- Constructor ----*/

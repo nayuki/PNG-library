@@ -9,7 +9,7 @@ import io.nayuki.png.Chunk;
 
 public record Idat(byte[] data) implements Chunk {
 	
-	public static final String TYPE = "IDAT";
+	static final String TYPE = "IDAT";
 	
 	
 	/*---- Constructor ----*/

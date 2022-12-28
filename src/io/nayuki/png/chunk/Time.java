@@ -16,7 +16,7 @@ public record Time(
 	implements Chunk {
 	
 	
-	public static final String TYPE = "tIME";
+	static final String TYPE = "tIME";
 	
 	
 	/*---- Constructor ----*/

@@ -16,7 +16,7 @@ public record Iccp(
 	implements Chunk {
 	
 	
-	public static final String TYPE = "iCCP";
+	static final String TYPE = "iCCP";
 	
 	
 	/*---- Constructor ----*/

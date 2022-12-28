@@ -9,7 +9,7 @@ import io.nayuki.png.Chunk;
 
 public record Srgb(RenderingIntent renderingIntent) implements Chunk {
 	
-	public static final String TYPE = "sRGB";
+	static final String TYPE = "sRGB";
 	
 	
 	/*---- Constructor ----*/
