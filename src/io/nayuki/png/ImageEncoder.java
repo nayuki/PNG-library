@@ -44,26 +44,24 @@ public final class ImageEncoder {
 			
 			if (bitDepth == 8) {
 				if (!hasAlpha) {
-					for (int x = 0; x < width; x++) {
+					for (int x = 0; x < width; x++, i += 3) {
 						long val = img.getPixel(x, y);
 						filtersAndSamples[i + 0] = (byte)(val >>> 48);
 						filtersAndSamples[i + 1] = (byte)(val >>> 32);
 						filtersAndSamples[i + 2] = (byte)(val >>> 16);
-						i += 3;
 					}
 				} else {
-					for (int x = 0; x < width; x++) {
+					for (int x = 0; x < width; x++, i += 4) {
 						long val = img.getPixel(x, y);
 						filtersAndSamples[i + 0] = (byte)(val >>> 48);
 						filtersAndSamples[i + 1] = (byte)(val >>> 32);
 						filtersAndSamples[i + 2] = (byte)(val >>> 16);
 						filtersAndSamples[i + 3] = (byte)(val >>>  0);
-						i += 4;
 					}
 				}
 			} else if (bitDepth == 16) {
 				if (!hasAlpha) {
-					for (int x = 0; x < width; x++) {
+					for (int x = 0; x < width; x++, i += 6) {
 						long val = img.getPixel(x, y);
 						filtersAndSamples[i + 0] = (byte)(val >>> 56);
 						filtersAndSamples[i + 1] = (byte)(val >>> 48);
@@ -71,10 +69,9 @@ public final class ImageEncoder {
 						filtersAndSamples[i + 3] = (byte)(val >>> 32);
 						filtersAndSamples[i + 4] = (byte)(val >>> 24);
 						filtersAndSamples[i + 5] = (byte)(val >>> 16);
-						i += 6;
 					}
 				} else {
-					for (int x = 0; x < width; x++) {
+					for (int x = 0; x < width; x++, i += 8) {
 						long val = img.getPixel(x, y);
 						filtersAndSamples[i + 0] = (byte)(val >>> 56);
 						filtersAndSamples[i + 1] = (byte)(val >>> 48);
@@ -84,7 +81,6 @@ public final class ImageEncoder {
 						filtersAndSamples[i + 5] = (byte)(val >>> 16);
 						filtersAndSamples[i + 6] = (byte)(val >>>  8);
 						filtersAndSamples[i + 7] = (byte)(val >>>  0);
-						i += 8;
 					}
 				}
 			} else
