@@ -37,10 +37,9 @@ public final class RawPng {
 		
 		List<Chunk> result = new ArrayList<>();
 		while (true) {
-			int b = din0.read();
-			if (b == -1)
+			int dataLen = din0.read();
+			if (dataLen == -1)
 				break;
-			int dataLen = b;
 			for (int i = 0; i < 3; i++)
 				dataLen = (dataLen << 8) | din0.readUnsignedByte();
 			if (dataLen < 0)
