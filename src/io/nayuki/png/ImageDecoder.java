@@ -41,15 +41,15 @@ public class ImageDecoder {
 		try (var din = new DataInputStream(new InflaterInputStream(new ByteArraysInputStream(idatDatas)))) {
 			
 			int bytesPerPixel = bitDepth / 8 * (hasAlpha ? 4 : 3);
-			var prevRow = new byte[Math.addExact(1, Math.multiplyExact(width, bytesPerPixel))];
+			var prevRow = new byte[Math.multiplyExact(width, bytesPerPixel)];
 			var row = prevRow.clone();
 			for (int y = 0; y < height; y++) {
+				int filter = din.readUnsignedByte();
 				din.readFully(row);
-				byte filter = row[0];
-				for (int i = 1, j = 1 - bytesPerPixel; i < row.length; i++, j++) {
-					int a = j >= 1 ? row[j] & 0xFF : 0;  // Left
+				for (int i = 0, j = -bytesPerPixel; i < row.length; i++, j++) {
+					int a = j >= 0 ? row[j] & 0xFF : 0;  // Left
 					int b = prevRow[i] & 0xFF;  // Up
-					int c = j >= 1 ? prevRow[j] & 0xFF : 0;  // Up left
+					int c = j >= 0 ? prevRow[j] & 0xFF : 0;  // Up left
 					row[i] += switch (filter) {  // Prediction by filter type
 						case 0 -> 0;
 						case 1 -> a;
@@ -70,26 +70,24 @@ public class ImageDecoder {
 				
 				if (bitDepth == 8) {
 					if (!hasAlpha) {
-						for (int x = 0, i = 1; x < width; x++) {
+						for (int x = 0, i = 0; x < width; x++, i += 3) {
 							long val = (row[i + 0] & 0xFFL) << 48
 							         | (row[i + 1] & 0xFFL) << 32
 							         | (row[i + 2] & 0xFFL) << 16;
 							result.setPixel(x, y, val);
-							i += 3;
 						}
 					} else {
-						for (int x = 0, i = 1; x < width; x++) {
+						for (int x = 0, i = 0; x < width; x++, i += 4) {
 							long val = (row[i + 0] & 0xFFL) << 48
 							         | (row[i + 1] & 0xFFL) << 32
 							         | (row[i + 2] & 0xFFL) << 16
 							         | (row[i + 3] & 0xFFL) <<  0;
 							result.setPixel(x, y, val);
-							i += 4;
 						}
 					}
 				} else if (bitDepth == 16) {
 					if (!hasAlpha) {
-						for (int x = 0, i = 1; x < width; x++) {
+						for (int x = 0, i = 0; x < width; x++, i += 6) {
 							long val = (row[i + 0] & 0xFFL) << 56
 							         | (row[i + 1] & 0xFFL) << 48
 							         | (row[i + 2] & 0xFFL) << 40
@@ -97,10 +95,9 @@ public class ImageDecoder {
 							         | (row[i + 4] & 0xFFL) << 24
 							         | (row[i + 5] & 0xFFL) << 16;
 							result.setPixel(x, y, val);
-							i += 6;
 						}
 					} else {
-						for (int x = 0, i = 1; x < width; x++) {
+						for (int x = 0, i = 0; x < width; x++, i += 8) {
 							long val = (row[i + 0] & 0xFFL) << 56
 							         | (row[i + 1] & 0xFFL) << 48
 							         | (row[i + 2] & 0xFFL) << 40
@@ -110,7 +107,6 @@ public class ImageDecoder {
 							         | (row[i + 6] & 0xFFL) <<  8
 							         | (row[i + 7] & 0xFFL) <<  0;
 							result.setPixel(x, y, val);
-							i += 8;
 						}
 					}
 				} else
