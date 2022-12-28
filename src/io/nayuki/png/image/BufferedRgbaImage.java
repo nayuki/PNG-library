@@ -19,11 +19,10 @@ public final class BufferedRgbaImage implements RgbaImage {
 		bitDepths = bitDepths.clone();
 		if (bitDepths.length != 4)
 			throw new IllegalArgumentException();
-		for (int i = 0; i < 3; i++) {
-			if (bitDepths[i] != 8)
-				throw new IllegalArgumentException();
-		}
-		if (bitDepths[3] != 0 && bitDepths[3] != 8)
+		int bitDepth = bitDepths[0];
+		if (bitDepth != 8 && bitDepth != 16)
+			throw new IllegalArgumentException();
+		if (bitDepths[1] != bitDepth || bitDepths[2] != bitDepth || bitDepths[3] != 0 && bitDepths[3] != bitDepth)
 			throw new IllegalArgumentException();
 		this.bitDepths = bitDepths;
 		
