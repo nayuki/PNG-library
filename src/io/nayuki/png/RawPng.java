@@ -1,31 +1,17 @@
 package io.nayuki.png;
 
-import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedOutputStream;
 
 
-public final class PngFile {
+public final class RawPng {
 	
-	public List<Chunk> chunks = new ArrayList<>();
-	
-	
-	public void write(File outFile) throws IOException {
-		try (var out = new BufferedOutputStream(new FileOutputStream(outFile))) {
-			write(out);
-		}
-	}
-	
-	
-	public void write(OutputStream out) throws IOException {
+	public static void write(List<Chunk> chunks, OutputStream out) throws IOException {
 		out.write(SIGNATURE);
 		var dout = new DataOutputStream(out);
 		for (Chunk chunk : chunks) {
