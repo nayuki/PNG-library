@@ -59,7 +59,7 @@ final class ByteArraysInputStream extends InputStream {
 	
 	private void nextArray() {
 		if (iterator.hasNext()) {
-			array = iterator.next();
+			array = Objects.requireNonNull(iterator.next());
 			index = 0;
 		} else {
 			array = null;

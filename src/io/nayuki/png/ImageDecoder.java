@@ -17,7 +17,7 @@ import io.nayuki.png.chunk.Ihdr;
 import io.nayuki.png.image.BufferedRgbaImage;
 
 
-public class ImageDecoder {
+public final class ImageDecoder {
 	
 	public static Object toImage(PngImage png) {
 		Ihdr ihdr = png.ihdr.get();
