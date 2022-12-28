@@ -10,6 +10,9 @@ import io.nayuki.png.Chunk;
 
 public record Trns(byte[] data) implements Chunk {
 	
+	public static final String TYPE = "tRNS";
+	
+	
 	/*---- Constructors ----*/
 	
 	public Trns {
@@ -46,7 +49,7 @@ public record Trns(byte[] data) implements Chunk {
 	/*---- Methods ----*/
 	
 	@Override public String getType() {
-		return "tRNS";
+		return TYPE;
 	}
 	
 	

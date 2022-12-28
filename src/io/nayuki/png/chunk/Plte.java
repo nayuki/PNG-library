@@ -9,6 +9,9 @@ import io.nayuki.png.Chunk;
 
 public record Plte(byte[] data) implements Chunk {
 	
+	public static final String TYPE = "PLTE";
+	
+	
 	/*---- Constructors ----*/
 	
 	public Plte {
@@ -55,7 +58,7 @@ public record Plte(byte[] data) implements Chunk {
 	/*---- Methods ----*/
 	
 	@Override public String getType() {
-		return "PLTE";
+		return TYPE;
 	}
 	
 	

@@ -9,6 +9,9 @@ import io.nayuki.png.Chunk;
 
 public record Srgb(RenderingIntent renderingIntent) implements Chunk {
 	
+	public static final String TYPE = "sRGB";
+	
+	
 	/*---- Constructor ----*/
 	
 	public Srgb {
@@ -25,7 +28,7 @@ public record Srgb(RenderingIntent renderingIntent) implements Chunk {
 	/*---- Methods ----*/
 	
 	@Override public String getType() {
-		return "sRGB";
+		return TYPE;
 	}
 	
 	

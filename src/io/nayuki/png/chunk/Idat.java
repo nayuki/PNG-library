@@ -9,6 +9,9 @@ import io.nayuki.png.Chunk;
 
 public record Idat(byte[] data) implements Chunk {
 	
+	public static final String TYPE = "IDAT";
+	
+	
 	/*---- Constructor ----*/
 	
 	public Idat {
@@ -26,7 +29,7 @@ public record Idat(byte[] data) implements Chunk {
 	/*---- Methods ----*/
 	
 	@Override public String getType() {
-		return "IDAT";
+		return TYPE;
 	}
 	
 	

@@ -18,6 +18,9 @@ public record Ihdr(
 	implements Chunk {
 	
 	
+	public static final String TYPE = "IHDR";
+	
+	
 	/*---- Constructor ----*/
 	
 	public Ihdr {
@@ -56,7 +59,7 @@ public record Ihdr(
 	/*---- Methods ----*/
 	
 	@Override public String getType() {
-		return "IHDR";
+		return TYPE;
 	}
 	
 	

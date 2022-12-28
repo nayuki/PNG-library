@@ -9,6 +9,9 @@ import io.nayuki.png.Chunk;
 
 public record Sbit(byte[] significantBits) implements Chunk {
 	
+	public static final String TYPE = "sBIT";
+	
+	
 	/*---- Constructor ----*/
 	
 	public Sbit {
@@ -32,7 +35,7 @@ public record Sbit(byte[] significantBits) implements Chunk {
 	/*---- Methods ----*/
 	
 	@Override public String getType() {
-		return "sBIT";
+		return TYPE;
 	}
 	
 	

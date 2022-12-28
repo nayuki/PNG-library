@@ -14,6 +14,9 @@ public record Chrm(
 	implements Chunk {
 	
 	
+	public static final String TYPE = "cHRM";
+	
+	
 	/*---- Constructors ----*/
 	
 	public Chrm {
@@ -72,7 +75,7 @@ public record Chrm(
 	/*---- Methods ----*/
 	
 	@Override public String getType() {
-		return "cHRM";
+		return TYPE;
 	}
 	
 	

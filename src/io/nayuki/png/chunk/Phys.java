@@ -14,6 +14,9 @@ public record Phys(
 	implements Chunk {
 	
 	
+	public static final String TYPE = "pHYs";
+	
+	
 	/*---- Constructor ----*/
 	
 	public Phys {
@@ -34,7 +37,7 @@ public record Phys(
 	/*---- Methods ----*/
 	
 	@Override public String getType() {
-		return "pHYs";
+		return TYPE;
 	}
 	
 	

@@ -16,6 +16,9 @@ public record Time(
 	implements Chunk {
 	
 	
+	public static final String TYPE = "tIME";
+	
+	
 	/*---- Constructor ----*/
 	
 	public Time {
@@ -48,7 +51,7 @@ public record Time(
 	/*---- Methods ----*/
 	
 	@Override public String getType() {
-		return "tIME";
+		return TYPE;
 	}
 	
 	

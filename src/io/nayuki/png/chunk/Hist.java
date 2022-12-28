@@ -9,6 +9,9 @@ import io.nayuki.png.Chunk;
 
 public record Hist(short[] frequencies) implements Chunk {
 	
+	public static final String TYPE = "hIST";
+	
+	
 	/*---- Constructor ----*/
 	
 	public Hist {
@@ -29,7 +32,7 @@ public record Hist(short[] frequencies) implements Chunk {
 	/*---- Methods ----*/
 	
 	@Override public String getType() {
-		return "hIST";
+		return TYPE;
 	}
 	
 	

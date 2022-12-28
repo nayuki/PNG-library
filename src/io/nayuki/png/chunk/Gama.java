@@ -8,6 +8,9 @@ import io.nayuki.png.Chunk;
 
 public record Gama(int gamma) implements Chunk {
 	
+	public static final String TYPE = "gAMA";
+	
+	
 	/*---- Constructors ----*/
 	
 	public Gama {
@@ -40,7 +43,7 @@ public record Gama(int gamma) implements Chunk {
 	/*---- Methods ----*/
 	
 	@Override public String getType() {
-		return "gAMA";
+		return TYPE;
 	}
 	
 	

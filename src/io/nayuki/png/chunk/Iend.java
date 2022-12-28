@@ -11,13 +11,15 @@ public enum Iend implements Chunk {
 	
 	SINGLETON;
 	
+	public static final String TYPE = "IEND";
+	
 	private static final byte[] DATA = {};
 	
 	
 	/*---- Methods ----*/
 	
 	@Override public String getType() {
-		return "IEND";
+		return TYPE;
 	}
 	
 	

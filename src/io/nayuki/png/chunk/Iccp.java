@@ -16,6 +16,9 @@ public record Iccp(
 	implements Chunk {
 	
 	
+	public static final String TYPE = "iCCP";
+	
+	
 	/*---- Constructor ----*/
 	
 	public Iccp {
@@ -59,7 +62,7 @@ public record Iccp(
 	/*---- Methods ----*/
 	
 	@Override public String getType() {
-		return "iCCP";
+		return TYPE;
 	}
 	
 	

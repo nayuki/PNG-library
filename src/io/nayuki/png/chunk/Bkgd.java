@@ -10,6 +10,9 @@ import io.nayuki.png.Chunk;
 
 public record Bkgd(byte[] data) implements Chunk {
 	
+	public static final String TYPE = "bKGD";
+	
+	
 	/*---- Constructors ----*/
 	
 	public Bkgd {
@@ -46,7 +49,7 @@ public record Bkgd(byte[] data) implements Chunk {
 	/*---- Methods ----*/
 	
 	@Override public String getType() {
-		return "bKGD";
+		return TYPE;
 	}
 	
 	
