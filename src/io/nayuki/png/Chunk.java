@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Objects;
 
 
 public interface Chunk {
@@ -41,5 +42,17 @@ public interface Chunk {
 	
 	
 	public abstract void writeData(DataOutput out) throws IOException;
+	
+	
+	public static void checkType(String type) {
+		Objects.requireNonNull(type);
+		if (type.length() != 4)
+			throw new IllegalArgumentException();
+		for (int i = 0; i < type.length(); i++) {
+			char c = type.charAt(i);
+			if (!('A' <= c && c <= 'Z' || 'a' <= c && c <= 'z'))
+				throw new IllegalArgumentException();
+		}
+	}
 	
 }

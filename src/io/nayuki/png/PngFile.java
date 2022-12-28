@@ -9,7 +9,6 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedOutputStream;
 
@@ -36,7 +35,7 @@ public final class PngFile {
 			dout.writeInt(dataLen);
 			
 			String type = chunk.getType();
-			checkChunkType(type);
+			Chunk.checkType(type);
 			var cout = new CheckedOutputStream(out, new CRC32());
 			cout.write(type.getBytes(StandardCharsets.US_ASCII));
 			
@@ -48,18 +47,6 @@ public final class PngFile {
 			if (crc >>> 32 != 0)
 				throw new AssertionError();
 			dout.writeInt((int)crc);
-		}
-	}
-	
-	
-	private static void checkChunkType(String type) {
-		Objects.requireNonNull(type);
-		if (type.length() != 4)
-			throw new IllegalArgumentException();
-		for (int i = 0; i < type.length(); i++) {
-			char c = type.charAt(i);
-			if (!('A' <= c && c <= 'Z' || 'a' <= c && c <= 'z'))
-				throw new IllegalArgumentException();
 		}
 	}
 	
