@@ -7,9 +7,8 @@ import java.util.stream.Collectors;
 import java.util.zip.InflaterInputStream;
 import io.nayuki.png.chunk.Ihdr;
 import io.nayuki.png.image.Argb16Image;
-import io.nayuki.png.image.Argb8Image;
 import io.nayuki.png.image.BufferedArgb16Image;
-import io.nayuki.png.image.BufferedArgb8Image;
+import io.nayuki.png.image.BufferedRgbaImage;
 
 
 public class ImageDecoder {
@@ -25,7 +24,7 @@ public class ImageDecoder {
 		
 		if (ihdr.colorType() == Ihdr.ColorType.TRUE_COLOR || ihdr.colorType() == Ihdr.ColorType.TRUE_COLOR_WITH_ALPHA) {
 			return switch (ihdr.bitDepth()) {
-				case 8 -> toArgb8Image(png);
+				case 8 -> toRgba8Image(png);
 				case 16 -> toArgb16Image(png);
 				default -> throw new UnsupportedOperationException();
 			};
@@ -34,13 +33,13 @@ public class ImageDecoder {
 	}
 	
 	
-	private static Argb8Image toArgb8Image(PngImage png) {
+	private static BufferedRgbaImage toRgba8Image(PngImage png) {
 		Ihdr ihdr = png.ihdr.get();
 		int width = ihdr.width();
 		int height = ihdr.height();
 		boolean hasAlpha = ihdr.colorType() == Ihdr.ColorType.TRUE_COLOR_WITH_ALPHA;
 		
-		var result = new BufferedArgb8Image(width, height);
+		var result = new BufferedRgbaImage(width, height, new int[]{8, 8, 8, hasAlpha ? 8 : 0});
 		List<byte[]> idatDatas = png.idats.stream()
 			.map(idat -> idat.data())
 			.collect(Collectors.toList());
@@ -76,19 +75,18 @@ public class ImageDecoder {
 				
 				if (hasAlpha) {
 					for (int x = 0, i = 1; x < width; x++) {
-						int val = (row[i + 0] & 0xFF) << 16
-						        | (row[i + 1] & 0xFF) <<  8
-						        | (row[i + 2] & 0xFF) <<  0
-						        | (row[i + 3] & 0xFF) << 24;
+						long val = (row[i + 0] & 0xFFL) << 48
+						         | (row[i + 1] & 0xFFL) << 32
+						         | (row[i + 2] & 0xFFL) << 16
+						         | (row[i + 3] & 0xFFL) <<  0;
 						result.setPixel(x, y, val);
 						i += 4;
 					}
 				} else {
 					for (int x = 0, i = 1; x < width; x++) {
-						int val = (row[i + 0] & 0xFF) << 16
-						        | (row[i + 1] & 0xFF) <<  8
-						        | (row[i + 2] & 0xFF) <<  0
-						        | 0xFF << 24;
+						long val = (row[i + 0] & 0xFFL) << 48
+						         | (row[i + 1] & 0xFFL) << 32
+						         | (row[i + 2] & 0xFFL) << 16;
 						result.setPixel(x, y, val);
 						i += 3;
 					}
