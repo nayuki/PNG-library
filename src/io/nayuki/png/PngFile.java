@@ -27,18 +27,23 @@ public final class PngFile {
 	
 	
 	public void write(OutputStream out) throws IOException {
-		var cout = new CheckedOutputStream(out, new CRC32());
-		var dout = new DataOutputStream(cout);
-		dout.write(SIGNATURE);
+		out.write(SIGNATURE);
+		var dout = new DataOutputStream(out);
 		for (Chunk chunk : chunks) {
-			dout.writeInt(chunk.getDataLength());
-			cout.getChecksum().reset();
+			int dataLen = chunk.getDataLength();
+			if (dataLen < 0)
+				throw new IllegalArgumentException();
+			dout.writeInt(dataLen);
 			
 			String type = chunk.getType();
 			checkChunkType(type);
-			dout.write(type.getBytes(StandardCharsets.US_ASCII));
+			var cout = new CheckedOutputStream(out, new CRC32());
+			cout.write(type.getBytes(StandardCharsets.US_ASCII));
 			
-			chunk.writeData(dout);
+			var bout = new BoundedOutputStream(cout, dataLen);
+			chunk.writeData(new DataOutputStream(bout));
+			bout.finish();
+			
 			long crc = cout.getChecksum().getValue();
 			if (crc >>> 32 != 0)
 				throw new AssertionError();
