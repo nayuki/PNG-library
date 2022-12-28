@@ -1,3 +1,11 @@
+/* 
+ * PNG library (Java)
+ * 
+ * Copyright (c) Project Nayuki
+ * MIT License. See readme file.
+ * https://www.nayuki.io/
+ */
+
 package io.nayuki.png;
 
 import java.io.InputStream;
