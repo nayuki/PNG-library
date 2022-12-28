@@ -13,7 +13,7 @@ public final class RawPng {
 	
 	public static void write(List<Chunk> chunks, OutputStream out) throws IOException {
 		out.write(SIGNATURE);
-		var dout = new DataOutputStream(out);
+		DataOutput dout = new DataOutputStream(out);
 		for (Chunk chunk : chunks) {
 			int dataLen = chunk.getDataLength();
 			if (dataLen < 0)

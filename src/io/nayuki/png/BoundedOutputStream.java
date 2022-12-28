@@ -32,7 +32,7 @@ public final class BoundedOutputStream extends FilterOutputStream {
 	
 	
 	@Override public void write(byte[] b, int off, int len) throws IOException {
-		if (len < 0 || len > count)
+		if (!(0 <= len && len <= count))
 			throw new IllegalStateException();
 		count -= len;
 		out.write(b, off, len);
