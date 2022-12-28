@@ -14,22 +14,7 @@ import java.util.List;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 import java.util.zip.CheckedOutputStream;
-import io.nayuki.png.chunk.Bkgd;
-import io.nayuki.png.chunk.Chrm;
-import io.nayuki.png.chunk.Custom;
-import io.nayuki.png.chunk.Gama;
-import io.nayuki.png.chunk.Hist;
-import io.nayuki.png.chunk.Iccp;
-import io.nayuki.png.chunk.Idat;
-import io.nayuki.png.chunk.Iend;
-import io.nayuki.png.chunk.Ihdr;
-import io.nayuki.png.chunk.Phys;
-import io.nayuki.png.chunk.Plte;
-import io.nayuki.png.chunk.Sbit;
-import io.nayuki.png.chunk.Srgb;
-import io.nayuki.png.chunk.Text;
-import io.nayuki.png.chunk.Time;
-import io.nayuki.png.chunk.Trns;
+import io.nayuki.png.chunk.Util;
 
 
 public final class RawPng {
@@ -62,25 +47,7 @@ public final class RawPng {
 			Chunk.checkType(type);
 			
 			var bin = new BoundedInputStream(cin, dataLen);
-			din1 = new DataInputStream(bin);
-			result.add(switch (type) {
-				case Bkgd.TYPE -> Bkgd.read(dataLen, din1);
-				case Chrm.TYPE -> Chrm.read(         din1);
-				case Gama.TYPE -> Gama.read(         din1);
-				case Hist.TYPE -> Hist.read(dataLen, din1);
-				case Iccp.TYPE -> Iccp.read(dataLen, din1);
-				case Idat.TYPE -> Idat.read(dataLen, din1);
-				case Iend.TYPE -> Iend.SINGLETON;
-				case Ihdr.TYPE -> Ihdr.read(         din1);
-				case Phys.TYPE -> Phys.read(         din1);
-				case Plte.TYPE -> Plte.read(dataLen, din1);
-				case Sbit.TYPE -> Sbit.read(dataLen, din1);
-				case Srgb.TYPE -> Srgb.read(         din1);
-				case Text.TYPE -> Text.read(dataLen, din1);
-				case Time.TYPE -> Time.read(         din1);
-				case Trns.TYPE -> Trns.read(dataLen, din1);
-				default -> Custom.read(type, dataLen, din1);
-			});
+			result.add(Util.readChunk(type, dataLen, new DataInputStream(bin)));
 			bin.finish();
 			
 			long crc = cin.getChecksum().getValue();
