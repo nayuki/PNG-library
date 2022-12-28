@@ -34,7 +34,7 @@ public final class PngImage {
 	
 	
 	public static PngImage read(InputStream in) throws IOException {
-		return new PngImage(RawPng.read(in));
+		return new PngImage(RawPng.read(in, true));
 	}
 	
 	

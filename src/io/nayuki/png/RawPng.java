@@ -22,12 +22,13 @@ import java.util.List;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 import java.util.zip.CheckedOutputStream;
+import io.nayuki.png.chunk.Custom;
 import io.nayuki.png.chunk.Util;
 
 
 public final class RawPng {
 	
-	public static List<Chunk> read(InputStream in) throws IOException {
+	public static List<Chunk> read(InputStream in, boolean parse) throws IOException {
 		var din0 = new DataInputStream(in);
 		
 		var sig = new byte[SIGNATURE.length];
@@ -54,7 +55,10 @@ public final class RawPng {
 			Chunk.checkType(type);
 			
 			var bin = new BoundedInputStream(cin, dataLen);
-			result.add(Util.readChunk(type, dataLen, new DataInputStream(bin)));
+			if (parse)
+				result.add(Util.readChunk(type, dataLen, new DataInputStream(bin)));
+			else
+				result.add(Custom.read(type, dataLen, new DataInputStream(bin)));
 			bin.finish();
 			
 			long crc = cin.getChecksum().getValue();
