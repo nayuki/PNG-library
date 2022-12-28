@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 import java.util.zip.CheckedOutputStream;
@@ -26,17 +27,28 @@ import io.nayuki.png.chunk.Custom;
 import io.nayuki.png.chunk.Util;
 
 
-public final class RawPng {
+public record XngFile(Type type, List<Chunk> chunks) {
 	
-	public static List<Chunk> read(InputStream in, boolean parse) throws IOException {
+	public XngFile {
+		Objects.requireNonNull(type);
+		Objects.requireNonNull(chunks);
+	}
+	
+	
+	public static XngFile read(InputStream in, boolean parse) throws IOException {
 		var din0 = new DataInputStream(in);
 		
-		var sig = new byte[SIGNATURE.length];
+		var sig = new byte[8];
 		din0.readFully(sig);
-		if (!Arrays.equals(sig, SIGNATURE))
+		Type fileType = null;
+		for (Type t : Type.values()) {
+			if (Arrays.equals(t.signature, sig))
+				fileType = t;
+		}
+		if (fileType == null)
 			throw new IllegalArgumentException();
 		
-		List<Chunk> result = new ArrayList<>();
+		List<Chunk> chunks = new ArrayList<>();
 		while (true) {
 			int dataLen = din0.read();
 			if (dataLen == -1)
@@ -56,9 +68,9 @@ public final class RawPng {
 			
 			var bin = new BoundedInputStream(cin, dataLen);
 			if (parse)
-				result.add(Util.readChunk(type, dataLen, new DataInputStream(bin)));
+				chunks.add(Util.readChunk(type, dataLen, new DataInputStream(bin)));
 			else
-				result.add(Custom.read(type, dataLen, new DataInputStream(bin)));
+				chunks.add(Custom.read(type, dataLen, new DataInputStream(bin)));
 			bin.finish();
 			
 			long crc = cin.getChecksum().getValue();
@@ -67,12 +79,12 @@ public final class RawPng {
 			if (din0.readInt() != (int)crc)
 				throw new IllegalArgumentException();
 		}
-		return result;
+		return new XngFile(fileType, chunks);
 	}
 	
 	
-	public static void write(List<Chunk> chunks, OutputStream out) throws IOException {
-		out.write(SIGNATURE);
+	public void write(OutputStream out) throws IOException {
+		out.write(type.getSignature());
 		DataOutput dout = new DataOutputStream(out);
 		for (Chunk chunk : chunks) {
 			int dataLen = chunk.getDataLength();
@@ -97,6 +109,23 @@ public final class RawPng {
 	}
 	
 	
-	private static final byte[] SIGNATURE = {(byte)0x89, 'P', 'N', 'G', '\r', '\n', 0x1A, '\n'};
+	
+	public enum Type {
+		PNG(0x89, 'P', 'N', 'G', '\r', '\n', 0x1A, '\n'),
+		MNG(0x8A, 'M', 'N', 'G', '\r', '\n', 0x1A, '\n'),
+		JNG(0x8B, 'J', 'N', 'G', '\r', '\n', 0x1A, '\n');
+		
+		private final byte[] signature;
+		
+		private Type(int... sig) {
+			signature = new byte[sig.length];
+			for (int i = 0; i < sig.length; i++)
+				signature[i] = (byte)sig[i];
+		}
+		
+		public byte[] getSignature() {
+			return signature.clone();
+		}
+	}
 	
 }

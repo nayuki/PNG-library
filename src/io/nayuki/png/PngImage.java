@@ -34,7 +34,10 @@ public final class PngImage {
 	
 	
 	public static PngImage read(InputStream in) throws IOException {
-		return new PngImage(RawPng.read(in, true));
+		XngFile xng = XngFile.read(in, true);
+		if (xng.type() != XngFile.Type.PNG)
+			throw new IllegalArgumentException();
+		return new PngImage(xng.chunks());
 	}
 	
 	
@@ -93,7 +96,7 @@ public final class PngImage {
 		chunks.addAll(idats);
 		chunks.addAll(afterIdats);
 		chunks.add(Iend.SINGLETON);
-		RawPng.write(chunks, out);
+		new XngFile(XngFile.Type.PNG, chunks).write(out);
 	}
 	
 }
