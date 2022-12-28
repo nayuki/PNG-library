@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 
-public final class BoundedOutputStream extends FilterOutputStream {
+final class BoundedOutputStream extends FilterOutputStream {
 	
 	private int count;
 	
