@@ -1,5 +1,6 @@
 package io.nayuki.png.chunk;
 
+import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Objects;
@@ -13,6 +14,13 @@ public record Custom(String type, byte[] data) implements Chunk {
 	public Custom {
 		Chunk.checkType(type);
 		Objects.requireNonNull(data);
+	}
+	
+	
+	public static Custom read(String type, int dataLen, DataInput in) throws IOException {
+		var data = new byte[dataLen];
+		in.readFully(data);
+		return new Custom(type, data);
 	}
 	
 	
