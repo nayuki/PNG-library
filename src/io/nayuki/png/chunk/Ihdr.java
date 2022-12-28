@@ -1,5 +1,6 @@
 package io.nayuki.png.chunk;
 
+import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Objects;
@@ -30,6 +31,25 @@ public record Ihdr(
 		Objects.requireNonNull(compressionMethod);
 		Objects.requireNonNull(filterMethod);
 		Objects.requireNonNull(interlaceMethod);
+	}
+	
+	
+	public static Ihdr read(DataInput in) throws IOException {
+		int width = in.readInt();
+		int height = in.readInt();
+		int bitDepth = in.readUnsignedByte();
+		
+		ColorType colorType = null;
+		int colorTypeInt = in.readUnsignedByte();
+		for (ColorType val : ColorType.values()) {
+			if (val.value == colorTypeInt)
+				colorType = val;
+		}
+		
+		CompressionMethod compressionMethod = Util.indexInto(CompressionMethod.values(), in.readUnsignedByte());
+		FilterMethod filterMethod = Util.indexInto(FilterMethod.values(), in.readUnsignedByte());
+		InterlaceMethod interlaceMethod = Util.indexInto(InterlaceMethod.values(), in.readUnsignedByte());
+		return new Ihdr(width, height, bitDepth, colorType, compressionMethod, filterMethod, interlaceMethod);
 	}
 	
 	

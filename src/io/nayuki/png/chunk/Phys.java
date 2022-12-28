@@ -1,5 +1,6 @@
 package io.nayuki.png.chunk;
 
+import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Objects;
@@ -19,6 +20,14 @@ public record Phys(
 		if (pixelsPerUnitX <= 0 || pixelsPerUnitY <= 0)
 			throw new IllegalArgumentException();
 		Objects.requireNonNull(unitSpecifier);
+	}
+	
+	
+	public static Phys read(DataInput in) throws IOException {
+		int pixelsPerUnitX = in.readInt();
+		int pixelsPerUnitY = in.readInt();
+		UnitSpecifier unitSpecifier = Util.indexInto(UnitSpecifier.values(), in.readUnsignedByte());
+		return new Phys(pixelsPerUnitX, pixelsPerUnitY, unitSpecifier);
 	}
 	
 	

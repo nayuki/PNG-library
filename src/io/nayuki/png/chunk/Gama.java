@@ -1,5 +1,6 @@
 package io.nayuki.png.chunk;
 
+import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import io.nayuki.png.Chunk;
@@ -28,6 +29,11 @@ public record Gama(int gamma) implements Chunk {
 		if (!(0 < result && result <= Integer.MAX_VALUE))
 			throw new IllegalArgumentException();
 		return (int)result;
+	}
+	
+	
+	public static Gama read(DataInput in) throws IOException {
+		return new Gama(in.readInt());
 	}
 	
 	

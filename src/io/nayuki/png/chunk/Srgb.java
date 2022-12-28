@@ -1,5 +1,6 @@
 package io.nayuki.png.chunk;
 
+import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Objects;
@@ -12,6 +13,12 @@ public record Srgb(RenderingIntent renderingIntent) implements Chunk {
 	
 	public Srgb {
 		Objects.requireNonNull(renderingIntent);
+	}
+	
+	
+	public static Srgb read(DataInput in) throws IOException {
+		RenderingIntent renderingIntent = Util.indexInto(RenderingIntent.values(), in.readUnsignedByte());
+		return new Srgb(renderingIntent);
 	}
 	
 	

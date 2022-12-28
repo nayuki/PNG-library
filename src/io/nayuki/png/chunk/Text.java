@@ -1,8 +1,10 @@
 package io.nayuki.png.chunk;
 
+import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Objects;
 import io.nayuki.png.Chunk;
 
@@ -29,6 +31,20 @@ public record Text(String keyword, String text) implements Chunk {
 			if (!(c == '\n' || 32 <= c && c <= 126 || 161 <= c && c <= 255))
 				throw new IllegalArgumentException();
 		}
+	}
+	
+	
+	public static Text read(int dataLen, DataInput in) throws IOException {
+		var data = new byte[dataLen];
+		in.readFully(data);
+		int index = 0;
+		while (index < data.length && data[index] != 0)
+			index++;
+		if (index >= data.length)
+			throw new IllegalArgumentException();
+		return new Text(
+			new String(Arrays.copyOf(data, index), StandardCharsets.ISO_8859_1),
+			new String(Arrays.copyOfRange(data, index + 1, data.length), StandardCharsets.ISO_8859_1));
 	}
 	
 	

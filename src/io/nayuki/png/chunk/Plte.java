@@ -1,5 +1,6 @@
 package io.nayuki.png.chunk;
 
+import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Objects;
@@ -41,6 +42,13 @@ public record Plte(byte[] data) implements Chunk {
 	private static void checkNumEntries(int numEntries) {
 		if (!(1 <= numEntries && numEntries <= 256))
 			throw new IllegalArgumentException();
+	}
+	
+	
+	public static Plte read(int dataLen, DataInput in) throws IOException {
+		var data = new byte[dataLen];
+		in.readFully(data);
+		return new Plte(data);
 	}
 	
 	

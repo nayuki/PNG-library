@@ -1,8 +1,10 @@
 package io.nayuki.png.chunk;
 
+import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Objects;
 import io.nayuki.png.Chunk;
 
@@ -36,6 +38,21 @@ public record Iccp(
 		}
 		if (s.startsWith(" ") || s.endsWith(" ") || s.contains("  "))
 			throw new IllegalArgumentException();
+	}
+	
+	
+	public static Iccp read(int dataLen, DataInput in) throws IOException {
+		var data = new byte[dataLen];
+		in.readFully(data);
+		int index = 0;
+		while (index < data.length && data[index] != 0)
+			index++;
+		if (data.length - index < 2)
+			throw new IllegalArgumentException();
+		return new Iccp(
+			new String(Arrays.copyOf(data, index), StandardCharsets.ISO_8859_1),
+			Util.indexInto(CompressionMethod.values(), data[index + 1]),
+			Arrays.copyOfRange(data, index + 2, data.length));
 	}
 	
 	

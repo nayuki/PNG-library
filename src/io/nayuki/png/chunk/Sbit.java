@@ -1,5 +1,6 @@
 package io.nayuki.png.chunk;
 
+import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Objects;
@@ -18,6 +19,13 @@ public record Sbit(byte[] significantBits) implements Chunk {
 			if (!(1 <= bits && bits <= 16))
 				throw new IllegalArgumentException();
 		}
+	}
+	
+	
+	public static Sbit read(int dataLen, DataInput in) throws IOException {
+		var data = new byte[dataLen];
+		in.readFully(data);
+		return new Sbit(data);
 	}
 	
 	

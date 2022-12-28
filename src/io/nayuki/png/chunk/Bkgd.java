@@ -1,5 +1,6 @@
 package io.nayuki.png.chunk;
 
+import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -32,6 +33,13 @@ public record Bkgd(byte[] data) implements Chunk {
 		if (!bb.hasArray())
 			throw new AssertionError();
 		return bb.array();
+	}
+	
+	
+	public static Bkgd read(int dataLen, DataInput in) throws IOException {
+		var data = new byte[dataLen];
+		in.readFully(data);
+		return new Bkgd(data);
 	}
 	
 	

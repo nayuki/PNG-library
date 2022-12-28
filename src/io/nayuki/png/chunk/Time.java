@@ -1,5 +1,6 @@
 package io.nayuki.png.chunk;
 
+import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import io.nayuki.png.Chunk;
@@ -30,6 +31,17 @@ public record Time(
 			throw new IllegalArgumentException();
 		if (!(0 <= second && second <= 60))
 			throw new IllegalArgumentException();
+	}
+	
+	
+	public static Time read(DataInput in) throws IOException {
+		int year = in.readUnsignedShort();
+		int month = in.readUnsignedByte();
+		int day = in.readUnsignedByte();
+		int hour = in.readUnsignedByte();
+		int minute = in.readUnsignedByte();
+		int second = in.readUnsignedByte();
+		return new Time(year, month, day, hour, minute, second);
 	}
 	
 	
