@@ -20,6 +20,7 @@ import io.nayuki.png.Chunk;
 /**
  * An embedded ICC profile (iCCP) chunk. This indicates the image
  * samples conform to the color space represented by the profile.
+ * @see https://www.w3.org/TR/2003/REC-PNG-20031110/#11iCCP
  */
 public record Iccp(
 		String profileName,

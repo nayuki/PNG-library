@@ -17,6 +17,7 @@ import io.nayuki.png.Chunk;
 /**
  * An image gamma (gAMA) chunk. This specifies the relationship
  * between the image samples and the desired display output intensity.
+ * @see https://www.w3.org/TR/2003/REC-PNG-20031110/#11gAMA
  */
 public record Gama(int gamma) implements Chunk {
 	

@@ -18,6 +18,7 @@ import io.nayuki.png.Chunk;
 /**
  * An image header (IHDR) chunk. This specifies the
  * image dimensions, color type, and various encoding methods.
+ * @see https://www.w3.org/TR/2003/REC-PNG-20031110/#11IHDR
  */
 public record Ihdr(
 		int width,

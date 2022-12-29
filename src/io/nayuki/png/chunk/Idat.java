@@ -17,6 +17,7 @@ import io.nayuki.png.Chunk;
 
 /**
  * An image data (IDAT) chunk. This contains pixel data that is filtered and compressed.
+ * @see https://www.w3.org/TR/2003/REC-PNG-20031110/#11IDAT
  */
 public record Idat(byte[] data) implements Chunk {
 	

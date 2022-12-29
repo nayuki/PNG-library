@@ -18,6 +18,7 @@ import io.nayuki.png.Chunk;
 /**
  * A physical pixel dimensions (pHYs) chunk. This specifies the
  * intended pixel size or aspect ratio for displaying the image.
+ * @see https://www.w3.org/TR/2003/REC-PNG-20031110/#11pHYs
  */
 public record Phys(
 		int pixelsPerUnitX,

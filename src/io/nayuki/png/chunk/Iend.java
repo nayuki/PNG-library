@@ -15,6 +15,7 @@ import io.nayuki.png.Chunk;
 
 /**
  * An image trailer (IEND) chunk. This marks the end of a PNG data stream.
+ * @see https://www.w3.org/TR/2003/REC-PNG-20031110/#11IEND
  */
 public enum Iend implements Chunk {
 	

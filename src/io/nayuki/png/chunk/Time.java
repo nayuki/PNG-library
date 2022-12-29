@@ -16,6 +16,7 @@ import io.nayuki.png.Chunk;
 
 /**
  * A last-modification time (tIME) chunk. This gives the time of the last image modification.
+ * @see https://www.w3.org/TR/2003/REC-PNG-20031110/#11tIME
  */
 public record Time(
 		int year,
