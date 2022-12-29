@@ -30,11 +30,10 @@ public final class BufferedRgbaImage implements RgbaImage {
 		bitDepths = bitDepths.clone();
 		if (bitDepths.length != 4)
 			throw new IllegalArgumentException();
-		int bitDepth = bitDepths[0];
-		if (bitDepth != 8 && bitDepth != 16)
-			throw new IllegalArgumentException();
-		if (bitDepths[1] != bitDepth || bitDepths[2] != bitDepth || bitDepths[3] != 0 && bitDepths[3] != bitDepth)
-			throw new IllegalArgumentException();
+		for (int i = 0; i < bitDepths.length; i++) {
+			if (!((i == 3 ? 0 : 1) <= bitDepths[i] && bitDepths[i] <= 16))
+				throw new IllegalArgumentException();
+		}
 		this.bitDepths = bitDepths;
 		
 		long temp = 0;
@@ -49,7 +48,7 @@ public final class BufferedRgbaImage implements RgbaImage {
 	
 	
 	@Override public int[] getBitDepths() {
-		return bitDepths;
+		return bitDepths.clone();
 	}
 	
 	
