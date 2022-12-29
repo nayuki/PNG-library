@@ -18,7 +18,8 @@ import io.nayuki.png.image.BufferedRgbaImage;
 
 
 /**
- * Decodes a {@link PngImage} object to a buffered image where pixels can be directly read.
+ * Decodes a {@link PngImage} object to a buffered image
+ * where pixels can be directly read. Not instantiable.
  */
 public final class ImageDecoder {
 	
@@ -151,7 +152,6 @@ public final class ImageDecoder {
 	}
 	
 	
-	// Not instantiable
 	private ImageDecoder() {}
 	
 }

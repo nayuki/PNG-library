@@ -14,7 +14,7 @@ import io.nayuki.png.Chunk;
 
 
 /**
- * Utility functions for chunks.
+ * Utility functions for chunks. Not instantiable.
  */
 public final class Util {
 	
@@ -48,7 +48,6 @@ public final class Util {
 	}
 	
 	
-	// Not instantiable
 	private Util() {}
 	
 }
