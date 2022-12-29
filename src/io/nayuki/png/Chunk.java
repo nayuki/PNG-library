@@ -29,7 +29,7 @@ public interface Chunk {
 	}
 	
 	public default boolean isSafeToCopy() {
-		return (getType().charAt(3) & 0x20) == 1;
+		return (getType().charAt(3) & 0x20) != 0;
 	}
 	
 	
