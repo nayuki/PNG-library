@@ -17,6 +17,10 @@ import java.util.Objects;
 import io.nayuki.png.Chunk;
 
 
+/**
+ * An embedded ICC profile (iCCP) chunk. This indicates the image
+ * samples conform to the color space represented by the profile.
+ */
 public record Iccp(
 		String profileName,
 		CompressionMethod compressionMethod,

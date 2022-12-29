@@ -27,6 +27,9 @@ import io.nayuki.png.chunk.Custom;
 import io.nayuki.png.chunk.Util;
 
 
+/**
+ * A low-level representation of PNG/MNG/JNG chunks and methods to read/write such files.
+ */
 public record XngFile(Type type, List<Chunk> chunks) {
 	
 	public XngFile {

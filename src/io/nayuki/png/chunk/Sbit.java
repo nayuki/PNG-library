@@ -15,6 +15,9 @@ import java.util.Objects;
 import io.nayuki.png.Chunk;
 
 
+/**
+ * A significant bits (sBIT) chunk. This defines the original number of significant bits per channel.
+ */
 public record Sbit(byte[] significantBits) implements Chunk {
 	
 	static final String TYPE = "sBIT";

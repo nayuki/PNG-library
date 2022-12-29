@@ -13,6 +13,9 @@ import java.io.IOException;
 import io.nayuki.png.Chunk;
 
 
+/**
+ * Utility functions for chunks.
+ */
 public final class Util {
 	
 	public static Chunk readChunk(String type, int dataLen, DataInput in) throws IOException {

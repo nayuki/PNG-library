@@ -9,6 +9,9 @@
 package io.nayuki.png.image;
 
 
+/**
+ * A mutable RGBA image where all pixels are stored in memory.
+ */
 public final class BufferedRgbaImage implements RgbaImage {
 	
 	private final int width;

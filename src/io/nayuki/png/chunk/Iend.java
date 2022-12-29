@@ -13,6 +13,9 @@ import java.io.IOException;
 import io.nayuki.png.Chunk;
 
 
+/**
+ * An image trailer (IEND) chunk. This marks the end of a PNG data stream.
+ */
 public enum Iend implements Chunk {
 	
 	/*---- Constants ----*/

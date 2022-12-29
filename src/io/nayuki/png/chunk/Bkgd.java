@@ -16,6 +16,9 @@ import java.util.Objects;
 import io.nayuki.png.Chunk;
 
 
+/**
+ * A background color (bKGD) chunk. This specifies a default background color to present the image against.
+ */
 public record Bkgd(byte[] data) implements Chunk {
 	
 	static final String TYPE = "bKGD";

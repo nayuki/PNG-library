@@ -15,6 +15,10 @@ import java.util.Objects;
 import io.nayuki.png.Chunk;
 
 
+/**
+ * An image histogram (hIST) chunk. This gives the
+ * approximate usage frequency of each color in the palette.
+ */
 public record Hist(short[] frequencies) implements Chunk {
 	
 	static final String TYPE = "hIST";

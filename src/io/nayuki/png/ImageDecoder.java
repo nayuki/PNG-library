@@ -17,6 +17,9 @@ import io.nayuki.png.chunk.Ihdr;
 import io.nayuki.png.image.BufferedRgbaImage;
 
 
+/**
+ * Decodes a {@link PngImage} object to a buffered image where pixels can be directly read.
+ */
 public final class ImageDecoder {
 	
 	public static Object toImage(PngImage png) {

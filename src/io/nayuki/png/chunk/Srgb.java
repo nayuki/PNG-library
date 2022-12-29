@@ -15,6 +15,10 @@ import java.util.Objects;
 import io.nayuki.png.Chunk;
 
 
+/**
+ * A standard RGB color space (sRGB) chunk. This indicates the image samples conform to
+ * the sRGB color space and should be displayed using the specified rendering intent.
+ */
 public record Srgb(RenderingIntent renderingIntent) implements Chunk {
 	
 	static final String TYPE = "sRGB";

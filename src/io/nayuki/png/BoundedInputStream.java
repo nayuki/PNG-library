@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 
+/**
+ * Ensures that the exact number of bytes are read/skipped.
+ */
 final class BoundedInputStream extends FilterInputStream {
 	
 	private int count;

@@ -16,6 +16,9 @@ import java.util.Objects;
 import io.nayuki.png.Chunk;
 
 
+/**
+ * A transparency (tRNS) chunk. This specifies a single transparent color or associates alpha values with palette entries.
+ */
 public record Trns(byte[] data) implements Chunk {
 	
 	static final String TYPE = "tRNS";

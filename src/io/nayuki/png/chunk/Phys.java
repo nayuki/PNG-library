@@ -15,6 +15,10 @@ import java.util.Objects;
 import io.nayuki.png.Chunk;
 
 
+/**
+ * A physical pixel dimensions (pHYs) chunk. This specifies the
+ * intended pixel size or aspect ratio for displaying the image.
+ */
 public record Phys(
 		int pixelsPerUnitX,
 		int pixelsPerUnitY,

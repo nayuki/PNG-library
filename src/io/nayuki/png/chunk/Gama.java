@@ -14,6 +14,10 @@ import java.io.IOException;
 import io.nayuki.png.Chunk;
 
 
+/**
+ * An image gamma (gAMA) chunk. This specifies the relationship
+ * between the image samples and the desired display output intensity.
+ */
 public record Gama(int gamma) implements Chunk {
 	
 	static final String TYPE = "gAMA";

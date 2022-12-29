@@ -15,6 +15,10 @@ import java.util.Objects;
 import io.nayuki.png.Chunk;
 
 
+/**
+ * A palette (PLTE) chunk. This is required for indexed-color images,
+ * but only behaves as a suggestion for true-color images.
+ */
 public record Plte(byte[] data) implements Chunk {
 	
 	static final String TYPE = "PLTE";

@@ -24,6 +24,10 @@ import io.nayuki.png.chunk.Iend;
 import io.nayuki.png.chunk.Ihdr;
 
 
+/**
+ * A structured representation of chunks that form a PNG file.
+ * These objects are mutable. There is some degree of validation and exclusion of invalid data.
+ */
 public final class PngImage {
 	
 	public static PngImage read(File inFile) throws IOException {

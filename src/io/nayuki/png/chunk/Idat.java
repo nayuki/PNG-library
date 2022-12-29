@@ -15,6 +15,9 @@ import java.util.Objects;
 import io.nayuki.png.Chunk;
 
 
+/**
+ * An image data (IDAT) chunk. This contains pixel data that is filtered and compressed.
+ */
 public record Idat(byte[] data) implements Chunk {
 	
 	static final String TYPE = "IDAT";

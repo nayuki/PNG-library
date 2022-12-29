@@ -17,6 +17,9 @@ import io.nayuki.png.chunk.Ihdr;
 import io.nayuki.png.image.RgbaImage;
 
 
+/**
+ * Encodes an image (where pixels can be read) to a {@link PngImage} object.
+ */
 public final class ImageEncoder {
 	
 	public static PngImage toPng(RgbaImage img) {

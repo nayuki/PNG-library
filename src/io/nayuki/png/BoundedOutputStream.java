@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 
+/**
+ * Ensures that the exact number of bytes are written.
+ */
 final class BoundedOutputStream extends FilterOutputStream {
 	
 	private int count;

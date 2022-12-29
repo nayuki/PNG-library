@@ -14,6 +14,9 @@ import java.io.IOException;
 import io.nayuki.png.Chunk;
 
 
+/**
+ * A last-modification time (tIME) chunk. This gives the time of the last image modification.
+ */
 public record Time(
 		int year,
 		int month,

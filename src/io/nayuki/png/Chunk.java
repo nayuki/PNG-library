@@ -15,6 +15,10 @@ import java.io.IOException;
 import java.util.Objects;
 
 
+/**
+ * A PNG/MNG/JNG chunk. Each chunk has a type (4 ASCII uppercase/lowercase
+ * letters) and binary data (0 to 2<sup>31</sup>&minus;1 bytes).
+ */
 public interface Chunk {
 	
 	public abstract String getType();

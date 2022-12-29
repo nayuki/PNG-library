@@ -15,6 +15,11 @@ import java.util.Objects;
 import io.nayuki.png.Chunk;
 
 
+/**
+ * A custom chunk that is not parsed. This can represent a chunk of
+ * a type that already has a defined class (e.g. {@code class Ihdr}
+ * for type "IHDR") or it can represent an unrecognized chunk type.
+ */
 public record Custom(String type, byte[] data) implements Chunk {
 	
 	/*---- Constructor ----*/
