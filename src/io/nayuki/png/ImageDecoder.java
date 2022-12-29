@@ -150,4 +150,8 @@ public final class ImageDecoder {
 		return result;
 	}
 	
+	
+	// Not instantiable
+	private ImageDecoder() {}
+	
 }

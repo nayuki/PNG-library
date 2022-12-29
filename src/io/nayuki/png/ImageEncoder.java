@@ -101,4 +101,8 @@ public final class ImageEncoder {
 		return result;
 	}
 	
+	
+	// Not instantiable
+	private ImageEncoder() {}
+	
 }

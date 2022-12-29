@@ -47,4 +47,8 @@ public final class Util {
 			return null;
 	}
 	
+	
+	// Not instantiable
+	private Util() {}
+	
 }
