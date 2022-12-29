@@ -18,23 +18,23 @@ import java.io.InputStream;
  */
 final class BoundedInputStream extends FilterInputStream {
 	
-	private int count;
+	private int remain;
 	
 	
 	public BoundedInputStream(InputStream in, int count) {
 		super(in);
 		if (count < 0)
 			throw new IllegalArgumentException();
-		this.count = count;
+		this.remain = count;
 	}
 	
 	
 	@Override public int read() throws IOException {
-		if (count < 1)
+		if (remain < 1)
 			throw new IllegalStateException();
 		int result = in.read();
 		if (result != -1)
-			count--;
+			remain--;
 		return result;
 	}
 	
@@ -45,31 +45,31 @@ final class BoundedInputStream extends FilterInputStream {
 	
 	
 	@Override public int read(byte[] b, int off, int len) throws IOException {
-		if (!(0 <= len && len <= count))
+		if (!(0 <= len && len <= remain))
 			throw new IllegalStateException();
 		int result = in.read(b, off, len);
 		if (result != -1)
-			count -= result;
+			remain -= result;
 		return result;
 	}
 	
 	
 	@Override public long skip(long n) throws IOException {
-		if (!(0 <= n && n <= count))
+		if (!(0 <= n && n <= remain))
 			throw new IllegalStateException();
-		long result = in.skip(Math.min(n, count));
-		count -= result;
+		long result = in.skip(Math.min(n, remain));
+		remain -= result;
 		return result;
 	}
 	
 	
 	@Override public int available() throws IOException {
-		return Math.min(in.available(), count);
+		return Math.min(in.available(), remain);
 	}
 	
 	
 	public void finish() {
-		if (count != 0)
+		if (remain != 0)
 			throw new IllegalStateException();
 	}
 	

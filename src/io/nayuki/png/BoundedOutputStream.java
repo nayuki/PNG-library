@@ -18,21 +18,21 @@ import java.io.OutputStream;
  */
 final class BoundedOutputStream extends FilterOutputStream {
 	
-	private int count;
+	private int remain;
 	
 	
 	public BoundedOutputStream(OutputStream out, int count) {
 		super(out);
 		if (count < 0)
 			throw new IllegalArgumentException();
-		this.count = count;
+		this.remain = count;
 	}
 	
 	
 	@Override public void write(int b) throws IOException {
-		if (count < 1)
+		if (remain < 1)
 			throw new IllegalStateException();
-		count--;
+		remain--;
 		out.write(b);
 	}
 	
@@ -43,15 +43,15 @@ final class BoundedOutputStream extends FilterOutputStream {
 	
 	
 	@Override public void write(byte[] b, int off, int len) throws IOException {
-		if (!(0 <= len && len <= count))
+		if (!(0 <= len && len <= remain))
 			throw new IllegalStateException();
-		count -= len;
+		remain -= len;
 		out.write(b, off, len);
 	}
 	
 	
 	public void finish() {
-		if (count != 0)
+		if (remain != 0)
 			throw new IllegalStateException();
 	}
 	
