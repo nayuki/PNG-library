@@ -14,7 +14,16 @@ import java.io.InputStream;
 
 
 /**
- * Ensures that the exact number of bytes are read/skipped.
+ * Wraps an input stream to ensure that the exact number of bytes are read/skipped.
+ * Calls to {@code read()} and {@code skip()} enforce an upper bound on the total number
+ * of bytes read/skipped. Call {@code finish()} at the end to also ensure that the total
+ * bytes read/skipped is not less than the initially specified count. Example usage:
+ * <pre>InputStream in = (...);
+ *var bin = new BoundedInputStream(in, 3);
+ *bin.read();
+ *bin.read(new byte[2]);
+ *bin.finish();
+ *(... continue using in ...)</pre>
  */
 final class BoundedInputStream extends FilterInputStream {
 	

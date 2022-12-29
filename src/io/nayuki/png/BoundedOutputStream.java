@@ -14,7 +14,16 @@ import java.io.OutputStream;
 
 
 /**
- * Ensures that the exact number of bytes are written.
+ * Wraps an output stream to ensure that the exact number of bytes are written.
+ * Calls to {@code write()} enforce an upper bound on the total number of bytes
+ * written. Call {@code finish()} at the end to also ensure that the total bytes
+ * written is not less than the initially specified count. Example usage:
+ * <pre>OutputStream out = (...);
+ *var bout = new BoundedOutputStream(out, 3);
+ *bout.write(0xFF);
+ *bout.write(new byte[2]);
+ *bout.finish();
+ *(... continue using out ...)</pre>
  */
 final class BoundedOutputStream extends FilterOutputStream {
 	

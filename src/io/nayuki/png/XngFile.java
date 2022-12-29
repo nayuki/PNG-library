@@ -28,7 +28,10 @@ import io.nayuki.png.chunk.Util;
 
 
 /**
- * A low-level representation of PNG/MNG/JNG chunks and methods to read/write such files.
+ * A low-level representation of a list of PNG/MNG/JNG chunks, plus methods to read/write
+ * such files. Any list of chunks is considered valid; this structure will not check any
+ * constraints within or between chunks (e.g. invalid field values, chunks after IEND).
+ * Instances should be treated as immutable, but lists and chunks are not copied defensively.
  */
 public record XngFile(Type type, List<Chunk> chunks) {
 	

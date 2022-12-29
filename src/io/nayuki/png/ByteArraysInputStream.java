@@ -16,6 +16,7 @@ import java.util.Objects;
 
 /**
  * Presents the concatenation of a list of byte arrays as a single input stream.
+ * Similar to {@link java.io.ByteArrayInputStream}.
  */
 final class ByteArraysInputStream extends InputStream {
 	
