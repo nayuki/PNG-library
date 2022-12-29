@@ -18,6 +18,7 @@ import io.nayuki.png.Chunk;
 /**
  * A standard RGB color space (sRGB) chunk. This indicates the image samples conform to
  * the sRGB color space and should be displayed using the specified rendering intent.
+ * Instances are immutable.
  * @see https://www.w3.org/TR/2003/REC-PNG-20031110/#11sRGB
  */
 public record Srgb(RenderingIntent renderingIntent) implements Chunk {

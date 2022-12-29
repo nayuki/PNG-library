@@ -18,6 +18,7 @@ import io.nayuki.png.Chunk;
 
 /**
  * A background color (bKGD) chunk. This specifies a default background color to present the image against.
+ * Instances should be treated as immutable, but arrays are not copied defensively.
  * @see https://www.w3.org/TR/2003/REC-PNG-20031110/#11bKGD
  */
 public record Bkgd(byte[] data) implements Chunk {

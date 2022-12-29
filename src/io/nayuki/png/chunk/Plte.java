@@ -18,6 +18,7 @@ import io.nayuki.png.Chunk;
 /**
  * A palette (PLTE) chunk. This is required for indexed-color images,
  * but only behaves as a suggestion for true-color images.
+ * Instances should be treated as immutable, but arrays are not copied defensively.
  * @see https://www.w3.org/TR/2003/REC-PNG-20031110/#11PLTE
  */
 public record Plte(byte[] data) implements Chunk {
