@@ -25,7 +25,7 @@ final class BoundedOutputStream extends FilterOutputStream {
 		super(out);
 		if (count < 0)
 			throw new IllegalArgumentException();
-		this.remain = count;
+		remain = count;
 	}
 	
 	
@@ -43,10 +43,10 @@ final class BoundedOutputStream extends FilterOutputStream {
 	
 	
 	@Override public void write(byte[] b, int off, int len) throws IOException {
-		if (!(0 <= len && len <= remain))
+		if (len > remain)
 			throw new IllegalStateException();
-		remain -= len;
 		out.write(b, off, len);
+		remain -= len;
 	}
 	
 	

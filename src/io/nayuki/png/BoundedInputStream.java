@@ -25,7 +25,7 @@ final class BoundedInputStream extends FilterInputStream {
 		super(in);
 		if (count < 0)
 			throw new IllegalArgumentException();
-		this.remain = count;
+		remain = count;
 	}
 	
 	
@@ -45,7 +45,7 @@ final class BoundedInputStream extends FilterInputStream {
 	
 	
 	@Override public int read(byte[] b, int off, int len) throws IOException {
-		if (!(0 <= len && len <= remain))
+		if (len > remain)
 			throw new IllegalStateException();
 		int result = in.read(b, off, len);
 		if (result != -1)
