@@ -10,10 +10,13 @@ package io.nayuki.png;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.IntStream;
 import java.util.zip.DeflaterOutputStream;
 import io.nayuki.png.chunk.Idat;
 import io.nayuki.png.chunk.Ihdr;
+import io.nayuki.png.chunk.Sbit;
 import io.nayuki.png.image.RgbaImage;
 
 
@@ -23,11 +26,20 @@ import io.nayuki.png.image.RgbaImage;
 public final class ImageEncoder {
 	
 	public static PngImage toPng(RgbaImage img) {
+		Objects.requireNonNull(img);
 		int[] bitDepths = img.getBitDepths();
 		int bitDepth = bitDepths[0];
-		if (bitDepths[1] != bitDepth || bitDepths[2] != bitDepth || bitDepths[3] != 0 && bitDepths[3] != bitDepth)
-			throw new IllegalArgumentException();
 		boolean hasAlpha = bitDepths[3] != 0;
+		if (bitDepths[1] != bitDepth || bitDepths[2] != bitDepth || bitDepths[3] != 0 && bitDepths[3] != bitDepth) {
+			PngImage result = toPng(new UpBitDepthRgbaImage(img));
+			byte[] bitDepthsBytes;
+			if (!hasAlpha)
+				bitDepthsBytes = new byte[]{(byte)bitDepths[0], (byte)bitDepths[1], (byte)bitDepths[2]};
+			else
+				bitDepthsBytes = new byte[]{(byte)bitDepths[0], (byte)bitDepths[1], (byte)bitDepths[2], (byte)bitDepths[3]};
+			result.beforeIdats.add(new Sbit(bitDepthsBytes));
+			return result;
+		}
 
 		int width = img.getWidth();
 		int height = img.getHeight();
@@ -103,5 +115,67 @@ public final class ImageEncoder {
 	
 	
 	private ImageEncoder() {}
+	
+	
+	
+	private static final class UpBitDepthRgbaImage implements RgbaImage {
+		
+		private RgbaImage image;
+		private int[] bitDepths;
+		private final int mul, rDiv, gDiv, bDiv, aDiv;
+		
+		
+		public UpBitDepthRgbaImage(RgbaImage img) {
+			image = img;
+			
+			bitDepths = img.getBitDepths().clone();
+			if (bitDepths.length != 4)
+				throw new IllegalArgumentException();
+			for (int i = 0; i < bitDepths.length; i++) {
+				int bitDepth = bitDepths[i];
+				if (!((i == 3 ? 0 : 1) <= bitDepth && bitDepth <= 16))
+					throw new IllegalArgumentException();
+			}
+			int chosenBitDepth = Math.ceilDiv(IntStream.of(bitDepths).max().getAsInt(), 8) * 8;
+			if (chosenBitDepth != 8 && chosenBitDepth != 16)
+				throw new AssertionError();
+			
+			mul = (2 << chosenBitDepth) - 2;
+			rDiv = (1 << bitDepths[0]) - 1;
+			gDiv = (1 << bitDepths[1]) - 1;
+			bDiv = (1 << bitDepths[2]) - 1;
+			aDiv = bitDepths[3] != 0 ? (1 << bitDepths[3]) - 1 : 1;
+			
+			bitDepths[0] = chosenBitDepth;
+			bitDepths[1] = chosenBitDepth;
+			bitDepths[2] = chosenBitDepth;
+			if (bitDepths[3] != 0)
+				bitDepths[3] = chosenBitDepth;
+		}
+		
+		
+		@Override public int getWidth() {
+			return image.getWidth();
+		}
+		
+		@Override public int getHeight() {
+			return image.getHeight();
+		}
+		
+		@Override public int[] getBitDepths() {
+			return bitDepths;
+		}
+		
+		
+		@Override public long getPixel(int x, int y) {
+			long val = image.getPixel(x, y);
+			long r = (((val >>> 48) & 0xFFFF) * mul + rDiv) / rDiv >>> 1;
+			long g = (((val >>> 32) & 0xFFFF) * mul + gDiv) / gDiv >>> 1;
+			long b = (((val >>> 16) & 0xFFFF) * mul + bDiv) / bDiv >>> 1;
+			long a = (((val >>>  0) & 0xFFFF) * mul + aDiv) / aDiv >>> 1;
+			return r << 48 | g << 32 | b << 16 | a << 0;
+		}
+		
+	}
 	
 }
