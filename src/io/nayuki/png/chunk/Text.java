@@ -50,10 +50,7 @@ public record Text(String keyword, String text) implements Chunk {
 	
 	
 	public static Text read(int dataLen, DataInput in) throws IOException {
-		var data = new byte[dataLen];
-		in.readFully(data);
-		byte[][] parts = Util.splitByNull(data, 2);
-		
+		byte[][] parts = Util.readAndSplitByNull(dataLen, in, 2);
 		String keyword = new String(parts[0], StandardCharsets.ISO_8859_1);
 		String text = new String(parts[1], StandardCharsets.ISO_8859_1);
 		return new Text(keyword, text);

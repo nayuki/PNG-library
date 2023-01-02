@@ -71,9 +71,7 @@ public record Ztxt(
 	
 	
 	public static Ztxt read(int dataLen, DataInput in) throws IOException {
-		var data = new byte[dataLen];
-		in.readFully(data);
-		byte[][] parts = Util.splitByNull(data, 2);
+		byte[][] parts = Util.readAndSplitByNull(dataLen, in, 2);
 		
 		String keyword = new String(parts[0], StandardCharsets.ISO_8859_1);
 		if (parts[1].length < 1)

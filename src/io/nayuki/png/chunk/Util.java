@@ -61,7 +61,10 @@ public final class Util {
 	}
 	
 	
-	static byte[][] splitByNull(byte[] data, int numParts) {
+	static byte[][] readAndSplitByNull(int dataLen, DataInput in, int numParts) throws IOException {
+		var data = new byte[dataLen];
+		in.readFully(data);
+		
 		byte[][] result = new byte[numParts][];
 		int start = 0;
 		for (int i = 0; i < result.length - 1; i++) {
