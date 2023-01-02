@@ -72,14 +72,12 @@ public record Ztxt(
 	
 	public static Ztxt read(int dataLen, DataInput in) throws IOException {
 		byte[][] parts = Util.readAndSplitByNull(dataLen, in, 2);
-		
-		String keyword = new String(parts[0], StandardCharsets.ISO_8859_1);
 		if (parts[1].length < 1)
 			throw new IllegalArgumentException();
-		CompressionMethod compMethod = Util.indexInto(CompressionMethod.values(), parts[1][0]);
-		byte[] compText = Arrays.copyOfRange(parts[1], 1, parts[1].length);
-		
-		return new Ztxt(keyword, compMethod, compText);
+		return new Ztxt(
+			new String(parts[0], StandardCharsets.ISO_8859_1),
+			Util.indexInto(CompressionMethod.values(), parts[1][0]),
+			Arrays.copyOfRange(parts[1], 1, parts[1].length));
 	}
 	
 	

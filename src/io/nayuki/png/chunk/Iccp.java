@@ -60,14 +60,12 @@ public record Iccp(
 	
 	public static Iccp read(int dataLen, DataInput in) throws IOException {
 		byte[][] parts = Util.readAndSplitByNull(dataLen, in, 2);
-		
-		String profileName = new String(parts[0], StandardCharsets.ISO_8859_1);
 		if (parts[1].length < 1)
 			throw new IllegalArgumentException();
-		CompressionMethod compMethod = Util.indexInto(CompressionMethod.values(), parts[1][0]);
-		byte[] data = Arrays.copyOfRange(parts[1], 1, parts[1].length);
-		
-		return new Iccp(profileName, compMethod, data);
+		return new Iccp(
+			new String(parts[0], StandardCharsets.ISO_8859_1),
+			Util.indexInto(CompressionMethod.values(), parts[1][0]),
+			Arrays.copyOfRange(parts[1], 1, parts[1].length));
 	}
 	
 	

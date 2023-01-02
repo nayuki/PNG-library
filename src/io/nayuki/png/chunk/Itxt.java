@@ -85,21 +85,19 @@ public record Itxt(
 	
 	public static Itxt read(int dataLen, DataInput in) throws IOException {
 		byte[][] parts = Util.readAndSplitByNull(dataLen, in, 4);
-		
-		String keyword = new String(parts[0], StandardCharsets.ISO_8859_1);
 		if (parts[1].length < 2)
 			throw new IllegalArgumentException();
-		boolean compFlag = switch (parts[1][0]) {
-			case 0 -> false;
-			case 1 -> true;
-			default -> throw new IllegalArgumentException();
-		};
-		CompressionMethod compMethod = Util.indexInto(CompressionMethod.values(), parts[1][1]);
-		String languageTag = new String(Arrays.copyOfRange(parts[1], 2, parts[1].length), StandardCharsets.ISO_8859_1);
-		String translatedKeyword = new String(parts[2], StandardCharsets.UTF_8);
-		byte[] text = parts[3];
-		
-		return new Itxt(keyword, compFlag, compMethod, languageTag, translatedKeyword, text);
+		return new Itxt(
+			new String(parts[0], StandardCharsets.ISO_8859_1),
+			switch (parts[1][0]) {
+				case 0 -> false;
+				case 1 -> true;
+				default -> throw new IllegalArgumentException();
+			},
+			Util.indexInto(CompressionMethod.values(), parts[1][1]),
+			new String(Arrays.copyOfRange(parts[1], 2, parts[1].length), StandardCharsets.ISO_8859_1),
+			new String(parts[2], StandardCharsets.UTF_8),
+			parts[3]);
 	}
 	
 	
