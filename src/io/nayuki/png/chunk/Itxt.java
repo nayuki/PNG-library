@@ -39,12 +39,11 @@ public record Itxt(
 	/*---- Constructor ----*/
 	
 	public Itxt {
-		checkString(keyword);
-		if (!(1 <= keyword.length() && keyword.length() <= 79) ||
-				keyword.startsWith(" ") || keyword.endsWith(" ") || keyword.contains("  ") || keyword.contains("\n"))
-			throw new IllegalArgumentException();
+		Util.checkKeyword(keyword, true);
 		
-		checkString(languageTag);
+		Objects.requireNonNull(languageTag);
+		if (!languageTag.matches("(?:[A-Za-z0-9]{1,8}(?:-[A-Za-z0-9]{1,8})*)?"))
+			throw new IllegalArgumentException();
 		
 		Objects.requireNonNull(translatedKeyword);
 		for (int i = 0; i < translatedKeyword.length(); i++) {
@@ -52,32 +51,31 @@ public record Itxt(
 				throw new IllegalArgumentException();
 		}
 		
+		byte[] decompText;
 		if (compressionFlag) {
-			switch (compressionMethod) {
-				case DEFLATE:
+			decompText = switch (compressionMethod) {
+				case DEFLATE -> {
 					try {
-						Util.decompressZlibDeflate(text);
+						yield Util.decompressZlibDeflate(text);
 					} catch (IOException e) {
 						throw new IllegalArgumentException(e);
 					}
-					break;
-			}
-		} else if (compressionMethod != CompressionMethod.DEFLATE)
-			throw new IllegalArgumentException();
+				}
+			};
+		} else {
+			if (compressionMethod != CompressionMethod.DEFLATE)
+				throw new IllegalArgumentException();
+			decompText = text;
+		}
+		String textStr = new String(decompText, StandardCharsets.UTF_8);
+		for (int i = 0; i < textStr.length(); i++) {
+			if (textStr.charAt(i) == '\0')
+				throw new IllegalArgumentException();
+		}
 		
 		if (5L + keyword.length() + languageTag.length() + text.length +
 				translatedKeyword.getBytes(StandardCharsets.UTF_8).length > Integer.MAX_VALUE)
 			throw new IllegalArgumentException();
-	}
-	
-	
-	private static void checkString(String s) {
-		Objects.requireNonNull(s);
-		for (int i = 0; i < s.length(); i++) {
-			char c = s.charAt(i);
-			if (!(c == '\n' || 32 <= c && c <= 126 || 161 <= c && c <= 255))
-				throw new IllegalArgumentException();
-		}
 	}
 	
 	

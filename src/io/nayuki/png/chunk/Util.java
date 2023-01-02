@@ -12,6 +12,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInput;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.zip.InflaterOutputStream;
 import io.nayuki.png.Chunk;
 
@@ -82,6 +83,27 @@ public final class Util {
 		}
 		result[result.length - 1] = Arrays.copyOfRange(data, start, data.length);
 		return result;
+	}
+	
+	
+	static void checkKeyword(String s, boolean checkSpaces) {
+		Objects.requireNonNull(s);
+		if (!(1 <= s.length() && s.length() <= 79))
+			throw new IllegalArgumentException();
+		if (checkSpaces && (s.startsWith(" ") || s.endsWith(" ") || s.contains("  ")))
+			throw new IllegalArgumentException();
+		checkIso8859_1(s, false);
+	}
+	
+	
+	static void checkIso8859_1(String s, boolean allowNewline) {
+		Objects.requireNonNull(s);
+		for (int i = 0; i < s.length(); i++) {
+			char c = s.charAt(i);
+			if (32 <= c && c <= 126 || 161 <= c && c <= 255);
+			else if (allowNewline && c == '\n');
+			else throw new IllegalArgumentException();
+		}
 	}
 	
 	

@@ -36,10 +36,7 @@ public record Ztxt(
 	/*---- Constructor ----*/
 	
 	public Ztxt {
-		checkString(keyword);
-		if (!(1 <= keyword.length() && keyword.length() <= 79) ||
-				keyword.startsWith(" ") || keyword.endsWith(" ") || keyword.contains("  ") || keyword.contains("\n"))
-			throw new IllegalArgumentException();
+		Util.checkKeyword(keyword, true);
 		
 		Objects.requireNonNull(compressionMethod);
 		byte[] decompText = switch (compressionMethod) {
@@ -53,19 +50,9 @@ public record Ztxt(
 		};
 		
 		String text = new String(decompText, StandardCharsets.ISO_8859_1);
-		checkString(text);
+		Util.checkIso8859_1(text, true);
 		if (2L + keyword.length() + compressedText.length > Integer.MAX_VALUE)
 			throw new IllegalArgumentException();
-	}
-	
-	
-	private static void checkString(String s) {
-		Objects.requireNonNull(s);
-		for (int i = 0; i < s.length(); i++) {
-			char c = s.charAt(i);
-			if (!(c == '\n' || 32 <= c && c <= 126 || 161 <= c && c <= 255))
-				throw new IllegalArgumentException();
-		}
 	}
 	
 	

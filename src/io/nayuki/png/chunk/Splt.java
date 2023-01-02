@@ -13,7 +13,6 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.Objects;
 import io.nayuki.png.Chunk;
 
 
@@ -31,10 +30,7 @@ public record Splt(String paletteName, int sampleDepth, byte[] data) implements 
 	/*---- Constructor ----*/
 	
 	public Splt {
-		checkString(paletteName);
-		if (!(1 <= paletteName.length() && paletteName.length() <= 79) ||
-				paletteName.startsWith(" ") || paletteName.endsWith(" ") || paletteName.contains("  ") || paletteName.contains("\n"))
-			throw new IllegalArgumentException();
+		Util.checkKeyword(paletteName, true);
 		
 		int bytesPerEntry = switch (sampleDepth) {
 			case 8 -> 6;
@@ -46,16 +42,6 @@ public record Splt(String paletteName, int sampleDepth, byte[] data) implements 
 		
 		if (2L + paletteName.length() + data.length > Integer.MAX_VALUE)
 			throw new IllegalArgumentException();
-	}
-	
-	
-	private static void checkString(String s) {
-		Objects.requireNonNull(s);
-		for (int i = 0; i < s.length(); i++) {
-			char c = s.charAt(i);
-			if (!(c == '\n' || 32 <= c && c <= 126 || 161 <= c && c <= 255))
-				throw new IllegalArgumentException();
-		}
 	}
 	
 	
