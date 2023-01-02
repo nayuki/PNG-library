@@ -34,10 +34,12 @@ public final class Util {
 			case Idat.TYPE -> Idat.read(dataLen, in);
 			case Iend.TYPE -> Iend.SINGLETON;
 			case Ihdr.TYPE -> Ihdr.read(         in);
+			case Itxt.TYPE -> Itxt.read(dataLen, in);
 			case Offs.TYPE -> Offs.read(         in);
 			case Phys.TYPE -> Phys.read(         in);
 			case Plte.TYPE -> Plte.read(dataLen, in);
 			case Sbit.TYPE -> Sbit.read(dataLen, in);
+			case Splt.TYPE -> Splt.read(dataLen, in);
 			case Srgb.TYPE -> Srgb.read(         in);
 			case Ster.TYPE -> Ster.read(         in);
 			case Text.TYPE -> Text.read(dataLen, in);
