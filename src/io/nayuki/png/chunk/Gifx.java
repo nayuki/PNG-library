@@ -72,13 +72,4 @@ public record Gifx(
 		out.write(applicationData);
 	}
 	
-	
-	
-	/*---- Enumeration ----*/
-	
-	public enum UnitSpecifier {
-		PIXEL,
-		MICROMETRE,
-	}
-	
 }

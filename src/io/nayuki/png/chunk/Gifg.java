@@ -65,13 +65,4 @@ public record Gifg(
 		out.writeShort(delayTime);
 	}
 	
-	
-	
-	/*---- Enumeration ----*/
-	
-	public enum UnitSpecifier {
-		PIXEL,
-		MICROMETRE,
-	}
-	
 }
