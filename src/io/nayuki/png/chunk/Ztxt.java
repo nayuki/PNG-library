@@ -40,7 +40,20 @@ public record Ztxt(
 		if (!(1 <= keyword.length() && keyword.length() <= 79) ||
 				keyword.startsWith(" ") || keyword.endsWith(" ") || keyword.contains("  ") || keyword.contains("\n"))
 			throw new IllegalArgumentException();
-		String text = new String(compressedText, StandardCharsets.ISO_8859_1);
+		
+		Objects.requireNonNull(compressionMethod);
+		byte[] decompText = switch (compressionMethod) {
+			case DEFLATE -> {
+				try {
+					yield Util.decompressZlibDeflate(compressedText);
+				} catch (IOException e) {
+					throw new IllegalArgumentException(e);
+				}
+			}
+			default -> throw new IllegalArgumentException();
+		};
+		
+		String text = new String(decompText, StandardCharsets.ISO_8859_1);
 		checkString(text);
 		if (2L + keyword.length() + compressedText.length > Integer.MAX_VALUE)
 			throw new IllegalArgumentException();
