@@ -62,15 +62,15 @@ public record Splt(String paletteName, int sampleDepth, byte[] data) implements 
 	public static Splt read(int dataLen, DataInput in) throws IOException {
 		var data = new byte[dataLen];
 		in.readFully(data);
-		int index = 0;
-		while (index < data.length && data[index] != 0)
-			index++;
-		if (data.length - index < 2)
+		byte[][] parts = Util.splitByNull(data, 2);
+		
+		String paletteName = new String(parts[0], StandardCharsets.ISO_8859_1);
+		if (parts[1].length < 1)
 			throw new IllegalArgumentException();
-		return new Splt(
-			new String(Arrays.copyOf(data, index), StandardCharsets.ISO_8859_1),
-			data[index + 1],
-			Arrays.copyOfRange(data, index + 2, data.length));
+		int sampleDepth = parts[1][0];
+		data = Arrays.copyOfRange(parts[1], 1, parts[1].length);
+		
+		return new Splt(paletteName, sampleDepth, data);
 	}
 	
 	

@@ -11,6 +11,7 @@ package io.nayuki.png.chunk;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInput;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.zip.InflaterOutputStream;
 import io.nayuki.png.Chunk;
 
@@ -57,6 +58,27 @@ public final class Util {
 			iout.write(data);
 		}
 		return bout.toByteArray();
+	}
+	
+	
+	static byte[][] splitByNull(byte[] data, int numParts) {
+		byte[][] result = new byte[numParts][];
+		int start = 0;
+		for (int i = 0; i < result.length - 1; i++) {
+			int end = start;
+			while (true) {
+				if (end >= data.length)
+					throw new IllegalArgumentException();
+				else if (data[end] == 0)
+					break;
+				else
+					end++;
+			}
+			result[i] = Arrays.copyOfRange(data, start, end);
+			start = end + 1;
+		}
+		result[result.length - 1] = Arrays.copyOfRange(data, start, data.length);
+		return result;
 	}
 	
 	

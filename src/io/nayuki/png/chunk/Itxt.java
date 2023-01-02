@@ -86,45 +86,22 @@ public record Itxt(
 	public static Itxt read(int dataLen, DataInput in) throws IOException {
 		var data = new byte[dataLen];
 		in.readFully(data);
+		byte[][] parts = Util.splitByNull(data, 4);
 		
-		int start = 0;
-		int nextNull = nextNull(data, start);
-		String keyword = new String(Arrays.copyOfRange(data, start, nextNull), StandardCharsets.ISO_8859_1);
-		start = nextNull + 1;
-		
-		if (data.length - start < 2)
+		String keyword = new String(parts[0], StandardCharsets.ISO_8859_1);
+		if (parts[1].length < 2)
 			throw new IllegalArgumentException();
-		boolean compFlag = switch (data[start + 0]) {
+		boolean compFlag = switch (parts[1][0]) {
 			case 0 -> false;
 			case 1 -> true;
 			default -> throw new IllegalArgumentException();
 		};
-		CompressionMethod compMethod = Util.indexInto(CompressionMethod.values(), data[start + 1]);
-		start += 2;
-		
-		nextNull = nextNull(data, start);
-		String languageTag = new String(Arrays.copyOfRange(data, start, nextNull), StandardCharsets.ISO_8859_1);
-		start = nextNull + 1;
-		
-		nextNull = nextNull(data, start);
-		String translatedKeyword = new String(Arrays.copyOfRange(data, start, nextNull), StandardCharsets.UTF_8);
-		start = nextNull + 1;
-		
-		byte[] text = Arrays.copyOfRange(data, start, data.length);
+		CompressionMethod compMethod = Util.indexInto(CompressionMethod.values(), parts[1][1]);
+		String languageTag = new String(Arrays.copyOfRange(parts[1], 2, parts[1].length), StandardCharsets.ISO_8859_1);
+		String translatedKeyword = new String(parts[2], StandardCharsets.UTF_8);
+		byte[] text = parts[3];
 		
 		return new Itxt(keyword, compFlag, compMethod, languageTag, translatedKeyword, text);
-	}
-	
-	
-	private static int nextNull(byte[] data, int start) {
-		while (true) {
-			if (start >= data.length)
-				throw new IllegalArgumentException();
-			else if (data[start] == 0)
-				return start;
-			else
-				start++;
-		}
 	}
 	
 	
