@@ -126,12 +126,4 @@ public record Itxt(
 		out.write(text);
 	}
 	
-	
-	
-	/*---- Enumeration ----*/
-	
-	public enum CompressionMethod {
-		DEFLATE,
-	}
-	
 }

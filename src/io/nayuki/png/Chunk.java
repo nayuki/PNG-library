@@ -68,4 +68,10 @@ public interface Chunk {
 		}
 	}
 	
+	
+	
+	public enum CompressionMethod {
+		DEFLATE,
+	}
+	
 }

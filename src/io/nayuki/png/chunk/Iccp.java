@@ -88,12 +88,4 @@ public record Iccp(
 		out.write(compressedProfile);
 	}
 	
-	
-	
-	/*---- Enumeration ----*/
-	
-	public enum CompressionMethod {
-		DEFLATE,
-	}
-	
 }

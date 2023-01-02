@@ -100,12 +100,4 @@ public record Ztxt(
 		out.write(compressedText);
 	}
 	
-	
-	
-	/*---- Enumeration ----*/
-	
-	public enum CompressionMethod {
-		DEFLATE,
-	}
-	
 }

@@ -115,11 +115,6 @@ public record Ihdr(
 	}
 	
 	
-	public enum CompressionMethod {
-		DEFLATE,
-	}
-	
-	
 	public enum FilterMethod {
 		ADAPTIVE,
 	}
