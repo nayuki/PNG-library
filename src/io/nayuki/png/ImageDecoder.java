@@ -8,8 +8,12 @@
 
 package io.nayuki.png;
 
+import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.SequenceInputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.zip.InflaterInputStream;
@@ -47,10 +51,11 @@ public final class ImageDecoder {
 		boolean hasAlpha = ihdr.colorType() == Ihdr.ColorType.TRUE_COLOR_WITH_ALPHA;
 		
 		var result = new BufferedRgbaImage(width, height, new int[]{bitDepth, bitDepth, bitDepth, hasAlpha ? bitDepth : 0});
-		List<byte[]> idatDatas = png.idats.stream()
-			.map(idat -> idat.data())
+		List<InputStream> ins = png.idats.stream()
+			.map(idat -> new ByteArrayInputStream(idat.data()))
 			.collect(Collectors.toList());
-		try (var din = new DataInputStream(new InflaterInputStream(new ByteArraysInputStream(idatDatas)))) {
+		try (var din = new DataInputStream(new InflaterInputStream(
+				new SequenceInputStream(Collections.enumeration(ins))))) {
 			
 			int bytesPerPixel = bitDepth / 8 * (hasAlpha ? 4 : 3);
 			var prevRow = new byte[Math.multiplyExact(Math.addExact(1, width), bytesPerPixel)];
