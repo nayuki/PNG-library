@@ -4,7 +4,7 @@ PNG library
 License
 -------
 
-Copyright © 2022 Project Nayuki. (MIT License)  
+Copyright © 2023 Project Nayuki. (MIT License)  
 [https://www.nayuki.io/](https://www.nayuki.io/)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of

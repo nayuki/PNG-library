@@ -61,8 +61,6 @@ public record Itxt(
 						throw new IllegalArgumentException(e);
 					}
 					break;
-				default:
-					throw new IllegalArgumentException();
 			}
 		} else if (compressionMethod != CompressionMethod.DEFLATE)
 			throw new IllegalArgumentException();

@@ -50,7 +50,6 @@ public record Ztxt(
 					throw new IllegalArgumentException(e);
 				}
 			}
-			default -> throw new IllegalArgumentException();
 		};
 		
 		String text = new String(decompText, StandardCharsets.ISO_8859_1);
