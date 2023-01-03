@@ -41,6 +41,7 @@ public final class Util {
 			case Phys.TYPE -> Phys.read(         in);
 			case Plte.TYPE -> Plte.read(dataLen, in);
 			case Sbit.TYPE -> Sbit.read(dataLen, in);
+			case Scal.TYPE -> Scal.read(dataLen, in);
 			case Splt.TYPE -> Splt.read(dataLen, in);
 			case Srgb.TYPE -> Srgb.read(         in);
 			case Ster.TYPE -> Ster.read(         in);
