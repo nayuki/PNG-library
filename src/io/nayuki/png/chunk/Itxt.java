@@ -8,7 +8,9 @@
 
 package io.nayuki.png.chunk;
 
+import java.io.ByteArrayInputStream;
 import java.io.DataInput;
+import java.io.DataInputStream;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -80,20 +82,23 @@ public record Itxt(
 	
 	
 	public static Itxt read(int dataLen, DataInput in) throws IOException {
-		byte[][] parts = Util.readAndSplitByNull(dataLen, in, 4);
-		if (parts[1].length < 2)
+		byte[][] parts0 = Util.readAndSplitByNull(dataLen, in, 2);
+		if (parts0[1].length < 2)
 			throw new IllegalArgumentException();
+		byte[] rest = Arrays.copyOfRange(parts0[1], 2, parts0[1].length);
+		byte[][] parts1 = Util.readAndSplitByNull(rest.length, new DataInputStream(new ByteArrayInputStream(rest)), 3);
+		
 		return new Itxt(
-			new String(parts[0], StandardCharsets.ISO_8859_1),
-			switch (parts[1][0]) {
+			new String(parts0[0], StandardCharsets.ISO_8859_1),
+			switch (parts0[1][0]) {
 				case 0 -> false;
 				case 1 -> true;
 				default -> throw new IllegalArgumentException();
 			},
-			Util.indexInto(CompressionMethod.values(), parts[1][1]),
-			new String(Arrays.copyOfRange(parts[1], 2, parts[1].length), StandardCharsets.ISO_8859_1),
-			new String(parts[2], StandardCharsets.UTF_8),
-			parts[3]);
+			Util.indexInto(CompressionMethod.values(), parts0[1][1]),
+			new String(parts1[0], StandardCharsets.ISO_8859_1),
+			new String(parts1[1], StandardCharsets.UTF_8),
+			parts1[2]);
 	}
 	
 	
