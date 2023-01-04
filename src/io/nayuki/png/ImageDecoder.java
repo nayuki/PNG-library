@@ -34,8 +34,6 @@ public final class ImageDecoder {
 			throw new IllegalArgumentException();
 		if (ihdr.filterMethod() != Ihdr.FilterMethod.ADAPTIVE)
 			throw new IllegalArgumentException();
-		if (ihdr.interlaceMethod() != Ihdr.InterlaceMethod.NONE)
-			throw new IllegalArgumentException();
 		
 		if (ihdr.colorType() == Ihdr.ColorType.TRUE_COLOR || ihdr.colorType() == Ihdr.ColorType.TRUE_COLOR_WITH_ALPHA)
 			return toRgbaImage(png);
@@ -57,10 +55,34 @@ public final class ImageDecoder {
 			.collect(Collectors.toList());
 		try (var din = new DataInputStream(new InflaterInputStream(
 				new SequenceInputStream(Collections.enumeration(ins))))) {
-			decodeSubimage(din, width, height, bitDepth, hasAlpha, result);
+			
+			int xOffset = 0, yOffset = 0;
+			int xStep = switch (ihdr.interlaceMethod()) {
+				case NONE  -> 1;
+				case ADAM7 -> 8;
+			};
+			int yStep = xStep;
+			do {
+				decodeSubimage(din, xOffset, yOffset, xStep, yStep,
+					Math.ceilDiv(width - xOffset, xStep), Math.ceilDiv(height - yOffset, yStep),
+					bitDepth, hasAlpha, result);
+				if (xStep == yStep) {
+					if (xOffset == 0)  // True only in the foremost iteration
+						xOffset = xStep / 2;
+					else {
+						yOffset = xOffset;
+						xOffset = 0;
+						xStep /= 2;
+					}
+				} else {
+					xOffset = yOffset / 2;
+					yOffset = 0;
+					yStep /= 2;
+				}
+			} while (yStep > 1);
+			
 			if (din.read() != -1)
 				throw new IllegalArgumentException();
-			
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
 		}
@@ -68,7 +90,7 @@ public final class ImageDecoder {
 	}
 	
 	
-	private static void decodeSubimage(DataInput din, int width, int height, int bitDepth, boolean hasAlpha, BufferedRgbaImage result) throws IOException {
+	private static void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep, int width, int height, int bitDepth, boolean hasAlpha, BufferedRgbaImage result) throws IOException {
 		int bytesPerPixel = bitDepth / 8 * (hasAlpha ? 4 : 3);
 		var prevRow = new byte[Math.multiplyExact(Math.addExact(1, width), bytesPerPixel)];
 		var row = prevRow.clone();
@@ -116,7 +138,7 @@ public final class ImageDecoder {
 						long val = (row[i + 0] & 0xFFL) << 48
 						         | (row[i + 1] & 0xFFL) << 32
 						         | (row[i + 2] & 0xFFL) << 16;
-						result.setPixel(x, y, val);
+						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, val);
 					}
 				} else {
 					for (int x = 0, i = bytesPerPixel; x < width; x++, i += 4) {
@@ -124,7 +146,7 @@ public final class ImageDecoder {
 						         | (row[i + 1] & 0xFFL) << 32
 						         | (row[i + 2] & 0xFFL) << 16
 						         | (row[i + 3] & 0xFFL) <<  0;
-						result.setPixel(x, y, val);
+						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, val);
 					}
 				}
 			} else if (bitDepth == 16) {
@@ -136,7 +158,7 @@ public final class ImageDecoder {
 						         | (row[i + 3] & 0xFFL) << 32
 						         | (row[i + 4] & 0xFFL) << 24
 						         | (row[i + 5] & 0xFFL) << 16;
-						result.setPixel(x, y, val);
+						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, val);
 					}
 				} else {
 					for (int x = 0, i = bytesPerPixel; x < width; x++, i += 8) {
@@ -148,7 +170,7 @@ public final class ImageDecoder {
 						         | (row[i + 5] & 0xFFL) << 16
 						         | (row[i + 6] & 0xFFL) <<  8
 						         | (row[i + 7] & 0xFFL) <<  0;
-						result.setPixel(x, y, val);
+						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, val);
 					}
 				}
 			} else
