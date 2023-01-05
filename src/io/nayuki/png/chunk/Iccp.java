@@ -39,7 +39,7 @@ public record Iccp(
 		Util.checkKeyword(profileName, false);
 		Objects.requireNonNull(compressionMethod);
 		Objects.requireNonNull(compressedProfile);
-		Util.checkedLengthSum(2, profileName.length(), compressedProfile.length);
+		Util.checkedLengthSum(profileName.length(), compressedProfile.length, 2);
 	}
 	
 	
@@ -62,7 +62,7 @@ public record Iccp(
 	
 	
 	@Override public int getDataLength() {
-		return Util.checkedLengthSum(profileName.length(), 2, compressedProfile.length);
+		return Util.checkedLengthSum(profileName.length(), compressedProfile.length, 2);
 	}
 	
 	

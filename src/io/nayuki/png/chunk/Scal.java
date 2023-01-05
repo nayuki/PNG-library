@@ -51,7 +51,7 @@ public record Scal(
 		if (!m.matches() || m.group(1).equals("-") || !NONZERO.matcher(m.group(2)).find())
 			throw new IllegalArgumentException("Invalid number string");
 		
-		Util.checkedLengthSum(2, pixelWidth.length(), pixelHeight.length());
+		Util.checkedLengthSum(pixelWidth.length(), pixelHeight.length(), 2);
 	}
 	
 	
@@ -73,7 +73,7 @@ public record Scal(
 	
 	
 	@Override public int getDataLength() {
-		return Util.checkedLengthSum(2, pixelWidth.length(), pixelHeight.length());
+		return Util.checkedLengthSum(pixelWidth.length(), pixelHeight.length(), 2);
 	}
 	
 	

@@ -68,8 +68,8 @@ public record Itxt(
 				throw new IllegalArgumentException("NUL character in text");
 		}
 		
-		Util.checkedLengthSum(5, keyword.length(), languageTag.length(), text.length,
-			translatedKeyword.getBytes(StandardCharsets.UTF_8).length);
+		Util.checkedLengthSum(keyword.length(), languageTag.length(), text.length,
+			translatedKeyword.getBytes(StandardCharsets.UTF_8).length, 5);
 	}
 	
 	
@@ -102,8 +102,8 @@ public record Itxt(
 	
 	
 	@Override public int getDataLength() {
-		return Util.checkedLengthSum(5, keyword.length(), languageTag.length(), text.length,
-			translatedKeyword.getBytes(StandardCharsets.UTF_8).length);
+		return Util.checkedLengthSum(keyword.length(), languageTag.length(), text.length,
+			translatedKeyword.getBytes(StandardCharsets.UTF_8).length, 5);
 	}
 	
 	
