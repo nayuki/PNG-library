@@ -71,7 +71,7 @@ public interface Chunk {
 	
 	
 	public enum CompressionMethod {
-		DEFLATE,
+		ZLIB_DEFLATE,
 	}
 	
 }

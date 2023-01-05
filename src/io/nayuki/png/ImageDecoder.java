@@ -30,7 +30,7 @@ public final class ImageDecoder {
 	
 	public static Object toImage(PngImage png) {
 		Ihdr ihdr = png.ihdr.get();
-		if (ihdr.compressionMethod() != Ihdr.CompressionMethod.DEFLATE)
+		if (ihdr.compressionMethod() != Ihdr.CompressionMethod.ZLIB_DEFLATE)
 			throw new IllegalArgumentException();
 		if (ihdr.filterMethod() != Ihdr.FilterMethod.ADAPTIVE)
 			throw new IllegalArgumentException();

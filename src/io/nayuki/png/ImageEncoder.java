@@ -47,7 +47,7 @@ public final class ImageEncoder {
 		result.ihdr = Optional.of(new Ihdr(
 			width, height, bitDepth,
 			hasAlpha ? Ihdr.ColorType.TRUE_COLOR_WITH_ALPHA : Ihdr.ColorType.TRUE_COLOR,
-			Ihdr.CompressionMethod.DEFLATE,
+			Ihdr.CompressionMethod.ZLIB_DEFLATE,
 			Ihdr.FilterMethod.ADAPTIVE,
 			Ihdr.InterlaceMethod.NONE));
 		

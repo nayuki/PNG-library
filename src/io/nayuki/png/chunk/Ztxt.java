@@ -40,7 +40,7 @@ public record Ztxt(
 		
 		Objects.requireNonNull(compressionMethod);
 		byte[] decompText = switch (compressionMethod) {
-			case DEFLATE -> {
+			case ZLIB_DEFLATE -> {
 				try {
 					yield Util.decompressZlibDeflate(compressedText);
 				} catch (IOException e) {
