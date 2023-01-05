@@ -47,14 +47,11 @@ public final class ImageDecoder {
 		if (ihdr.filterMethod() != Ihdr.FilterMethod.ADAPTIVE)
 			throw new IllegalArgumentException("Unsupported filter method");
 		
-		if (ihdr.colorType() == Ihdr.ColorType.TRUE_COLOR ||
-				ihdr.colorType() == Ihdr.ColorType.TRUE_COLOR_WITH_ALPHA)
-			return toRgbaImage(png);
-		else if (ihdr.colorType() == Ihdr.ColorType.GRAYSCALE ||
-				ihdr.colorType() == Ihdr.ColorType.GRAYSCALE_WITH_ALPHA)
-			return toGrayImage(png);
-		else
-			throw new UnsupportedOperationException("Unsupported color type");
+		return switch (ihdr.colorType()) {
+			case TRUE_COLOR, TRUE_COLOR_WITH_ALPHA -> toRgbaImage(png);
+			case GRAYSCALE, GRAYSCALE_WITH_ALPHA -> toGrayImage(png);
+			default -> throw new UnsupportedOperationException("Unsupported color type");
+		};
 	}
 	
 	
