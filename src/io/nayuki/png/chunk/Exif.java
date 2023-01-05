@@ -9,10 +9,8 @@
 package io.nayuki.png.chunk;
 
 import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Objects;
-import io.nayuki.png.Chunk;
 
 
 /**
@@ -21,7 +19,7 @@ import io.nayuki.png.Chunk;
  * be treated as immutable, but arrays are not copied defensively.
  * @see https://ftp-osl.osuosl.org/pub/libpng/documents/pngext-1.5.0.html#C.eXIf
  */
-public record Exif(byte[] data) implements Chunk {
+public record Exif(byte[] data) implements BytesDataChunk {
 	
 	static final String TYPE = "eXIf";
 	
@@ -40,20 +38,10 @@ public record Exif(byte[] data) implements Chunk {
 	}
 	
 	
-	/*---- Methods ----*/
+	/*---- Method ----*/
 	
 	@Override public String getType() {
 		return TYPE;
-	}
-	
-	
-	@Override public byte[] getData() {
-		return data;
-	}
-	
-	
-	@Override public void writeData(DataOutput out) throws IOException {
-		out.write(data);
 	}
 	
 }

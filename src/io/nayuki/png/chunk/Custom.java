@@ -9,7 +9,6 @@
 package io.nayuki.png.chunk;
 
 import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Objects;
 import io.nayuki.png.Chunk;
@@ -21,7 +20,7 @@ import io.nayuki.png.Chunk;
  * type "IHDR") or it can represent an unrecognized chunk type. Instances
  * should be treated as immutable, but arrays are not copied defensively.
  */
-public record Custom(String type, byte[] data) implements Chunk {
+public record Custom(String type, byte[] data) implements BytesDataChunk {
 	
 	/*---- Constructor ----*/
 	
@@ -38,20 +37,10 @@ public record Custom(String type, byte[] data) implements Chunk {
 	}
 	
 	
-	/*---- Methods ----*/
+	/*---- Method ----*/
 	
 	@Override public String getType() {
 		return type;
-	}
-	
-	
-	@Override public byte[] getData() {
-		return data;
-	}
-	
-	
-	@Override public void writeData(DataOutput out) throws IOException {
-		out.write(data);
 	}
 	
 }

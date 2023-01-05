@@ -9,10 +9,8 @@
 package io.nayuki.png.chunk;
 
 import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Objects;
-import io.nayuki.png.Chunk;
 
 
 /**
@@ -21,7 +19,7 @@ import io.nayuki.png.Chunk;
  * should be treated as immutable, but arrays are not copied defensively.
  * @see https://www.w3.org/TR/2003/REC-PNG-20031110/#11PLTE
  */
-public record Plte(byte[] data) implements Chunk {
+public record Plte(byte[] data) implements BytesDataChunk {
 	
 	static final String TYPE = "PLTE";
 	
@@ -69,20 +67,10 @@ public record Plte(byte[] data) implements Chunk {
 	}
 	
 	
-	/*---- Methods ----*/
+	/*---- Method ----*/
 	
 	@Override public String getType() {
 		return TYPE;
-	}
-	
-	
-	@Override public byte[] getData() {
-		return data;
-	}
-	
-	
-	@Override public void writeData(DataOutput out) throws IOException {
-		out.write(data);
 	}
 	
 }
