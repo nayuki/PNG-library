@@ -33,7 +33,9 @@ public record Scal(
 	
 	static final String TYPE = "sCAL";
 	
-	private static final Pattern ASCII_FLOAT = Pattern.compile("([+-]?)(\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][+-]?\\d+)?");
+	private static final Pattern ASCII_FLOAT =
+		Pattern.compile("([+-]?)(\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][+-]?\\d+)?");
+	
 	private static final Pattern NONZERO = Pattern.compile("[1-9]");
 	
 	

@@ -106,8 +106,10 @@ public final class BufferedRgbaImage implements RgbaImage {
 	private int getIndex(int x, int y) {
 		if (0 <= x && x < width && 0 <= y && y < height)
 			return y * width + x;
-		else
-			throw new IndexOutOfBoundsException(String.format("(x,y) = (%d,%d); (width,height) = (%d,%d)", x, y, width, height));
+		else {
+			throw new IndexOutOfBoundsException(String.format(
+				"(x,y) = (%d,%d); (width,height) = (%d,%d)", x, y, width, height));
+		}
 	}
 	
 }

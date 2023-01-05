@@ -46,7 +46,8 @@ public final class ImageDecoder {
 		if (ihdr.filterMethod() != Ihdr.FilterMethod.ADAPTIVE)
 			throw new IllegalArgumentException("Unsupported filter method");
 		
-		if (ihdr.colorType() == Ihdr.ColorType.TRUE_COLOR || ihdr.colorType() == Ihdr.ColorType.TRUE_COLOR_WITH_ALPHA)
+		if (ihdr.colorType() == Ihdr.ColorType.TRUE_COLOR ||
+				ihdr.colorType() == Ihdr.ColorType.TRUE_COLOR_WITH_ALPHA)
 			return toRgbaImage(png);
 		else
 			throw new UnsupportedOperationException("Unsupported color type");
@@ -60,7 +61,8 @@ public final class ImageDecoder {
 		int bitDepth = ihdr.bitDepth();
 		boolean hasAlpha = ihdr.colorType() == Ihdr.ColorType.TRUE_COLOR_WITH_ALPHA;
 		
-		var result = new BufferedRgbaImage(width, height, new int[]{bitDepth, bitDepth, bitDepth, hasAlpha ? bitDepth : 0});
+		var result = new BufferedRgbaImage(width, height,
+			new int[]{bitDepth, bitDepth, bitDepth, hasAlpha ? bitDepth : 0});
 		List<InputStream> ins = png.idats.stream()
 			.map(idat -> new ByteArrayInputStream(idat.data()))
 			.collect(Collectors.toList());

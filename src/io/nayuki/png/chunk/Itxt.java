@@ -80,7 +80,8 @@ public record Itxt(
 		if (parts0[1].length < 2)
 			throw new IllegalArgumentException("Missing compression flag or compression method");
 		byte[] rest = Arrays.copyOfRange(parts0[1], 2, parts0[1].length);
-		byte[][] parts1 = Util.readAndSplitByNull(rest.length, new DataInputStream(new ByteArrayInputStream(rest)), 3);
+		byte[][] parts1 = Util.readAndSplitByNull(rest.length,
+			new DataInputStream(new ByteArrayInputStream(rest)), 3);
 		
 		return new Itxt(
 			new String(parts0[0], StandardCharsets.ISO_8859_1),

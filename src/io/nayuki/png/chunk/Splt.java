@@ -22,7 +22,12 @@ import io.nayuki.png.Chunk;
  * should be treated as immutable, but arrays are not copied defensively.
  * @see https://www.w3.org/TR/2003/REC-PNG-20031110/#11sPLT
  */
-public record Splt(String paletteName, int sampleDepth, byte[] data) implements Chunk {
+public record Splt(
+		String paletteName,
+		int sampleDepth,
+		byte[] data)
+	implements Chunk {
+	
 	
 	static final String TYPE = "sPLT";
 	
