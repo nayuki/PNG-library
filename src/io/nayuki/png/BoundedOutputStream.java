@@ -60,8 +60,10 @@ final class BoundedOutputStream extends FilterOutputStream {
 	
 	
 	public void finish() {
-		if (remain != 0)
+		if (remain > 0)
 			throw new IllegalStateException();
+		else if (remain < 0)
+			throw new AssertionError();
 	}
 	
 }
