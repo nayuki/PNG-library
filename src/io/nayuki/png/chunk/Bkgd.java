@@ -52,9 +52,7 @@ public record Bkgd(byte[] data) implements BytesDataChunk {
 	
 	
 	public static Bkgd read(int dataLen, DataInput in) throws IOException {
-		var data = new byte[dataLen];
-		in.readFully(data);
-		return new Bkgd(data);
+		return new Bkgd(Util.readBytes(in, dataLen));
 	}
 	
 	

@@ -32,9 +32,7 @@ public record Exif(byte[] data) implements BytesDataChunk {
 	
 	
 	public static Exif read(int dataLen, DataInput in) throws IOException {
-		var data = new byte[dataLen];
-		in.readFully(data);
-		return new Exif(data);
+		return new Exif(Util.readBytes(in, dataLen));
 	}
 	
 	

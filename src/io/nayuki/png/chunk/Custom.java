@@ -31,9 +31,7 @@ public record Custom(String type, byte[] data) implements BytesDataChunk {
 	
 	
 	public static Custom read(String type, int dataLen, DataInput in) throws IOException {
-		var data = new byte[dataLen];
-		in.readFully(data);
-		return new Custom(type, data);
+		return new Custom(type, Util.readBytes(in, dataLen));
 	}
 	
 	

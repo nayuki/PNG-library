@@ -53,8 +53,7 @@ public final class Util {
 	
 	
 	static byte[][] readAndSplitByNull(int dataLen, DataInput in, int numParts) throws IOException {
-		var data = new byte[dataLen];
-		in.readFully(data);
+		var data = readBytes(in, dataLen);
 		
 		byte[][] result = new byte[numParts][];
 		int start = 0;
@@ -118,6 +117,13 @@ public final class Util {
 				throw new IllegalArgumentException("Data too long");
 		}
 		return Math.toIntExact(result);
+	}
+	
+	
+	static byte[] readBytes(DataInput in, int len) throws IOException {
+		var result = new byte[len];
+		in.readFully(result);
+		return result;
 	}
 	
 	

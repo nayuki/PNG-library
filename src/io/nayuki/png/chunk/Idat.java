@@ -31,9 +31,7 @@ public record Idat(byte[] data) implements BytesDataChunk {
 	
 	
 	public static Idat read(int dataLen, DataInput in) throws IOException {
-		var data = new byte[dataLen];
-		in.readFully(data);
-		return new Idat(data);
+		return new Idat(Util.readBytes(in, dataLen));
 	}
 	
 	

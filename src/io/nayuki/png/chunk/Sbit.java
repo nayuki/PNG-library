@@ -39,9 +39,7 @@ public record Sbit(byte[] significantBits) implements Chunk {
 	
 	
 	public static Sbit read(int dataLen, DataInput in) throws IOException {
-		var data = new byte[dataLen];
-		in.readFully(data);
-		return new Sbit(data);
+		return new Sbit(Util.readBytes(in, dataLen));
 	}
 	
 	

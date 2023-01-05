@@ -61,9 +61,7 @@ public record Plte(byte[] data) implements BytesDataChunk {
 	
 	
 	public static Plte read(int dataLen, DataInput in) throws IOException {
-		var data = new byte[dataLen];
-		in.readFully(data);
-		return new Plte(data);
+		return new Plte(Util.readBytes(in, dataLen));
 	}
 	
 	

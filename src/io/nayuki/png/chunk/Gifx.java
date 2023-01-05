@@ -43,12 +43,9 @@ public record Gifx(
 	
 	
 	public static Gifx read(int dataLen, DataInput in) throws IOException {
-		var appIdentifier = new byte[8];
-		var authCode = new byte[3];
-		var appData = new byte[dataLen - appIdentifier.length - authCode.length];
-		in.readFully(appIdentifier);
-		in.readFully(authCode);
-		in.readFully(appData);
+		byte[] appIdentifier = Util.readBytes(in, 8);
+		byte[] authCode = Util.readBytes(in, 3);
+		byte[] appData = Util.readBytes(in, dataLen - appIdentifier.length - authCode.length);
 		return new Gifx(appIdentifier, authCode, appData);
 	}
 	

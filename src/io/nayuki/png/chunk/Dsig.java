@@ -32,9 +32,7 @@ public record Dsig(byte[] data) implements BytesDataChunk {
 	
 	
 	public static Dsig read(int dataLen, DataInput in) throws IOException {
-		var data = new byte[dataLen];
-		in.readFully(data);
-		return new Dsig(data);
+		return new Dsig(Util.readBytes(in, dataLen));
 	}
 	
 	

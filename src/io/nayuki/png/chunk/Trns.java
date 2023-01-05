@@ -52,9 +52,7 @@ public record Trns(byte[] data) implements BytesDataChunk {
 	
 	
 	public static Trns read(int dataLen, DataInput in) throws IOException {
-		var data = new byte[dataLen];
-		in.readFully(data);
-		return new Trns(data);
+		return new Trns(Util.readBytes(in, dataLen));
 	}
 	
 	
