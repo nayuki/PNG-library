@@ -48,11 +48,11 @@ public record XngFile(Type type, List<Chunk> chunks) {
 	
 	
 	/**
-	 * Reads the specified input file and returns a new {@code XngFile}
-	 * object representing the type and chunks that were read.
-	 * If {@code parse} is false, then every chunk returned is a {@link Custom};
-	 * otherwise, every chunk that matches a known type (e.g. "IHDR") will be read with that
-	 * type's specific parser and return that an object of that class (e.g. {@link Ihdr}).
+	 * Reads the specified input file and returns a new {@code XngFile} object
+	 * representing the type and chunks that were read. If {@code parse} is false,
+	 * then every chunk returned is a {@link Custom}; otherwise, every chunk that
+	 * matches a known type (e.g. "IHDR") will be read with that type's specific
+	 * parser and return that an object of that class (e.g. {@link Ihdr}).
 	 * @param inFile the input file to read from
 	 * @param parse whether to try to parse each chunk's internal fields
 	 * @return a new {@code XngFile} object representing the type and chunks read
@@ -70,10 +70,10 @@ public record XngFile(Type type, List<Chunk> chunks) {
 	/**
 	 * Reads the specified input stream and returns a new {@code XngFile} object
 	 * representing the type and chunks that were read. This does not close the stream.
-	 * This reads until the end of stream if no exception is thrown.
-	 * If {@code parse} is false, then every chunk returned is a {@link Custom};
-	 * otherwise, every chunk that matches a known type (e.g. "IHDR") will be read with that
-	 * type's specific parser and return that an object of that class (e.g. {@link Ihdr}).
+	 * This reads until the end of stream if no exception is thrown. If {@code parse}
+	 * is false, then every chunk returned is a {@link Custom}; otherwise, every chunk
+	 * that matches a known type (e.g. "IHDR") will be read with that type's
+	 * specific parser and return that an object of that class (e.g. {@link Ihdr}).
 	 * @param in the input stream to read from
 	 * @param parse whether to try to parse each chunk's internal fields
 	 * @return a new {@code XngFile} object representing the type and chunks read

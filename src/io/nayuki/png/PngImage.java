@@ -26,10 +26,10 @@ import io.nayuki.png.chunk.Ihdr;
 
 
 /**
- * A structured representation of chunks that form a PNG file.
- * Instances are mutable. There is some degree of validation and exclusion of invalid data.
- * When serializing an instance, the resulting list of chunks is: field {@code ihdr}
- * (must be present), field {@beforeIdats} (zero or more), field {@code idats} (one or more),
+ * A structured representation of chunks that form a PNG file. Instances are mutable.
+ * There is some degree of validation and exclusion of invalid data. When serializing
+ * an instance, the resulting list of chunks is: field {@code ihdr} (must be
+ * present), field {@beforeIdats} (zero or more), field {@code idats} (one or more),
  * field {@code afterIdats} (zero or more), {@code Iend.SINGLETON} (implicit).
  */
 public final class PngImage {

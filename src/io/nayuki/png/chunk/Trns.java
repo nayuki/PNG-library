@@ -15,10 +15,10 @@ import java.util.Objects;
 
 
 /**
- * A transparency (tRNS) chunk. This specifies a single transparent
- * color or associates alpha values with palette entries. Instances
- * should be treated as immutable, but arrays are not copied defensively.
- * The interpretation of this chunk depends on the color type in the IHDR chunk.
+ * A transparency (tRNS) chunk. This specifies a single transparent color
+ * or associates alpha values with palette entries. Instances should be
+ * treated as immutable, but arrays are not copied defensively. The
+ * interpretation of this chunk depends on the color type in the IHDR chunk.
  * @see https://www.w3.org/TR/2003/REC-PNG-20031110/#11tRNS
  */
 public record Trns(byte[] data) implements BytesDataChunk {

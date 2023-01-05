@@ -126,7 +126,8 @@ public final class ImageEncoder {
 	
 	
 	/**
-	 * Linearly up-scales sample values so that all channels have the same bit depth that is a multiple of 8.
+	 * Linearly up-scales sample values so that all channels
+	 * have the same bit depth that is a multiple of 8.
 	 */
 	private static final class UpBitDepthRgbaImage implements RgbaImage {
 		

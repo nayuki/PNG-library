@@ -18,9 +18,9 @@ import java.util.zip.InflaterOutputStream;
 
 /**
  * A PNG/MNG/JNG chunk. Each chunk has a type (4 ASCII uppercase/lowercase
- * letters) and binary data (0 to 2<sup>31</sup>&minus;1 bytes).
- * The CRC-32 field is excluded and handled automatically when reading/writing files.
- * Classes that implement this interface can choose to have mutable or immutable instances.
+ * letters) and binary data (0 to 2<sup>31</sup>&minus;1 bytes). The CRC-32
+ * field is excluded and handled automatically when reading/writing files. Classes
+ * that implement this interface can choose to have mutable or immutable instances.
  */
 public interface Chunk {
 	
