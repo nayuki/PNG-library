@@ -31,19 +31,7 @@ public record Chrm(
 	static final String TYPE = "cHRM";
 	
 	
-	/*---- Constructors ----*/
-	
-	public Chrm {
-		if (whitePointX <= 0 || whitePointY <= 0)
-			throw new IllegalArgumentException();
-		if (redX <= 0 || redY <= 0)
-			throw new IllegalArgumentException();
-		if (greenX <= 0 || greenY <= 0)
-			throw new IllegalArgumentException();
-		if (blueX <= 0 || blueY <= 0)
-			throw new IllegalArgumentException();
-	}
-	
+	/*---- Constructor ----*/
 	
 	public Chrm(
 			double whitePointX, double whitePointY,
@@ -60,10 +48,10 @@ public record Chrm(
 	
 	private static int convert(double val) {
 		val *= 100_000;
-		if (!(Double.isFinite(val) && 0 <= val && val <= Integer.MAX_VALUE))
+		if (!(Double.isFinite(val) && Integer.MIN_VALUE <= val && val <= Integer.MAX_VALUE))
 			throw new IllegalArgumentException();
 		long result = Math.round(val);
-		if (!(0 <= result && result <= Integer.MAX_VALUE))
+		if (!(Integer.MIN_VALUE <= result && result <= Integer.MAX_VALUE))
 			throw new IllegalArgumentException();
 		return (int)result;
 	}
