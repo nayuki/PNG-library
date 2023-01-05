@@ -40,7 +40,7 @@ public record Iccp(
 		Objects.requireNonNull(compressionMethod);
 		Objects.requireNonNull(compressedProfile);
 		if (2L + profileName.length() + compressedProfile.length > Integer.MAX_VALUE)
-			throw new IllegalArgumentException("Data length out of range");
+			throw new IllegalArgumentException("Data too long");
 	}
 	
 	

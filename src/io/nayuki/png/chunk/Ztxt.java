@@ -39,6 +39,7 @@ public record Ztxt(
 		Util.checkKeyword(keyword, true);
 		
 		Objects.requireNonNull(compressionMethod);
+		Objects.requireNonNull(compressedText);
 		byte[] decompText = compressionMethod.decompress(compressedText);
 		
 		String text = new String(decompText, StandardCharsets.ISO_8859_1);
