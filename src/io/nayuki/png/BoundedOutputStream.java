@@ -27,7 +27,7 @@ import java.io.OutputStream;
  */
 final class BoundedOutputStream extends FilterOutputStream {
 	
-	private int remain;
+	private int remain;  // Never negative
 	
 	
 	public BoundedOutputStream(OutputStream out, int count) {
@@ -59,10 +59,11 @@ final class BoundedOutputStream extends FilterOutputStream {
 	}
 	
 	
+	// Checks that precisely the expected number of bytes were written.
 	public void finish() {
 		if (remain > 0)
 			throw new IllegalStateException("Wrote too few bytes");
-		else if (remain < 0)
+		else if (remain < 0)  // Due to external bad concurrency or internal logic error
 			throw new AssertionError("Wrote too many bytes");
 	}
 	

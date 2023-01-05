@@ -24,10 +24,13 @@ import java.io.InputStream;
  *bin.read(new byte[2]);
  *bin.finish();
  *(... continue using in ...)</pre>
+ * <p>If the underlying stream initially has at least as many bytes as the
+ * byte count passed into the constructor, then this object will never
+ * return an EOF because the bound takes priority over the end of stream.</p>
  */
 final class BoundedInputStream extends FilterInputStream {
 	
-	private int remain;
+	private int remain;  // Never negative
 	
 	
 	public BoundedInputStream(InputStream in, int count) {
@@ -77,10 +80,11 @@ final class BoundedInputStream extends FilterInputStream {
 	}
 	
 	
+	// Checks that precisely the expected number of bytes were read.
 	public void finish() {
 		if (remain > 0)
 			throw new IllegalStateException("Read too few bytes");
-		else if (remain < 0)
+		else if (remain < 0)  // Due to external bad concurrency or internal logic error
 			throw new AssertionError("Read too many bytes");
 	}
 	
