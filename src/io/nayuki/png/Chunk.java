@@ -123,6 +123,10 @@ public interface Chunk {
 			if (!('A' <= c && c <= 'Z' || 'a' <= c && c <= 'z'))
 				throw new IllegalArgumentException();
 		}
+		if (type.charAt(2) >= 'a')
+			throw new IllegalArgumentException();
+		if (type.charAt(0) <= 'Z' && type.charAt(3) >= 'a')
+			throw new IllegalArgumentException();
 	}
 	
 	

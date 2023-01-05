@@ -67,6 +67,7 @@ public final class ImageDecoder {
 					decodeSubimage(din, xStep / 2, 0, xStep, yStep, result);
 					xStep /= 2;
 				} else {
+					assert xStep == yStep / 2;
 					decodeSubimage(din, 0, xStep, xStep, yStep, result);
 					yStep = xStep;
 				}
