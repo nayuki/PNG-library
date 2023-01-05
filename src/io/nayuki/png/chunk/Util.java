@@ -55,7 +55,7 @@ public final class Util {
 	static byte[][] readAndSplitByNull(int dataLen, DataInput in, int numParts) throws IOException {
 		var data = readBytes(in, dataLen);
 		
-		byte[][] result = new byte[numParts][];
+		var result = new byte[numParts][];
 		int start = 0;
 		for (int i = 0; i < result.length - 1; i++) {
 			int end = start;

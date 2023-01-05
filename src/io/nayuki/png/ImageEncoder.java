@@ -59,7 +59,7 @@ public final class ImageEncoder {
 			Ihdr.InterlaceMethod.NONE));
 		
 		int bytesPerRow = Math.addExact(1, Math.multiplyExact(width, bitDepth / 8 * (hasAlpha ? 4 : 3)));
-		byte[] filtersAndSamples = new byte[Math.multiplyExact(bytesPerRow, height)];
+		var filtersAndSamples = new byte[Math.multiplyExact(bytesPerRow, height)];
 		for (int y = 0, i = 0; y < height; y++) {
 			filtersAndSamples[i] = 0;
 			i++;

@@ -42,7 +42,7 @@ public record Ztxt(
 		Objects.requireNonNull(compressedText);
 		byte[] decompText = compressionMethod.decompress(compressedText);
 		
-		String text = new String(decompText, StandardCharsets.ISO_8859_1);
+		var text = new String(decompText, StandardCharsets.ISO_8859_1);
 		Util.checkIso8859_1(text, true);
 		Util.checkedLengthSum(keyword, compressedText, 2);
 	}

@@ -64,7 +64,7 @@ public record Itxt(
 				throw new IllegalArgumentException("Invalid compression method");
 			decompText = text;
 		}
-		String textStr = new String(decompText, StandardCharsets.UTF_8);
+		var textStr = new String(decompText, StandardCharsets.UTF_8);
 		for (int i = 0; i < textStr.length(); i++) {
 			if (textStr.charAt(i) == '\0')
 				throw new IllegalArgumentException("NUL character in text");

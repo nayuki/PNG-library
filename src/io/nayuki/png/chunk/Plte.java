@@ -42,7 +42,7 @@ public record Plte(byte[] data) implements BytesDataChunk {
 	private static byte[] convert(int[] entries) {
 		Objects.requireNonNull(entries);
 		checkNumEntries(entries.length);
-		byte[] result = new byte[Math.multiplyExact(entries.length, 3)];
+		var result = new byte[Math.multiplyExact(entries.length, 3)];
 		int i = 0;
 		for (int entry : entries) {
 			if (entry >>> 24 != 0)
