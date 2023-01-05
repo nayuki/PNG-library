@@ -61,13 +61,13 @@ public final class ImageDecoder {
 				case ADAM7 -> 8;
 			};
 			int yStep = xStep;
-			decodeSubimage(din, 0, 0, xStep, yStep, width, height, bitDepth, hasAlpha, result);
+			decodeSubimage(din, 0, 0, xStep, yStep, result);
 			while (yStep > 1) {
 				if (xStep == yStep) {
-					decodeSubimage(din, xStep / 2, 0, xStep, yStep, width, height, bitDepth, hasAlpha, result);
+					decodeSubimage(din, xStep / 2, 0, xStep, yStep, result);
 					xStep /= 2;
 				} else {
-					decodeSubimage(din, 0, xStep, xStep, yStep, width, height, bitDepth, hasAlpha, result);
+					decodeSubimage(din, 0, xStep, xStep, yStep, result);
 					yStep = xStep;
 				}
 			}
@@ -81,9 +81,11 @@ public final class ImageDecoder {
 	}
 	
 	
-	private static void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep, int width, int height, int bitDepth, boolean hasAlpha, BufferedRgbaImage result) throws IOException {
-		width  = Math.ceilDiv(width  - xOffset, xStep);
-		height = Math.ceilDiv(height - yOffset, yStep);
+	private static void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep, BufferedRgbaImage result) throws IOException {
+		int width  = Math.ceilDiv(result.getWidth()  - xOffset, xStep);
+		int height = Math.ceilDiv(result.getHeight() - yOffset, yStep);
+		int bitDepth = result.getBitDepths()[0];
+		boolean hasAlpha = result.getBitDepths()[3] > 0;
 		int bytesPerPixel = bitDepth / 8 * (hasAlpha ? 4 : 3);
 		var prevRow = new byte[Math.multiplyExact(Math.addExact(1, width), bytesPerPixel)];
 		var row = prevRow.clone();
