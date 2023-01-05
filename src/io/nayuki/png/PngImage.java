@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import io.nayuki.png.chunk.Idat;
 import io.nayuki.png.chunk.Iend;
@@ -31,6 +32,7 @@ import io.nayuki.png.chunk.Ihdr;
 public final class PngImage {
 	
 	public static PngImage read(File inFile) throws IOException {
+		Objects.requireNonNull(inFile);
 		try (var in = new BufferedInputStream(new FileInputStream(inFile))) {
 			return read(in);
 		}
@@ -38,6 +40,7 @@ public final class PngImage {
 	
 	
 	public static PngImage read(InputStream in) throws IOException {
+		Objects.requireNonNull(in);
 		XngFile xng = XngFile.read(in, true);
 		if (xng.type() != XngFile.Type.PNG)
 			throw new IllegalArgumentException();
@@ -87,6 +90,7 @@ public final class PngImage {
 	
 	
 	public void write(File outFile) throws IOException {
+		Objects.requireNonNull(outFile);
 		try (var out = new BufferedOutputStream(new FileOutputStream(outFile))) {
 			write(out);
 		}
@@ -94,6 +98,7 @@ public final class PngImage {
 	
 	
 	public void write(OutputStream out) throws IOException {
+		Objects.requireNonNull(out);
 		List<Chunk> chunks = new ArrayList<>();
 		chunks.add(ihdr.get());
 		chunks.addAll(beforeIdats);

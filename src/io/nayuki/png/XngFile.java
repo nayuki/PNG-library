@@ -42,6 +42,7 @@ public record XngFile(Type type, List<Chunk> chunks) {
 	
 	
 	public static XngFile read(InputStream in, boolean parse) throws IOException {
+		Objects.requireNonNull(in);
 		var din0 = new DataInputStream(in);
 		
 		var sig = new byte[8];
@@ -92,6 +93,7 @@ public record XngFile(Type type, List<Chunk> chunks) {
 	
 	
 	public void write(OutputStream out) throws IOException {
+		Objects.requireNonNull(out);
 		out.write(type.getSignature());
 		DataOutput dout = new DataOutputStream(out);
 		for (Chunk chunk : chunks) {
