@@ -89,8 +89,8 @@ public record Scal(
 	/*---- Enumeration ----*/
 	
 	public enum UnitSpecifier {
-		METRE,
-		RADIAN,
+		METRE,  // Value 1
+		RADIAN,  // Value 2
 	}
 	
 }

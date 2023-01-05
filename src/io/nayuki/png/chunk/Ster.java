@@ -16,7 +16,7 @@ import io.nayuki.png.Chunk;
 
 
 /**
- * An indicator of stereo image (sTER). This indicates the image
+ * An indicator of stereo image (sTER) chunk. This indicates the image
  * contains a stereo pair of subimages. Instances are immutable.
  * @see https://ftp-osl.osuosl.org/pub/libpng/documents/pngext-1.5.0.html#C.sTER
  */

@@ -19,6 +19,7 @@ import io.nayuki.png.Chunk;
  * type that already has a defined class (e.g. {@code class Ihdr} for
  * type "IHDR") or it can represent an unrecognized chunk type. Instances
  * should be treated as immutable, but arrays are not copied defensively.
+ * @see https://www.w3.org/TR/2003/REC-PNG-20031110/#5Chunk-layout
  */
 public record Custom(String type, byte[] data) implements BytesDataChunk {
 	
