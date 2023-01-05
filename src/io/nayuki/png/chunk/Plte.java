@@ -30,9 +30,9 @@ public record Plte(byte[] data) implements Chunk {
 	
 	public Plte {
 		Objects.requireNonNull(data);
-		int numEntries = data.length / 3;
-		if (!(data.length % 3 == 0 && 1 <= numEntries && numEntries <= 256))
+		if (data.length % 3 != 0)
 			throw new IllegalArgumentException();
+		checkNumEntries(data.length / 3);
 	}
 	
 	
