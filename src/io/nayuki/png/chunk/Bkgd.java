@@ -29,7 +29,7 @@ public record Bkgd(byte[] data) implements BytesDataChunk {
 	
 	public Bkgd {
 		Objects.requireNonNull(data);
-		if (!(1 <= data.length && data.length <= 6))
+		if (data.length != 1 && data.length != 2 && data.length != 6)
 			throw new IllegalArgumentException("Invalid data length");
 	}
 	

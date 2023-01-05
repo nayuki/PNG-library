@@ -43,6 +43,7 @@ public record Itxt(
 	
 	public Itxt {
 		Util.checkKeyword(keyword, true);
+		Objects.requireNonNull(compressionMethod);
 		
 		Objects.requireNonNull(languageTag);
 		if (!languageTag.matches("(?:[A-Za-z0-9]{1,8}(?:-[A-Za-z0-9]{1,8})*)?"))
@@ -54,6 +55,7 @@ public record Itxt(
 				throw new IllegalArgumentException("NUL character in translated keyword");
 		}
 		
+		Objects.requireNonNull(text);
 		byte[] decompText;
 		if (compressionFlag)
 			decompText = compressionMethod.decompress(text);

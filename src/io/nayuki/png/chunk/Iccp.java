@@ -39,6 +39,7 @@ public record Iccp(
 		Util.checkKeyword(profileName, false);
 		Objects.requireNonNull(compressionMethod);
 		Objects.requireNonNull(compressedProfile);
+		compressionMethod.decompress(compressedProfile);
 		Util.checkedLengthSum(profileName, compressedProfile, 2);
 	}
 	

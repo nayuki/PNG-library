@@ -53,7 +53,7 @@ public record Chrm(
 		long result = Math.round(val);
 		if (!(Integer.MIN_VALUE <= result && result <= Integer.MAX_VALUE))
 			throw new IllegalArgumentException("Coordinate value out of range");
-		return (int)result;
+		return Math.toIntExact(result);
 	}
 	
 	

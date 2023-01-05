@@ -44,7 +44,7 @@ public record Gama(int gamma) implements Chunk {
 		long result = Math.round(gamma);
 		if (!(0 < result && result <= Integer.MAX_VALUE))
 			throw new IllegalArgumentException("Gamma value out of range");
-		return (int)result;
+		return Math.toIntExact(result);
 	}
 	
 	

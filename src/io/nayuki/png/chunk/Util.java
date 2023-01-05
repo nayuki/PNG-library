@@ -131,7 +131,7 @@ public final class Util {
 		if (0 <= index && index < array.length)
 			return array[index];
 		else
-			return null;
+			throw new IllegalArgumentException("Unrecognized value for enumeration");
 	}
 	
 	
