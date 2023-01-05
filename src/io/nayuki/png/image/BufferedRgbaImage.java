@@ -14,11 +14,11 @@ import java.util.Objects;
 /**
  * A mutable RGBA image where all pixels are stored in memory.
  */
-public final class BufferedRgbaImage implements RgbaImage {
+public final class BufferedRgbaImage implements RgbaImage, Cloneable {
 	
 	private final int width;
 	private final int height;
-	private final int[] bitDepths;
+	private int[] bitDepths;
 	private final long illegalOnes;
 	private long[] pixels;
 	
@@ -109,6 +109,18 @@ public final class BufferedRgbaImage implements RgbaImage {
 		else {
 			throw new IndexOutOfBoundsException(String.format(
 				"(x,y) = (%d,%d); (width,height) = (%d,%d)", x, y, width, height));
+		}
+	}
+	
+	
+	@Override public BufferedRgbaImage clone() {
+		try {
+			BufferedRgbaImage result = (BufferedRgbaImage)super.clone();
+			result.bitDepths = result.bitDepths.clone();
+			result.pixels = result.pixels.clone();
+			return result;
+		} catch (CloneNotSupportedException e) {
+			throw new AssertionError("Caught impossible exception", e);
 		}
 	}
 	
