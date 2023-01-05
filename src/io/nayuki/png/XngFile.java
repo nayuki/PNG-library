@@ -8,10 +8,15 @@
 
 package io.nayuki.png;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.DataOutput;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -38,6 +43,14 @@ public record XngFile(Type type, List<Chunk> chunks) {
 	public XngFile {
 		Objects.requireNonNull(type);
 		Objects.requireNonNull(chunks);
+	}
+	
+	
+	public static XngFile read(File inFile, boolean parse) throws IOException {
+		Objects.requireNonNull(inFile);
+		try (var in = new BufferedInputStream(new FileInputStream(inFile))) {
+			return read(in, parse);
+		}
 	}
 	
 	
@@ -89,6 +102,14 @@ public record XngFile(Type type, List<Chunk> chunks) {
 				throw new IllegalArgumentException();
 		}
 		return new XngFile(fileType, chunks);
+	}
+	
+	
+	public void write(File outFile) throws IOException {
+		Objects.requireNonNull(outFile);
+		try (var out = new BufferedOutputStream(new FileOutputStream(outFile))) {
+			write(out);
+		}
 	}
 	
 	
