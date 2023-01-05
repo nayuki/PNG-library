@@ -38,7 +38,7 @@ public record Gifx(
 		Objects.requireNonNull(applicationData);
 		if (applicationIdentifier.length != 8 || authenticationCode.length != 3)
 			throw new IllegalArgumentException("Data array length out of range");
-		Util.checkedLengthSum(applicationIdentifier.length, authenticationCode.length, applicationData.length);
+		Util.checkedLengthSum(applicationIdentifier, authenticationCode, applicationData);
 	}
 	
 	
@@ -61,7 +61,7 @@ public record Gifx(
 	
 	
 	@Override public int getDataLength() {
-		return Util.checkedLengthSum(applicationIdentifier.length, authenticationCode.length, applicationData.length);
+		return Util.checkedLengthSum(applicationIdentifier, authenticationCode, applicationData);
 	}
 	
 	

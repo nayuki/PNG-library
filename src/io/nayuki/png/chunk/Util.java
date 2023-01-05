@@ -97,10 +97,20 @@ public final class Util {
 	}
 	
 	
-	static int checkedLengthSum(int... componentLengths) {
+	static int checkedLengthSum(Object... componentLengths) {
 		Objects.requireNonNull(componentLengths);
 		long result = 0;
-		for (int n : componentLengths) {
+		for (Object obj : componentLengths) {
+			int n;
+			if (obj instanceof Integer i)
+				n = i.intValue();
+			else if (obj instanceof byte[] b)
+				n = b.length;
+			else if (obj instanceof String s)
+				n = s.length();
+			else
+				throw new IllegalArgumentException("Value has unrecognized type");
+			
 			if (n < 0)
 				throw new AssertionError("Negative length");
 			result += n;

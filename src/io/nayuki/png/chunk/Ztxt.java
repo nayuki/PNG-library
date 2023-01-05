@@ -44,7 +44,7 @@ public record Ztxt(
 		
 		String text = new String(decompText, StandardCharsets.ISO_8859_1);
 		Util.checkIso8859_1(text, true);
-		Util.checkedLengthSum(keyword.length(), compressedText.length, 2);
+		Util.checkedLengthSum(keyword, compressedText, 2);
 	}
 	
 	
@@ -67,7 +67,7 @@ public record Ztxt(
 	
 	
 	@Override public int getDataLength() {
-		return Util.checkedLengthSum(keyword.length(), compressedText.length, 2);
+		return Util.checkedLengthSum(keyword, compressedText, 2);
 	}
 	
 	

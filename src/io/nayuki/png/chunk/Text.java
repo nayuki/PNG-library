@@ -30,7 +30,7 @@ public record Text(String keyword, String text) implements Chunk {
 	public Text {
 		Util.checkKeyword(keyword, true);
 		Util.checkIso8859_1(text, true);
-		Util.checkedLengthSum(keyword.length(), text.length(), 1);
+		Util.checkedLengthSum(keyword, text, 1);
 	}
 	
 	
@@ -50,7 +50,7 @@ public record Text(String keyword, String text) implements Chunk {
 	
 	
 	@Override public int getDataLength() {
-		return Util.checkedLengthSum(keyword.length(), text.length(), 1);
+		return Util.checkedLengthSum(keyword, text, 1);
 	}
 	
 	
