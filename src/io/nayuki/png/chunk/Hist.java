@@ -31,7 +31,7 @@ public record Hist(short[] frequencies) implements Chunk {
 	public Hist {
 		Objects.requireNonNull(frequencies);
 		if (!(1 <= frequencies.length && frequencies.length <= 256))
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Data length out of range");
 	}
 	
 	

@@ -33,7 +33,7 @@ public record Gifg(
 	
 	public Gifg {
 		if (disposalMethod >>> 3 != 0)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Disposal method out of range");
 	}
 	
 	
@@ -42,7 +42,7 @@ public record Gifg(
 		int userInputFlag = in.readUnsignedByte();
 		int delayTime = in.readUnsignedShort();
 		if (userInputFlag >>> 1 != 0)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("User input flag out of range");
 		return new Gifg(disposalMethod, userInputFlag != 0, delayTime);
 	}
 	

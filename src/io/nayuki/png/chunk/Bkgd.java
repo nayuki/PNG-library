@@ -32,7 +32,7 @@ public record Bkgd(byte[] data) implements Chunk {
 	public Bkgd {
 		Objects.requireNonNull(data);
 		if (!(1 <= data.length && data.length <= 6))
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Invalid data length");
 	}
 	
 	
@@ -44,11 +44,11 @@ public record Bkgd(byte[] data) implements Chunk {
 	private static byte[] convert(short[] channelValues) {
 		Objects.requireNonNull(channelValues);
 		if (channelValues.length != 1 && channelValues.length != 3)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Invalid array length");
 		ByteBuffer bb = ByteBuffer.allocate(Math.multiplyExact(channelValues.length, Short.BYTES));
 		bb.asShortBuffer().put(channelValues);
 		if (!bb.hasArray())
-			throw new AssertionError();
+			throw new AssertionError("Non-direct ByteBuffer must have array");
 		return bb.array();
 	}
 	

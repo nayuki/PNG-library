@@ -32,7 +32,7 @@ public record Trns(byte[] data) implements Chunk {
 	public Trns {
 		Objects.requireNonNull(data);
 		if (data.length > 256)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Data length out of range");
 	}
 	
 	
@@ -44,11 +44,11 @@ public record Trns(byte[] data) implements Chunk {
 	private static byte[] convert(short[] channelValues) {
 		Objects.requireNonNull(channelValues);
 		if (channelValues.length != 1 && channelValues.length != 3)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Invalid array length");
 		ByteBuffer bb = ByteBuffer.allocate(Math.multiplyExact(channelValues.length, Short.BYTES));
 		bb.asShortBuffer().put(channelValues);
 		if (!bb.hasArray())
-			throw new AssertionError();
+			throw new AssertionError("Non-direct ByteBuffer must have array");
 		return bb.array();
 	}
 	

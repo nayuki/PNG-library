@@ -31,7 +31,7 @@ public record Text(String keyword, String text) implements Chunk {
 		Util.checkKeyword(keyword, true);
 		Util.checkIso8859_1(text, true);
 		if (1L + keyword.length() + text.length() > Integer.MAX_VALUE)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Data too long");
 	}
 	
 	

@@ -38,12 +38,12 @@ public record Ihdr(
 	
 	public Ihdr {
 		if (width <= 0)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Non-positive width");
 		if (height <= 0)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Non-positive height");
 		Objects.requireNonNull(colorType);
 		if (!(colorType.minimumBitDepth <= bitDepth && bitDepth <= colorType.maximumBitDepth && Integer.bitCount(bitDepth) == 1))
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Invalid bit depth");
 		Objects.requireNonNull(compressionMethod);
 		Objects.requireNonNull(filterMethod);
 		Objects.requireNonNull(interlaceMethod);

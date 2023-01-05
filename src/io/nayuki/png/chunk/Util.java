@@ -62,7 +62,7 @@ public final class Util {
 			int end = start;
 			while (true) {
 				if (end >= data.length)
-					throw new IllegalArgumentException();
+					throw new IllegalArgumentException("Missing expected NUL byte");
 				else if (data[end] == 0)
 					break;
 				else
@@ -79,9 +79,9 @@ public final class Util {
 	static void checkKeyword(String s, boolean checkSpaces) {
 		Objects.requireNonNull(s);
 		if (!(1 <= s.length() && s.length() <= 79))
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Invalid string length");
 		if (checkSpaces && (s.startsWith(" ") || s.endsWith(" ") || s.contains("  ")))
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("String contains invalid spaces");
 		checkIso8859_1(s, false);
 	}
 	
@@ -92,7 +92,7 @@ public final class Util {
 			char c = s.charAt(i);
 			if (32 <= c && c <= 126 || 161 <= c && c <= 255);
 			else if (allowNewline && c == '\n');
-			else throw new IllegalArgumentException();
+			else throw new IllegalArgumentException("Invalid byte in ISO 8859-1 text");
 		}
 	}
 	

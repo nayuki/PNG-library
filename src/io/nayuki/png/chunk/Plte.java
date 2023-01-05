@@ -31,7 +31,7 @@ public record Plte(byte[] data) implements Chunk {
 	public Plte {
 		Objects.requireNonNull(data);
 		if (data.length % 3 != 0)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Invalid data length");
 		checkNumEntries(data.length / 3);
 	}
 	
@@ -48,7 +48,7 @@ public record Plte(byte[] data) implements Chunk {
 		int i = 0;
 		for (int entry : entries) {
 			if (entry >>> 24 != 0)
-				throw new IllegalArgumentException();
+				throw new IllegalArgumentException("Uint24 value out of range");
 			for (int j = 16; j >= 0; j -= 8, i++)
 				result[i] = (byte)(entry >>> j);
 		}
@@ -58,7 +58,7 @@ public record Plte(byte[] data) implements Chunk {
 	
 	private static void checkNumEntries(int numEntries) {
 		if (!(1 <= numEntries && numEntries <= 256))
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Number of entries out of range");
 	}
 	
 	

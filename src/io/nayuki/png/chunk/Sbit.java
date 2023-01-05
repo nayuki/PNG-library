@@ -30,10 +30,10 @@ public record Sbit(byte[] significantBits) implements Chunk {
 	public Sbit {
 		Objects.requireNonNull(significantBits);
 		if (!(1 <= significantBits.length && significantBits.length <= 4))
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Array length out of range");
 		for (int bits : significantBits) {
 			if (!(1 <= bits && bits <= 16))
-				throw new IllegalArgumentException();
+				throw new IllegalArgumentException("Number of significant bits out of range");
 		}
 	}
 	

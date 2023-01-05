@@ -35,20 +35,20 @@ public record Splt(String paletteName, int sampleDepth, byte[] data) implements 
 		int bytesPerEntry = switch (sampleDepth) {
 			case 8 -> 6;
 			case 16 -> 10;
-			default -> throw new IllegalArgumentException();
+			default -> throw new IllegalArgumentException("Invalid sample depth");
 		};
 		if (data.length % bytesPerEntry != 0)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Invalid data length");
 		
 		if (2L + paletteName.length() + data.length > Integer.MAX_VALUE)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Data too long");
 	}
 	
 	
 	public static Splt read(int dataLen, DataInput in) throws IOException {
 		byte[][] parts = Util.readAndSplitByNull(dataLen, in, 2);
 		if (parts[1].length < 1)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Missing sample depth");
 		return new Splt(
 			new String(parts[0], StandardCharsets.ISO_8859_1),
 			parts[1][0],

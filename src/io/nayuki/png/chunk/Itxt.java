@@ -46,12 +46,12 @@ public record Itxt(
 		
 		Objects.requireNonNull(languageTag);
 		if (!languageTag.matches("(?:[A-Za-z0-9]{1,8}(?:-[A-Za-z0-9]{1,8})*)?"))
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Invalid language tag syntax");
 		
 		Objects.requireNonNull(translatedKeyword);
 		for (int i = 0; i < translatedKeyword.length(); i++) {
 			if (translatedKeyword.charAt(i) == '\0')
-				throw new IllegalArgumentException();
+				throw new IllegalArgumentException("NUL character in translated keyword");
 		}
 		
 		byte[] decompText;
@@ -63,25 +63,25 @@ public record Itxt(
 			}
 		} else {
 			if (compressionMethod != CompressionMethod.ZLIB_DEFLATE)
-				throw new IllegalArgumentException();
+				throw new IllegalArgumentException("Invalid compression method");
 			decompText = text;
 		}
 		String textStr = new String(decompText, StandardCharsets.UTF_8);
 		for (int i = 0; i < textStr.length(); i++) {
 			if (textStr.charAt(i) == '\0')
-				throw new IllegalArgumentException();
+				throw new IllegalArgumentException("NUL character in text");
 		}
 		
 		if (5L + keyword.length() + languageTag.length() + text.length +
 				translatedKeyword.getBytes(StandardCharsets.UTF_8).length > Integer.MAX_VALUE)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Data too long");
 	}
 	
 	
 	public static Itxt read(int dataLen, DataInput in) throws IOException {
 		byte[][] parts0 = Util.readAndSplitByNull(dataLen, in, 2);
 		if (parts0[1].length < 2)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Missing compression flag or compression method");
 		byte[] rest = Arrays.copyOfRange(parts0[1], 2, parts0[1].length);
 		byte[][] parts1 = Util.readAndSplitByNull(rest.length, new DataInputStream(new ByteArrayInputStream(rest)), 3);
 		
@@ -90,7 +90,7 @@ public record Itxt(
 			switch (parts0[1][0]) {
 				case 0 -> false;
 				case 1 -> true;
-				default -> throw new IllegalArgumentException();
+				default -> throw new IllegalArgumentException("Compression flag out of range");
 			},
 			Util.indexInto(CompressionMethod.values(), parts0[1][1]),
 			new String(parts1[0], StandardCharsets.ISO_8859_1),

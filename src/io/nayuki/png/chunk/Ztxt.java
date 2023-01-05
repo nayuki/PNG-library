@@ -49,14 +49,14 @@ public record Ztxt(
 		String text = new String(decompText, StandardCharsets.ISO_8859_1);
 		Util.checkIso8859_1(text, true);
 		if (2L + keyword.length() + compressedText.length > Integer.MAX_VALUE)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Data too long");
 	}
 	
 	
 	public static Ztxt read(int dataLen, DataInput in) throws IOException {
 		byte[][] parts = Util.readAndSplitByNull(dataLen, in, 2);
 		if (parts[1].length < 1)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Missing compression method");
 		return new Ztxt(
 			new String(parts[0], StandardCharsets.ISO_8859_1),
 			Util.indexInto(CompressionMethod.values(), parts[1][0]),

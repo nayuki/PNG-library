@@ -46,13 +46,13 @@ public record Scal(
 		
 		Matcher m = ASCII_FLOAT.matcher(pixelWidth);
 		if (!m.matches() || m.group(1).equals("-") || !NONZERO.matcher(m.group(2)).find())
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Invalid number string");
 		m = ASCII_FLOAT.matcher(pixelHeight);
 		if (!m.matches() || m.group(1).equals("-") || !NONZERO.matcher(m.group(2)).find())
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Invalid number string");
 		
 		if (2L + pixelWidth.length() + pixelHeight.length() > Integer.MAX_VALUE)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Data too long");
 	}
 	
 	

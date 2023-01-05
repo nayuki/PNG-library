@@ -28,7 +28,7 @@ public record Gama(int gamma) implements Chunk {
 	
 	public Gama {
 		if (gamma <= 0)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Gamma value out of range");
 	}
 	
 	
@@ -40,10 +40,10 @@ public record Gama(int gamma) implements Chunk {
 	private static int convert(double gamma) {
 		gamma *= 100_000;
 		if (!(Double.isFinite(gamma) && 0 < gamma && gamma <= Integer.MAX_VALUE))
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Gamma value out of range");
 		long result = Math.round(gamma);
 		if (!(0 < result && result <= Integer.MAX_VALUE))
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Gamma value out of range");
 		return (int)result;
 	}
 	

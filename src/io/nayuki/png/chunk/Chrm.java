@@ -49,10 +49,10 @@ public record Chrm(
 	private static int convert(double val) {
 		val *= 100_000;
 		if (!(Double.isFinite(val) && Integer.MIN_VALUE <= val && val <= Integer.MAX_VALUE))
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Coordinate value out of range");
 		long result = Math.round(val);
 		if (!(Integer.MIN_VALUE <= result && result <= Integer.MAX_VALUE))
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Coordinate value out of range");
 		return (int)result;
 	}
 	
