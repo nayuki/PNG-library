@@ -180,6 +180,8 @@ public record XngFile(Type type, List<Chunk> chunks) {
 	
 	
 	
+	/*---- Enumeration ----*/
+	
 	/**
 	 * Distinguishes between PNG/MNG/JNG files.
 	 */

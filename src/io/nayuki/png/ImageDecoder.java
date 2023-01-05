@@ -171,6 +171,7 @@ public final class ImageDecoder {
 			} else
 				throw new AssertionError();
 			
+			// Swap row buffers
 			byte[] temp = row;
 			row = prevRow;
 			prevRow = temp;

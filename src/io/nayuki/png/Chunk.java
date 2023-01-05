@@ -127,6 +127,8 @@ public interface Chunk {
 	
 	
 	
+	/*---- Enumeration ----*/
+	
 	/**
 	 * The list of defined compression methods. This is used in several chunk types.
 	 */
