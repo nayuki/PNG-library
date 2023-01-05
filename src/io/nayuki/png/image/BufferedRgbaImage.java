@@ -52,7 +52,7 @@ public final class BufferedRgbaImage implements RgbaImage, Cloneable {
 		if (bitDepths.length != 4)
 			throw new IllegalArgumentException("Invalid bit depth array length");
 		for (int i = 0; i < bitDepths.length; i++) {
-			if (!((i == 3 ? 0 : 1) <= bitDepths[i] && bitDepths[i] <= 16))
+			if (!((i == bitDepths.length - 1 ? 0 : 1) <= bitDepths[i] && bitDepths[i] <= 16))
 				throw new IllegalArgumentException("Invalid bit depths");
 		}
 		this.bitDepths = bitDepths;
@@ -60,7 +60,7 @@ public final class BufferedRgbaImage implements RgbaImage, Cloneable {
 		long temp = 0;
 		for (int numBits : bitDepths) {
 			temp <<= 16;
-			temp |= ((1 << numBits) - 1) ^ 0xFFFF;
+			temp |= 0x10000 - (1 << numBits);
 		}
 		illegalOnes = temp;
 		
