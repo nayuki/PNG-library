@@ -63,7 +63,7 @@ public record Iccp(
 	
 	
 	@Override public int getDataLength() {
-		return profileName.length() + 1 + 1 + compressedProfile.length;
+		return profileName.length() + 2 + compressedProfile.length;
 	}
 	
 	

@@ -42,6 +42,7 @@ public interface Chunk {
 		return (getType().charAt(0) & 0x20) == 0;
 	}
 	
+	
 	/**
 	 * Tests whether this chunk is public. Each public chunk type must be defined
 	 * in the PNG standard or in a list maintained by the registration authority.
@@ -50,6 +51,7 @@ public interface Chunk {
 	public default boolean isPublic() {
 		return (getType().charAt(1) & 0x20) == 0;
 	}
+	
 	
 	/**
 	 * Tests whether this chunk is safe to copy. Generally speaking, an
