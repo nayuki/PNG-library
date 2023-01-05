@@ -55,9 +55,9 @@ public record XngFile(Type type, List<Chunk> chunks) {
 	 * type's specific parser and return that an object of that class (e.g. {@link Ihdr}).
 	 * @param inFile the input file to read from
 	 * @param parse whether to try to parse each chunk's internal fields
+	 * @return a new {@code XngFile} object representing the type and chunks read
 	 * @throws NullPointerException if {@code inFile} is {@code null}
 	 * @throws IOException if an I/O exception occurs
-	 * @return a new {@code XngFile} object representing the type and chunks read
 	 */
 	public static XngFile read(File inFile, boolean parse) throws IOException {
 		Objects.requireNonNull(inFile);
@@ -76,9 +76,9 @@ public record XngFile(Type type, List<Chunk> chunks) {
 	 * type's specific parser and return that an object of that class (e.g. {@link Ihdr}).
 	 * @param in the input stream to read from
 	 * @param parse whether to try to parse each chunk's internal fields
+	 * @return a new {@code XngFile} object representing the type and chunks read
 	 * @throws NullPointerException if {@code in} is {@code null}
 	 * @throws IOException if an I/O exception occurs
-	 * @return a new {@code XngFile} object representing the type and chunks read
 	 */
 	@SuppressWarnings("resource")  // This function needs to use many intermediate filters and discard them without closing the top-level stream
 	public static XngFile read(InputStream in, boolean parse) throws IOException {

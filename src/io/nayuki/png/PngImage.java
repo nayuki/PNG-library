@@ -38,9 +38,9 @@ public final class PngImage {
 	 * Reads the specified input file and returns a new
 	 * {@code PngImage} object representing chunks read.
 	 * @param inFile the input file to read from
+	 * @return a new {@code XngFile} object representing chunks read
 	 * @throws NullPointerException if {@code inFile} is {@code null}
 	 * @throws IOException if an I/O exception occurs
-	 * @return a new {@code XngFile} object representing chunks read
 	 */
 	public static PngImage read(File inFile) throws IOException {
 		Objects.requireNonNull(inFile);
@@ -55,9 +55,9 @@ public final class PngImage {
 	 * object representing chunks read. This does not close the stream.
 	 * This reads until the end of stream if no exception is thrown.
 	 * @param in the input stream to read from
+	 * @return a new {@code XngFile} object representing chunks read
 	 * @throws NullPointerException if {@code inFile} is {@code null}
 	 * @throws IOException if an I/O exception occurs
-	 * @return a new {@code XngFile} object representing chunks read
 	 */
 	public static PngImage read(InputStream in) throws IOException {
 		Objects.requireNonNull(in);
