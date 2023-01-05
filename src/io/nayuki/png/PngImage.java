@@ -99,6 +99,9 @@ public final class PngImage {
 	
 	public void write(OutputStream out) throws IOException {
 		Objects.requireNonNull(out);
+		if (ihdr.isEmpty() || idats.isEmpty())
+			throw new IllegalStateException();
+		
 		List<Chunk> chunks = new ArrayList<>();
 		chunks.add(ihdr.get());
 		chunks.addAll(beforeIdats);
