@@ -55,15 +55,11 @@ public record Itxt(
 		
 		byte[] decompText;
 		if (compressionFlag) {
-			decompText = switch (compressionMethod) {
-				case ZLIB_DEFLATE -> {
-					try {
-						yield Util.decompressZlibDeflate(text);
-					} catch (IOException e) {
-						throw new IllegalArgumentException(e);
-					}
-				}
-			};
+			try {
+				decompText = compressionMethod.decompress(text);
+			} catch (IOException e) {
+				throw new IllegalArgumentException(e);
+			}
 		} else {
 			if (compressionMethod != CompressionMethod.ZLIB_DEFLATE)
 				throw new IllegalArgumentException();

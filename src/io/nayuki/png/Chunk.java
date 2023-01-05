@@ -13,6 +13,7 @@ import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.zip.InflaterOutputStream;
 
 
 /**
@@ -71,7 +72,28 @@ public interface Chunk {
 	
 	
 	public enum CompressionMethod {
-		ZLIB_DEFLATE,
+		ZLIB_DEFLATE(data -> {
+			var bout = new ByteArrayOutputStream();
+			try (var iout = new InflaterOutputStream(bout)) {
+				iout.write(data);
+			}
+			return bout.toByteArray();
+		});
+		
+		private Function decompressor;
+		
+		private CompressionMethod(Function decomp) {
+			decompressor = decomp;
+		}
+		
+		public byte[] decompress(byte[] data) throws IOException {
+			return decompressor.apply(data);
+		}
+		
+		
+		private interface Function {
+			public byte[] apply(byte[] data) throws IOException;
+		}
 	}
 	
 }

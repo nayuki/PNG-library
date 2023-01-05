@@ -8,12 +8,10 @@
 
 package io.nayuki.png.chunk;
 
-import java.io.ByteArrayOutputStream;
 import java.io.DataInput;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.zip.InflaterOutputStream;
 import io.nayuki.png.Chunk;
 
 
@@ -51,15 +49,6 @@ public final class Util {
 			case Ztxt.TYPE -> Ztxt.read(dataLen, in);
 			default -> Custom.read(type, dataLen, in);
 		};
-	}
-	
-	
-	public static byte[] decompressZlibDeflate(byte[] data) throws IOException {
-		var bout = new ByteArrayOutputStream();
-		try (var iout = new InflaterOutputStream(bout)) {
-			iout.write(data);
-		}
-		return bout.toByteArray();
 	}
 	
 	

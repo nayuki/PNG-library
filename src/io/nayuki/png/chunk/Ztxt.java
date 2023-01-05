@@ -39,15 +39,12 @@ public record Ztxt(
 		Util.checkKeyword(keyword, true);
 		
 		Objects.requireNonNull(compressionMethod);
-		byte[] decompText = switch (compressionMethod) {
-			case ZLIB_DEFLATE -> {
-				try {
-					yield Util.decompressZlibDeflate(compressedText);
-				} catch (IOException e) {
-					throw new IllegalArgumentException(e);
-				}
-			}
-		};
+		byte[] decompText;
+		try {
+			decompText = compressionMethod.decompress(compressedText);
+		} catch (IOException e) {
+			throw new IllegalArgumentException(e);
+		}
 		
 		String text = new String(decompText, StandardCharsets.ISO_8859_1);
 		Util.checkIso8859_1(text, true);
