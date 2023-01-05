@@ -16,9 +16,9 @@ import io.nayuki.png.Chunk;
 
 
 /**
- * An exchangeable image file profile (eXIf) chunk. This typically
- * conveys metadata for images produced by digital cameras.
- * Instances should be treated as immutable, but arrays are not copied defensively.
+ * An exchangeable image file profile (eXIf) chunk. This typically conveys
+ * metadata for images produced by digital cameras. Instances should
+ * be treated as immutable, but arrays are not copied defensively.
  * @see https://ftp-osl.osuosl.org/pub/libpng/documents/pngext-1.5.0.html#C.eXIf
  */
 public record Exif(byte[] data) implements Chunk {

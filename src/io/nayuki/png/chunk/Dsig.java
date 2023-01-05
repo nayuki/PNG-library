@@ -16,9 +16,9 @@ import io.nayuki.png.Chunk;
 
 
 /**
- * A digital signature (dSIG) chunk. This allows detecting unauthorized
- * changes to the chunks enclosed in a pair of digital signature chunks.
- * Instances should be treated as immutable, but arrays are not copied defensively.
+ * A digital signature (dSIG) chunk. This allows detecting unauthorized changes
+ * to the chunks enclosed in a pair of digital signature chunks. Instances
+ * should be treated as immutable, but arrays are not copied defensively.
  * @see https://ftp-osl.osuosl.org/pub/libpng/documents/pngext-1.5.0.html#RC.dSIG
  */
 public record Dsig(byte[] data) implements Chunk {

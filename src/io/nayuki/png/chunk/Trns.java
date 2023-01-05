@@ -17,8 +17,9 @@ import io.nayuki.png.Chunk;
 
 
 /**
- * A transparency (tRNS) chunk. This specifies a single transparent color or associates alpha values with palette entries.
- * Instances should be treated as immutable, but arrays are not copied defensively.
+ * A transparency (tRNS) chunk. This specifies a single transparent
+ * color or associates alpha values with palette entries. Instances
+ * should be treated as immutable, but arrays are not copied defensively.
  * @see https://www.w3.org/TR/2003/REC-PNG-20031110/#11tRNS
  */
 public record Trns(byte[] data) implements Chunk {

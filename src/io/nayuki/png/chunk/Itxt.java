@@ -20,9 +20,10 @@ import io.nayuki.png.Chunk;
 
 
 /**
- * A international textual data (iTXt) chunk. This contains a keyword (ISO 8859-1), compression parameters,
- * language tag (ISO 8859-1), translated keyword (UTF-8), and text (UTF-8 with optional compression).
- * Instances should be treated as immutable, but arrays are not copied defensively.
+ * A international textual data (iTXt) chunk. This contains a keyword (ISO
+ * 8859-1), compression parameters, language tag (ISO 8859-1), translated
+ * keyword (UTF-8), and text (UTF-8 with optional compression). Instances
+ * should be treated as immutable, but arrays are not copied defensively.
  * @see https://www.w3.org/TR/2003/REC-PNG-20031110/#11iTXt
  */
 public record Itxt(

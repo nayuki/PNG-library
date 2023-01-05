@@ -16,8 +16,8 @@ import io.nayuki.png.Chunk;
 
 
 /**
- * A textual data (tEXt) chunk. This contains a keyword and text string in the ISO 8859-1 character set.
- * Instances are immutable.
+ * A textual data (tEXt) chunk. This contains a keyword and text
+ * string in the ISO 8859-1 character set. Instances are immutable.
  * @see https://www.w3.org/TR/2003/REC-PNG-20031110/#11tEXt
  */
 public record Text(String keyword, String text) implements Chunk {

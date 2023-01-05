@@ -15,10 +15,9 @@ import io.nayuki.png.Chunk;
 
 
 /**
- * A primary chromaticities and white point (cHRM) chunk. This specifies
- * the 1931 CIE <var>x</var> and <var>y</var> coordinates of the
- * RGB primaries used in the image and the reference white point.
- * Instances are immutable.
+ * A primary chromaticities and white point (cHRM) chunk. This specifies the
+ * 1931 CIE <var>x</var> and <var>y</var> coordinates of the RGB primaries
+ * used in the image and the reference white point. Instances are immutable.
  * @see https://www.w3.org/TR/2003/REC-PNG-20031110/#11cHRM
  */
 public record Chrm(

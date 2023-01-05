@@ -16,8 +16,8 @@ import io.nayuki.png.Chunk;
 
 
 /**
- * A significant bits (sBIT) chunk. This defines the original number of significant bits per channel.
- * Instances should be treated as immutable, but arrays are not copied defensively.
+ * A significant bits (sBIT) chunk. This defines the original number of significant bits per
+ * channel. Instances should be treated as immutable, but arrays are not copied defensively.
  * @see https://www.w3.org/TR/2003/REC-PNG-20031110/#11sBIT
  */
 public record Sbit(byte[] significantBits) implements Chunk {

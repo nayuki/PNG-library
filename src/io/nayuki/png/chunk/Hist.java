@@ -16,9 +16,9 @@ import io.nayuki.png.Chunk;
 
 
 /**
- * An image histogram (hIST) chunk. This gives the
- * approximate usage frequency of each color in the palette.
- * Instances should be treated as immutable, but arrays are not copied defensively.
+ * An image histogram (hIST) chunk. This gives the approximate
+ * usage frequency of each color in the palette. Instances should
+ * be treated as immutable, but arrays are not copied defensively.
  * @see https://www.w3.org/TR/2003/REC-PNG-20031110/#11hIST
  */
 public record Hist(short[] frequencies) implements Chunk {

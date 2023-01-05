@@ -18,8 +18,8 @@ import io.nayuki.png.Chunk;
 
 /**
  * A suggested palette (sPLT) chunk. This contains a palette name,
- * sample depth, and color samples with alpha and frequency.
- * Instances should be treated as immutable, but arrays are not copied defensively.
+ * sample depth, and color samples with alpha and frequency. Instances
+ * should be treated as immutable, but arrays are not copied defensively.
  * @see https://www.w3.org/TR/2003/REC-PNG-20031110/#11sPLT
  */
 public record Splt(String paletteName, int sampleDepth, byte[] data) implements Chunk {
