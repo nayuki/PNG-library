@@ -41,8 +41,8 @@ final class BoundedOutputStream extends FilterOutputStream {
 	@Override public void write(int b) throws IOException {
 		if (remain < 1)
 			throw new IllegalStateException();
-		remain--;
 		out.write(b);
+		remain--;
 	}
 	
 	
