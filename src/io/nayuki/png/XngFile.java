@@ -80,6 +80,7 @@ public record XngFile(Type type, List<Chunk> chunks) {
 	 * @throws IOException if an I/O exception occurs
 	 * @return a new {@code XngFile} object representing the type and chunks read
 	 */
+	@SuppressWarnings("resource")  // This function needs to use many intermediate filters and discard them without closing the top-level stream
 	public static XngFile read(InputStream in, boolean parse) throws IOException {
 		Objects.requireNonNull(in);
 		var din0 = new DataInputStream(in);
