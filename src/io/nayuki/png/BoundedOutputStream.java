@@ -33,14 +33,14 @@ final class BoundedOutputStream extends FilterOutputStream {
 	public BoundedOutputStream(OutputStream out, int count) {
 		super(out);
 		if (count < 0)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Negative byte count");
 		remain = count;
 	}
 	
 	
 	@Override public void write(int b) throws IOException {
 		if (remain < 1)
-			throw new IllegalStateException();
+			throw new IllegalStateException("Insufficient remaining bytes");
 		out.write(b);
 		remain--;
 	}
@@ -53,7 +53,7 @@ final class BoundedOutputStream extends FilterOutputStream {
 	
 	@Override public void write(byte[] b, int off, int len) throws IOException {
 		if (len > remain)
-			throw new IllegalStateException();
+			throw new IllegalStateException("Insufficient remaining bytes");
 		out.write(b, off, len);
 		remain -= len;
 	}
@@ -61,9 +61,9 @@ final class BoundedOutputStream extends FilterOutputStream {
 	
 	public void finish() {
 		if (remain > 0)
-			throw new IllegalStateException();
+			throw new IllegalStateException("Wrote too few bytes");
 		else if (remain < 0)
-			throw new AssertionError();
+			throw new AssertionError("Wrote too many bytes");
 	}
 	
 }

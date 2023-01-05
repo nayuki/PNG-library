@@ -33,14 +33,14 @@ final class BoundedInputStream extends FilterInputStream {
 	public BoundedInputStream(InputStream in, int count) {
 		super(in);
 		if (count < 0)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Negative byte count");
 		remain = count;
 	}
 	
 	
 	@Override public int read() throws IOException {
 		if (remain < 1)
-			throw new IllegalStateException();
+			throw new IllegalStateException("Insufficient remaining bytes");
 		int result = in.read();
 		if (result != -1)
 			remain--;
@@ -55,7 +55,7 @@ final class BoundedInputStream extends FilterInputStream {
 	
 	@Override public int read(byte[] b, int off, int len) throws IOException {
 		if (len > remain)
-			throw new IllegalStateException();
+			throw new IllegalStateException("Insufficient remaining bytes");
 		int result = in.read(b, off, len);
 		if (result != -1)
 			remain -= result;
@@ -65,7 +65,7 @@ final class BoundedInputStream extends FilterInputStream {
 	
 	@Override public long skip(long n) throws IOException {
 		if (!(0 <= n && n <= remain))
-			throw new IllegalStateException();
+			throw new IllegalStateException("Insufficient remaining bytes");
 		long result = in.skip(Math.min(n, remain));
 		remain -= result;
 		return result;
@@ -79,9 +79,9 @@ final class BoundedInputStream extends FilterInputStream {
 	
 	public void finish() {
 		if (remain > 0)
-			throw new IllegalStateException();
+			throw new IllegalStateException("Read too few bytes");
 		else if (remain < 0)
-			throw new AssertionError();
+			throw new AssertionError("Read too many bytes");
 	}
 	
 }
