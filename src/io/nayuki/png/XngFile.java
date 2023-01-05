@@ -187,8 +187,11 @@ public record XngFile(Type type, List<Chunk> chunks) {
 	 * Distinguishes between PNG/MNG/JNG files.
 	 */
 	public enum Type {
+		/** The Portable Network Graphics (PNG) file format. */
 		PNG(0x89, 'P', 'N', 'G', '\r', '\n', 0x1A, '\n'),
+		/** The Multiple-image Network Graphics (MNG) file format. */
 		MNG(0x8A, 'M', 'N', 'G', '\r', '\n', 0x1A, '\n'),
+		/** The JPEG Network Graphics (JNG) file format. */
 		JNG(0x8B, 'J', 'N', 'G', '\r', '\n', 0x1A, '\n');
 		
 		private final byte[] signature;
@@ -201,6 +204,7 @@ public record XngFile(Type type, List<Chunk> chunks) {
 		
 		/**
 		 * Returns a new length-8 array representing file header signature for this type.
+		 * @return this file type's signature (not {@code null})
 		 */
 		public byte[] getSignature() {
 			return signature.clone();

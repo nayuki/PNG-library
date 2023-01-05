@@ -29,6 +29,15 @@ import io.nayuki.png.image.BufferedRgbaImage;
  */
 public final class ImageDecoder {
 	
+	/**
+	 * Decodes the specified PNG image to a new mutable buffered image.
+	 * If the PNG's color type is true color, then a {@link BufferedRgbaImage} is returned.
+	 * @param png the PNG image to decode (not {@code null})
+	 * @return a new buffered image (not {@code null})
+	 * @throws NullPointerException if {@code png} is {@code null}
+	 * @throws IllegalArgumentException if the PNG image is malformed
+	 * @throws UnsupportedOperationException if the PNG image's color type is not supported
+	 */
 	public static Object toImage(PngImage png) {
 		Objects.requireNonNull(png);
 		Ihdr ihdr = png.ihdr.orElseThrow(() -> new IllegalArgumentException("Missing IHDR chunk"));

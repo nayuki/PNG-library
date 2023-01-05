@@ -23,6 +23,24 @@ public final class BufferedRgbaImage implements RgbaImage {
 	private long[] pixels;
 	
 	
+	/**
+	 * Constructs an all-zero image with the specified dimensions and
+	 * channel bit depths. {@code bitDepths} is a length-4 array:
+	 * <ul>
+	 *   <li>Index 0: Red channel bit depth, in the range [1, 16]</li>
+	 *   <li>Index 1: Green channel bit depth, in the range [1, 16]</li>
+	 *   <li>Index 2: Blue channel bit depth, in the range [1, 16]</li>
+	 *   <li>Index 3: Alpha channel bit depth, in the range [0, 16], where 0 means all pixels are opaque</li>
+	 * </ul>
+	 * <p>The dimensions and bit depths are immutable after
+	 * construction; only the pixel values can be modified.</p>
+	 * @param width the width of the image, a positive number
+	 * @param height the height of the image, a positive number
+	 * @param bitDepths the bit depths of the channels of the image (not {@code null})
+	 * @throws NullPointerException if {@code bitDepths} is {@code null}
+	 * @throws IllegalArgumentException if the width, height, or bit depths are out of range
+	 * @throws ArithmeticException if {@code width * height > Integer.MAX_VALUE}
+	 */
 	public BufferedRgbaImage(int width, int height, int[] bitDepths) {
 		if (width <= 0 || height <= 0)
 			throw new IllegalArgumentException("Non-positive dimensions");
@@ -70,6 +88,14 @@ public final class BufferedRgbaImage implements RgbaImage {
 	}
 	
 	
+	/**
+	 * Sets the pixel at the specified coordinates to the specified value.
+	 * @param x x the <var>x</var> coordinate of the pixel to set, in the range [0, {@code getWidth()})
+	 * @param y y the <var>y</var> coordinate of the pixel to set, in the range [0, {@code getHeight()})
+	 * @param val the new channel sample values of the pixel
+	 * @throws IndexOutOfBoundsException if the (<var>x</var>, <var>y</var>) coordinates are out of bounds
+	 * @throws IllegalArgumentException if any of the channel sample values are outside of their bit depth
+	 */
 	public void setPixel(int x, int y, long val) {
 		if ((val & illegalOnes) != 0)
 			throw new IllegalArgumentException("Invalid sample value");

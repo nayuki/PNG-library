@@ -25,6 +25,13 @@ import io.nayuki.png.image.RgbaImage;
  */
 public final class ImageEncoder {
 	
+	/**
+	 * Encodes the specified image to a new PNG image. The input image
+	 * can have any bit depth allowed by the {@code RgbaImage} contract.
+	 * @param img the image to encode (not {@code null})
+	 * @return a new PNG image (not {@code null})
+	 * @throws NullPointerException if {@code img} is {@code null}
+	 */
 	public static PngImage toPng(RgbaImage img) {
 		Objects.requireNonNull(img);
 		int[] bitDepths = img.getBitDepths();
@@ -118,6 +125,9 @@ public final class ImageEncoder {
 	
 	
 	
+	/**
+	 * Linearly up-scales sample values so that all channels have the same bit depth that is a multiple of 8.
+	 */
 	private static final class UpBitDepthRgbaImage implements RgbaImage {
 		
 		private RgbaImage image;
