@@ -30,8 +30,7 @@ public record Text(String keyword, String text) implements Chunk {
 	public Text {
 		Util.checkKeyword(keyword, true);
 		Util.checkIso8859_1(text, true);
-		if (1L + keyword.length() + text.length() > Integer.MAX_VALUE)
-			throw new IllegalArgumentException("Data too long");
+		Util.checkedLengthSum(1, keyword.length(), text.length());
 	}
 	
 	
@@ -51,7 +50,7 @@ public record Text(String keyword, String text) implements Chunk {
 	
 	
 	@Override public int getDataLength() {
-		return keyword.length() + 1 + text.length();
+		return Util.checkedLengthSum(keyword.length(), 1, text.length());
 	}
 	
 	

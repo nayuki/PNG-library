@@ -68,9 +68,8 @@ public record Itxt(
 				throw new IllegalArgumentException("NUL character in text");
 		}
 		
-		if (5L + keyword.length() + languageTag.length() + text.length +
-				translatedKeyword.getBytes(StandardCharsets.UTF_8).length > Integer.MAX_VALUE)
-			throw new IllegalArgumentException("Data too long");
+		Util.checkedLengthSum(5, keyword.length(), languageTag.length(), text.length,
+			translatedKeyword.getBytes(StandardCharsets.UTF_8).length);
 	}
 	
 	
@@ -103,8 +102,8 @@ public record Itxt(
 	
 	
 	@Override public int getDataLength() {
-		return 5 + keyword.length() + languageTag.length() + text.length
-			+ translatedKeyword.getBytes(StandardCharsets.UTF_8).length;
+		return Util.checkedLengthSum(5, keyword.length(), languageTag.length(), text.length,
+			translatedKeyword.getBytes(StandardCharsets.UTF_8).length);
 	}
 	
 	

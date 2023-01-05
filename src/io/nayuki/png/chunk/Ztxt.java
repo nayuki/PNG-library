@@ -44,8 +44,7 @@ public record Ztxt(
 		
 		String text = new String(decompText, StandardCharsets.ISO_8859_1);
 		Util.checkIso8859_1(text, true);
-		if (2L + keyword.length() + compressedText.length > Integer.MAX_VALUE)
-			throw new IllegalArgumentException("Data too long");
+		Util.checkedLengthSum(2, keyword.length(), compressedText.length);
 	}
 	
 	
@@ -68,7 +67,7 @@ public record Ztxt(
 	
 	
 	@Override public int getDataLength() {
-		return keyword.length() + 2 + compressedText.length;
+		return Util.checkedLengthSum(keyword.length(), 2, compressedText.length);
 	}
 	
 	

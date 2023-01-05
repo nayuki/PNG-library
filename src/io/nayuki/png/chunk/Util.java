@@ -97,6 +97,20 @@ public final class Util {
 	}
 	
 	
+	static int checkedLengthSum(int... componentLengths) {
+		Objects.requireNonNull(componentLengths);
+		long result = 0;
+		for (int n : componentLengths) {
+			if (n < 0)
+				throw new AssertionError("Negative length");
+			result += n;
+			if (result > Integer.MAX_VALUE)
+				throw new IllegalArgumentException("Data too long");
+		}
+		return Math.toIntExact(result);
+	}
+	
+	
 	static <E> E indexInto(E[] array, int index) {
 		if (0 <= index && index < array.length)
 			return array[index];

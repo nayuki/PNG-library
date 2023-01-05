@@ -39,8 +39,7 @@ public record Iccp(
 		Util.checkKeyword(profileName, false);
 		Objects.requireNonNull(compressionMethod);
 		Objects.requireNonNull(compressedProfile);
-		if (2L + profileName.length() + compressedProfile.length > Integer.MAX_VALUE)
-			throw new IllegalArgumentException("Data too long");
+		Util.checkedLengthSum(2, profileName.length(), compressedProfile.length);
 	}
 	
 	
@@ -63,7 +62,7 @@ public record Iccp(
 	
 	
 	@Override public int getDataLength() {
-		return profileName.length() + 2 + compressedProfile.length;
+		return Util.checkedLengthSum(profileName.length(), 2, compressedProfile.length);
 	}
 	
 	

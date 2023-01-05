@@ -51,8 +51,7 @@ public record Scal(
 		if (!m.matches() || m.group(1).equals("-") || !NONZERO.matcher(m.group(2)).find())
 			throw new IllegalArgumentException("Invalid number string");
 		
-		if (2L + pixelWidth.length() + pixelHeight.length() > Integer.MAX_VALUE)
-			throw new IllegalArgumentException("Data too long");
+		Util.checkedLengthSum(2, pixelWidth.length(), pixelHeight.length());
 	}
 	
 	
@@ -74,7 +73,7 @@ public record Scal(
 	
 	
 	@Override public int getDataLength() {
-		return 2 + pixelWidth.length() + pixelHeight.length();
+		return Util.checkedLengthSum(2, pixelWidth.length(), pixelHeight.length());
 	}
 	
 	
