@@ -8,6 +8,8 @@
 
 package io.nayuki.png.image;
 
+import java.util.Objects;
+
 
 /**
  * A mutable RGBA image where all pixels are stored in memory.
@@ -23,10 +25,11 @@ public final class BufferedRgbaImage implements RgbaImage {
 	
 	public BufferedRgbaImage(int width, int height, int[] bitDepths) {
 		if (width <= 0 || height <= 0)
-			throw new IllegalArgumentException("Negative dimensions");
+			throw new IllegalArgumentException("Non-positive dimensions");
 		this.width = width;
 		this.height = height;
 		
+		Objects.requireNonNull(bitDepths);
 		bitDepths = bitDepths.clone();
 		if (bitDepths.length != 4)
 			throw new IllegalArgumentException("Invalid bit depth array length");

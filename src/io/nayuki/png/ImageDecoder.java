@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.zip.InflaterInputStream;
 import io.nayuki.png.chunk.Ihdr;
@@ -29,7 +30,8 @@ import io.nayuki.png.image.BufferedRgbaImage;
 public final class ImageDecoder {
 	
 	public static Object toImage(PngImage png) {
-		Ihdr ihdr = png.ihdr.get();
+		Objects.requireNonNull(png);
+		Ihdr ihdr = png.ihdr.orElseThrow(() -> new IllegalArgumentException("Missing IHDR chunk"));
 		if (ihdr.compressionMethod() != Ihdr.CompressionMethod.ZLIB_DEFLATE)
 			throw new IllegalArgumentException("Unsupported compression method");
 		if (ihdr.filterMethod() != Ihdr.FilterMethod.ADAPTIVE)
