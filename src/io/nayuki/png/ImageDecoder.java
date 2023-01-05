@@ -56,30 +56,21 @@ public final class ImageDecoder {
 		try (var din = new DataInputStream(new InflaterInputStream(
 				new SequenceInputStream(Collections.enumeration(ins))))) {
 			
-			int xOffset = 0, yOffset = 0;
 			int xStep = switch (ihdr.interlaceMethod()) {
 				case NONE  -> 1;
 				case ADAM7 -> 8;
 			};
 			int yStep = xStep;
-			do {
-				decodeSubimage(din, xOffset, yOffset, xStep, yStep,
-					Math.ceilDiv(width - xOffset, xStep), Math.ceilDiv(height - yOffset, yStep),
-					bitDepth, hasAlpha, result);
+			decodeSubimage(din, 0, 0, xStep, yStep, width, height, bitDepth, hasAlpha, result);
+			while (yStep > 1) {
 				if (xStep == yStep) {
-					if (xOffset == 0)  // True only in the foremost iteration
-						xOffset = xStep / 2;
-					else {
-						yOffset = xOffset;
-						xOffset = 0;
-						xStep /= 2;
-					}
+					decodeSubimage(din, xStep / 2, 0, xStep, yStep, width, height, bitDepth, hasAlpha, result);
+					xStep /= 2;
 				} else {
-					xOffset = yOffset / 2;
-					yOffset = 0;
-					yStep /= 2;
+					decodeSubimage(din, 0, xStep, xStep, yStep, width, height, bitDepth, hasAlpha, result);
+					yStep = xStep;
 				}
-			} while (yStep > 1);
+			}
 			
 			if (din.read() != -1)
 				throw new IllegalArgumentException();
@@ -91,6 +82,8 @@ public final class ImageDecoder {
 	
 	
 	private static void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep, int width, int height, int bitDepth, boolean hasAlpha, BufferedRgbaImage result) throws IOException {
+		width  = Math.ceilDiv(width  - xOffset, xStep);
+		height = Math.ceilDiv(height - yOffset, yStep);
 		int bytesPerPixel = bitDepth / 8 * (hasAlpha ? 4 : 3);
 		var prevRow = new byte[Math.multiplyExact(Math.addExact(1, width), bytesPerPixel)];
 		var row = prevRow.clone();
