@@ -55,7 +55,7 @@ public record Gifg(
 	
 	
 	@Override public int getDataLength() {
-		return 9;
+		return 4;
 	}
 	
 	

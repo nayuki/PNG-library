@@ -62,7 +62,7 @@ public record Gifx(
 	
 	
 	@Override public int getDataLength() {
-		return 9;
+		return applicationIdentifier.length + authenticationCode.length + applicationData.length;
 	}
 	
 	
