@@ -40,7 +40,7 @@ public final class PngImage {
 	 * @param inFile the input file to read from
 	 * @throws NullPointerException if {@code inFile} is {@code null}
 	 * @throws IOException if an I/O exception occurs
-	 * @returns a new {@code XngFile} object representing chunks read
+	 * @return a new {@code XngFile} object representing chunks read
 	 */
 	public static PngImage read(File inFile) throws IOException {
 		Objects.requireNonNull(inFile);
@@ -57,7 +57,7 @@ public final class PngImage {
 	 * @param in the input stream to read from
 	 * @throws NullPointerException if {@code inFile} is {@code null}
 	 * @throws IOException if an I/O exception occurs
-	 * @returns a new {@code XngFile} object representing chunks read
+	 * @return a new {@code XngFile} object representing chunks read
 	 */
 	public static PngImage read(InputStream in) throws IOException {
 		Objects.requireNonNull(in);
