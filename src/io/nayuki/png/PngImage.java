@@ -28,9 +28,20 @@ import io.nayuki.png.chunk.Ihdr;
 /**
  * A structured representation of chunks that form a PNG file.
  * Instances are mutable. There is some degree of validation and exclusion of invalid data.
+ * When serializing an instance, the resulting list of chunks is: field {@code ihdr}
+ * (must be present), field {@beforeIdats} (zero or more), field {@code idats} (one or more),
+ * field {@code afterIdats} (zero or more), {@code Iend.SINGLETON} (implicit).
  */
 public final class PngImage {
 	
+	/**
+	 * Reads the specified input file and returns a new
+	 * {@code PngImage} object representing chunks read.
+	 * @param inFile the input file to read from
+	 * @throws NullPointerException if {@code inFile} is {@code null}
+	 * @throws IOException if an I/O exception occurs
+	 * @returns a new {@code XngFile} object representing chunks read
+	 */
 	public static PngImage read(File inFile) throws IOException {
 		Objects.requireNonNull(inFile);
 		try (var in = new BufferedInputStream(new FileInputStream(inFile))) {
@@ -39,6 +50,15 @@ public final class PngImage {
 	}
 	
 	
+	/**
+	 * Reads the specified input stream and returns a new {@code PngImage}
+	 * object representing chunks read. This does not close the stream.
+	 * This reads until the end of stream if no exception is thrown.
+	 * @param in the input stream to read from
+	 * @throws NullPointerException if {@code inFile} is {@code null}
+	 * @throws IOException if an I/O exception occurs
+	 * @returns a new {@code XngFile} object representing chunks read
+	 */
 	public static PngImage read(InputStream in) throws IOException {
 		Objects.requireNonNull(in);
 		XngFile xng = XngFile.read(in, true);
@@ -48,15 +68,22 @@ public final class PngImage {
 	}
 	
 	
+	/** The single IHDR chunk, if present. */
 	public Optional<Ihdr> ihdr = Optional.empty();
 	
+	/** The chunks positioned before the IDAT chunks. */
 	public List<Chunk> beforeIdats = new ArrayList<>();
 	
+	/** The consecutive IDAT chunks. */
 	public List<Idat> idats = new ArrayList<>();
 	
+	/** The chunks positioned after the IDAT chunks. */
 	public List<Chunk> afterIdats = new ArrayList<>();
 	
 	
+	/**
+	 * Constructs a blank PNG image where all fields are initially empty (not {@code null}).
+	 */
 	public PngImage() {}
 	
 	
@@ -89,6 +116,14 @@ public final class PngImage {
 	}
 	
 	
+	/**
+	 * Writes the signature and chunks of this PNG file to the specified output file.
+	 * @throws NullPointerException if {@code outFile}
+	 * or any of this object's fields is {@code null}
+	 * @throws IllegalStateException if the current
+	 * lists of chunks do not form a valid PNG file
+	 * @throws IOException if an I/O exception occurs
+	 */
 	public void write(File outFile) throws IOException {
 		Objects.requireNonNull(outFile);
 		try (var out = new BufferedOutputStream(new FileOutputStream(outFile))) {
@@ -97,6 +132,15 @@ public final class PngImage {
 	}
 	
 	
+	/**
+	 * Writes the signature and chunks of this PNG file to the
+	 * specified output stream. This does not close the stream.
+	 * @throws NullPointerException if {@code out}
+	 * or any of this object's fields is {@code null}
+	 * @throws IllegalStateException if the current
+	 * lists of chunks do not form a valid PNG file
+	 * @throws IOException if an I/O exception occurs
+	 */
 	public void write(OutputStream out) throws IOException {
 		Objects.requireNonNull(out);
 		if (ihdr.isEmpty() || idats.isEmpty())

@@ -29,6 +29,7 @@ import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 import java.util.zip.CheckedOutputStream;
 import io.nayuki.png.chunk.Custom;
+import io.nayuki.png.chunk.Ihdr;
 import io.nayuki.png.chunk.Util;
 
 
@@ -46,6 +47,18 @@ public record XngFile(Type type, List<Chunk> chunks) {
 	}
 	
 	
+	/**
+	 * Reads the specified input file and returns a new {@code XngFile}
+	 * object representing the type and chunks that were read.
+	 * If {@code parse} is false, then every chunk returned is a {@link Custom};
+	 * otherwise, every chunk that matches a known type (e.g. "IHDR") will be read with that
+	 * type's specific parser and return that an object of that class (e.g. {@link Ihdr}).
+	 * @param inFile the input file to read from
+	 * @param parse whether to try to parse each chunk's internal fields
+	 * @throws NullPointerException if {@code inFile} is {@code null}
+	 * @throws IOException if an I/O exception occurs
+	 * @returns a new {@code XngFile} object representing the type and chunks read
+	 */
 	public static XngFile read(File inFile, boolean parse) throws IOException {
 		Objects.requireNonNull(inFile);
 		try (var in = new BufferedInputStream(new FileInputStream(inFile))) {
@@ -54,6 +67,19 @@ public record XngFile(Type type, List<Chunk> chunks) {
 	}
 	
 	
+	/**
+	 * Reads the specified input stream and returns a new {@code XngFile} object
+	 * representing the type and chunks that were read. This does not close the stream.
+	 * This reads until the end of stream if no exception is thrown.
+	 * If {@code parse} is false, then every chunk returned is a {@link Custom};
+	 * otherwise, every chunk that matches a known type (e.g. "IHDR") will be read with that
+	 * type's specific parser and return that an object of that class (e.g. {@link Ihdr}).
+	 * @param in the input stream to read from
+	 * @param parse whether to try to parse each chunk's internal fields
+	 * @throws NullPointerException if {@code in} is {@code null}
+	 * @throws IOException if an I/O exception occurs
+	 * @returns a new {@code XngFile} object representing the type and chunks read
+	 */
 	public static XngFile read(InputStream in, boolean parse) throws IOException {
 		Objects.requireNonNull(in);
 		var din0 = new DataInputStream(in);
@@ -105,6 +131,12 @@ public record XngFile(Type type, List<Chunk> chunks) {
 	}
 	
 	
+	/**
+	 * Writes the type and chunks of this XNG file to the specified output file.
+	 * @param outFile the output file to write to
+	 * @throws NullPointerException if {@code outFile} is {@code null}
+	 * @throws IOException if an I/O exception occurs
+	 */
 	public void write(File outFile) throws IOException {
 		Objects.requireNonNull(outFile);
 		try (var out = new BufferedOutputStream(new FileOutputStream(outFile))) {
@@ -113,6 +145,13 @@ public record XngFile(Type type, List<Chunk> chunks) {
 	}
 	
 	
+	/**
+	 * Writes the type and chunks of this XNG file to the
+	 * specified output stream. This does not close the stream.
+	 * @param out the output stream to write to
+	 * @throws NullPointerException if {@code out} is {@code null}
+	 * @throws IOException if an I/O exception occurs
+	 */
 	public void write(OutputStream out) throws IOException {
 		Objects.requireNonNull(out);
 		out.write(type.getSignature());
@@ -141,6 +180,9 @@ public record XngFile(Type type, List<Chunk> chunks) {
 	
 	
 	
+	/**
+	 * Distinguishes between PNG/MNG/JNG files.
+	 */
 	public enum Type {
 		PNG(0x89, 'P', 'N', 'G', '\r', '\n', 0x1A, '\n'),
 		MNG(0x8A, 'M', 'N', 'G', '\r', '\n', 0x1A, '\n'),
@@ -154,6 +196,9 @@ public record XngFile(Type type, List<Chunk> chunks) {
 				signature[i] = (byte)sig[i];
 		}
 		
+		/**
+		 * Returns a new length-8 array representing file header signature for this type.
+		 */
 		public byte[] getSignature() {
 			return signature.clone();
 		}
