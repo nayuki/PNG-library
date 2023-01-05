@@ -23,16 +23,16 @@ public final class BufferedRgbaImage implements RgbaImage {
 	
 	public BufferedRgbaImage(int width, int height, int[] bitDepths) {
 		if (width <= 0 || height <= 0)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Negative dimensions");
 		this.width = width;
 		this.height = height;
 		
 		bitDepths = bitDepths.clone();
 		if (bitDepths.length != 4)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Invalid bit depth array length");
 		for (int i = 0; i < bitDepths.length; i++) {
 			if (!((i == 3 ? 0 : 1) <= bitDepths[i] && bitDepths[i] <= 16))
-				throw new IllegalArgumentException();
+				throw new IllegalArgumentException("Invalid bit depths");
 		}
 		this.bitDepths = bitDepths;
 		
@@ -69,7 +69,7 @@ public final class BufferedRgbaImage implements RgbaImage {
 	
 	public void setPixel(int x, int y, long val) {
 		if ((val & illegalOnes) != 0)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Invalid sample value");
 		pixels[getIndex(x, y)] = val;
 	}
 	
@@ -78,7 +78,7 @@ public final class BufferedRgbaImage implements RgbaImage {
 		if (0 <= x && x < width && 0 <= y && y < height)
 			return y * width + x;
 		else
-			throw new IndexOutOfBoundsException();
+			throw new IndexOutOfBoundsException(String.format("(x,y) = (%d,%d); (width,height) = (%d,%d)", x, y, width, height));
 	}
 	
 }

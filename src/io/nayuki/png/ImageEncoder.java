@@ -99,14 +99,14 @@ public final class ImageEncoder {
 					}
 				}
 			} else
-				throw new AssertionError();
+				throw new AssertionError("Unsupported bit depth");
 		}
 		
 		var bout = new ByteArrayOutputStream();
 		try (var dout = new DeflaterOutputStream(bout)) {
 			dout.write(filtersAndSamples);
 		} catch (IOException e) {
-			throw new AssertionError(e);
+			throw new AssertionError("Caught impossible exception", e);
 		}
 		result.idats.add(new Idat(bout.toByteArray()));
 		
@@ -130,15 +130,15 @@ public final class ImageEncoder {
 			
 			bitDepths = img.getBitDepths().clone();
 			if (bitDepths.length != 4)
-				throw new IllegalArgumentException();
+				throw new IllegalArgumentException("Invalid bit depths array");
 			for (int i = 0; i < bitDepths.length; i++) {
 				int bitDepth = bitDepths[i];
 				if (!((i == 3 ? 0 : 1) <= bitDepth && bitDepth <= 16))
-					throw new IllegalArgumentException();
+					throw new IllegalArgumentException("Invalid bit depths");
 			}
 			int chosenBitDepth = Math.ceilDiv(IntStream.of(bitDepths).max().getAsInt(), 8) * 8;
 			if (chosenBitDepth != 8 && chosenBitDepth != 16)
-				throw new AssertionError();
+				throw new AssertionError("Unsupported bit depth");
 			
 			mul = (2 << chosenBitDepth) - 2;
 			rDiv = (1 << bitDepths[0]) - 1;

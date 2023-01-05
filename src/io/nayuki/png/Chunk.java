@@ -86,7 +86,7 @@ public interface Chunk {
 			writeData(new DataOutputStream(out));
 			return out.toByteArray();
 		} catch (IOException e) {
-			throw new AssertionError(e);
+			throw new AssertionError("Caught impossible exception", e);
 		}
 	}
 	
@@ -117,16 +117,16 @@ public interface Chunk {
 	public static void checkType(String type) {
 		Objects.requireNonNull(type);
 		if (type.length() != 4)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Invalid type string length");
 		for (int i = 0; i < type.length(); i++) {
 			char c = type.charAt(i);
 			if (!('A' <= c && c <= 'Z' || 'a' <= c && c <= 'z'))
-				throw new IllegalArgumentException();
+				throw new IllegalArgumentException("Invalid type string characters");
 		}
 		if (type.charAt(2) >= 'a')
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Reserved chunk type");
 		if (type.charAt(0) <= 'Z' && type.charAt(3) >= 'a')
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Chunk type that is critical must be unsafe to copy");
 	}
 	
 	

@@ -31,14 +31,14 @@ public final class ImageDecoder {
 	public static Object toImage(PngImage png) {
 		Ihdr ihdr = png.ihdr.get();
 		if (ihdr.compressionMethod() != Ihdr.CompressionMethod.ZLIB_DEFLATE)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Unsupported compression method");
 		if (ihdr.filterMethod() != Ihdr.FilterMethod.ADAPTIVE)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Unsupported filter method");
 		
 		if (ihdr.colorType() == Ihdr.ColorType.TRUE_COLOR || ihdr.colorType() == Ihdr.ColorType.TRUE_COLOR_WITH_ALPHA)
 			return toRgbaImage(png);
 		else
-			throw new UnsupportedOperationException();
+			throw new UnsupportedOperationException("Unsupported color type");
 	}
 	
 	
@@ -74,7 +74,7 @@ public final class ImageDecoder {
 			}
 			
 			if (din.read() != -1)
-				throw new IllegalArgumentException();
+				throw new IllegalArgumentException("Extra decompressed data after all pixels");
 		} catch (IOException e) {
 			throw new IllegalArgumentException(e);
 		}
@@ -125,7 +125,7 @@ public final class ImageDecoder {
 					}
 					break;
 				default:
-					throw new IllegalArgumentException();
+					throw new IllegalArgumentException("Unsupported filter type: " + filter);
 			}
 			
 			if (bitDepth == 8) {
@@ -170,7 +170,7 @@ public final class ImageDecoder {
 					}
 				}
 			} else
-				throw new AssertionError();
+				throw new AssertionError("Unsupported bit depth");
 			
 			// Swap row buffers
 			byte[] temp = row;

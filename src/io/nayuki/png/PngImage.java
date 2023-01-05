@@ -63,7 +63,7 @@ public final class PngImage {
 		Objects.requireNonNull(in);
 		XngFile xng = XngFile.read(in, true);
 		if (xng.type() != XngFile.Type.PNG)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("File signature is not PNG");
 		return new PngImage(xng.chunks());
 	}
 	
@@ -91,28 +91,28 @@ public final class PngImage {
 		boolean hasIend = false;
 		for (Chunk chunk : chunks) {
 			if (hasIend)
-				throw new IllegalArgumentException();
+				throw new IllegalArgumentException("Duplicate IEND chunk");
 			else if (chunk instanceof Iend)
 				hasIend = true;
 			else if (ihdr.isEmpty()) {
 				if (chunk instanceof Ihdr chk)
 					ihdr = Optional.of(chk);
 				else
-					throw new IllegalArgumentException();
+					throw new IllegalArgumentException("Expected IHDR chunk");
 			} else if (chunk instanceof Ihdr)
-				throw new IllegalArgumentException();
+				throw new IllegalArgumentException("Duplicate IHDR chunk");
 			else if (chunk instanceof Idat chk) {
 				if (afterIdats.isEmpty())
 					idats.add(chk);
 				else
-					throw new IllegalArgumentException();
+					throw new IllegalArgumentException("Non-consecutive IDAT chunks");
 			} else if (idats.isEmpty())
 				beforeIdats.add(chunk);
 			else
 				afterIdats.add(chunk);
 		}
 		if (ihdr.isEmpty() || idats.isEmpty() || !hasIend)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Missing some mandatory chunks");
 	}
 	
 	
@@ -144,7 +144,7 @@ public final class PngImage {
 	public void write(OutputStream out) throws IOException {
 		Objects.requireNonNull(out);
 		if (ihdr.isEmpty() || idats.isEmpty())
-			throw new IllegalStateException();
+			throw new IllegalStateException("Missing some mandatory chunks");
 		
 		List<Chunk> chunks = new ArrayList<>();
 		chunks.add(ihdr.get());

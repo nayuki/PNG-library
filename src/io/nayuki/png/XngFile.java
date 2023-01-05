@@ -92,7 +92,7 @@ public record XngFile(Type type, List<Chunk> chunks) {
 				fileType = t;
 		}
 		if (fileType == null)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Unrecognized file signature");
 		
 		List<Chunk> chunks = new ArrayList<>();
 		while (true) {
@@ -102,7 +102,7 @@ public record XngFile(Type type, List<Chunk> chunks) {
 			for (int i = 0; i < 3; i++)
 				dataLen = (dataLen << 8) | din0.readUnsignedByte();
 			if (dataLen < 0)
-				throw new IllegalArgumentException();
+				throw new IllegalArgumentException("Chunk data length out of range");
 			
 			var cin = new CheckedInputStream(in, new CRC32());
 			DataInput din1 = new DataInputStream(cin);
@@ -112,7 +112,7 @@ public record XngFile(Type type, List<Chunk> chunks) {
 			String type = sb.toString();
 			Chunk.checkType(type);
 			if ((type.charAt(2) & 0x20) != 0)
-				throw new IllegalArgumentException();
+				throw new IllegalArgumentException("Reserved chunk type");
 			
 			var bin = new BoundedInputStream(cin, dataLen);
 			if (parse)
@@ -123,9 +123,9 @@ public record XngFile(Type type, List<Chunk> chunks) {
 			
 			long crc = cin.getChecksum().getValue();
 			if (crc >>> 32 != 0)
-				throw new AssertionError();
+				throw new AssertionError("CRC-32 must be uint32");
 			if (din0.readInt() != (int)crc)
-				throw new IllegalArgumentException();
+				throw new IllegalArgumentException("Chunk CRC-32 mismatch");
 		}
 		return new XngFile(fileType, chunks);
 	}
@@ -159,7 +159,7 @@ public record XngFile(Type type, List<Chunk> chunks) {
 		for (Chunk chunk : chunks) {
 			int dataLen = chunk.getDataLength();
 			if (dataLen < 0)
-				throw new IllegalArgumentException();
+				throw new IllegalArgumentException("Chunk data length out of range");
 			dout.writeInt(dataLen);
 			
 			String type = chunk.getType();
@@ -173,7 +173,7 @@ public record XngFile(Type type, List<Chunk> chunks) {
 			
 			long crc = cout.getChecksum().getValue();
 			if (crc >>> 32 != 0)
-				throw new AssertionError();
+				throw new AssertionError("CRC-32 must be uint32");
 			dout.writeInt((int)crc);
 		}
 	}
