@@ -56,11 +56,7 @@ public record Itxt(
 		
 		byte[] decompText;
 		if (compressionFlag) {
-			try {
-				decompText = compressionMethod.decompress(text);
-			} catch (IOException e) {
-				throw new IllegalArgumentException(e);
-			}
+			decompText = compressionMethod.decompress(text);
 		} else {
 			if (compressionMethod != CompressionMethod.ZLIB_DEFLATE)
 				throw new IllegalArgumentException("Invalid compression method");

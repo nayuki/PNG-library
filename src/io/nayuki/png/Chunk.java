@@ -142,6 +142,8 @@ public interface Chunk {
 			var bout = new ByteArrayOutputStream();
 			try (var iout = new InflaterOutputStream(bout)) {
 				iout.write(data);
+			} catch (IOException e) {
+				throw new IllegalArgumentException("Invalid compressed data", e);
 			}
 			return bout.toByteArray();
 		});
@@ -152,13 +154,14 @@ public interface Chunk {
 			decompressor = decomp;
 		}
 		
-		public byte[] decompress(byte[] data) throws IOException {
+		public byte[] decompress(byte[] data) {
+			Objects.requireNonNull(data);
 			return decompressor.apply(data);
 		}
 		
 		
 		private interface Function {
-			public byte[] apply(byte[] data) throws IOException;
+			public byte[] apply(byte[] data);
 		}
 	}
 	
