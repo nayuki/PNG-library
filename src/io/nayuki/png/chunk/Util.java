@@ -37,6 +37,11 @@ public final class Util {
 	 * @throws IOException if an I/O exception occurs
 	 */
 	public static Chunk readChunk(String type, int dataLen, DataInput in) throws IOException {
+		Objects.requireNonNull(type);
+		Objects.requireNonNull(in);
+		if (dataLen < 0)
+			throw new IllegalArgumentException("Negative data length");
+		
 		return switch (type) {
 			case Bkgd.TYPE -> Bkgd.read(dataLen, in);
 			case Chrm.TYPE -> Chrm.read(         in);

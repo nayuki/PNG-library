@@ -52,6 +52,9 @@ public record Bkgd(byte[] data) implements BytesDataChunk {
 	
 	
 	public static Bkgd read(int dataLen, DataInput in) throws IOException {
+		if (dataLen < 0)
+			throw new IllegalArgumentException("Negative data length");
+		Objects.requireNonNull(in);
 		return new Bkgd(Util.readBytes(in, dataLen));
 	}
 	

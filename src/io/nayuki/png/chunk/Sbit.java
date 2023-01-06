@@ -40,6 +40,9 @@ public record Sbit(byte[] significantBits) implements Chunk {
 	
 	
 	public static Sbit read(int dataLen, DataInput in) throws IOException {
+		if (dataLen < 0)
+			throw new IllegalArgumentException("Negative data length");
+		Objects.requireNonNull(in);
 		return new Sbit(Util.readBytes(in, dataLen));
 	}
 	

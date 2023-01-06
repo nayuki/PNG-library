@@ -36,6 +36,10 @@ public record Hist(short[] frequencies) implements Chunk {
 	
 	
 	public static Hist read(int dataLen, DataInput in) throws IOException {
+		if (dataLen < 0)
+			throw new IllegalArgumentException("Negative data length");
+		Objects.requireNonNull(in);
+		
 		var freqs = new short[dataLen / Short.BYTES];
 		for (int i = 0; i < freqs.length; i++)
 			freqs[i] = in.readShort();

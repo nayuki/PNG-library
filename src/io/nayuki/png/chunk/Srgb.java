@@ -34,6 +34,7 @@ public record Srgb(RenderingIntent renderingIntent) implements Chunk {
 	
 	
 	public static Srgb read(DataInput in) throws IOException {
+		Objects.requireNonNull(in);
 		RenderingIntent renderingIntent = Util.indexInto(RenderingIntent.values(), in.readUnsignedByte());
 		return new Srgb(renderingIntent);
 	}

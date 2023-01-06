@@ -33,6 +33,7 @@ public record Ster(Mode mode) implements Chunk {
 	
 	
 	public static Ster read(DataInput in) throws IOException {
+		Objects.requireNonNull(in);
 		Mode mode = Util.indexInto(Mode.values(), in.readUnsignedByte());
 		return new Ster(mode);
 	}

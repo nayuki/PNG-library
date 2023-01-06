@@ -32,6 +32,9 @@ public record Exif(byte[] data) implements BytesDataChunk {
 	
 	
 	public static Exif read(int dataLen, DataInput in) throws IOException {
+		if (dataLen < 0)
+			throw new IllegalArgumentException("Negative data length");
+		Objects.requireNonNull(in);
 		return new Exif(Util.readBytes(in, dataLen));
 	}
 	

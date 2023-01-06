@@ -53,6 +53,9 @@ public record Trns(byte[] data) implements BytesDataChunk {
 	
 	
 	public static Trns read(int dataLen, DataInput in) throws IOException {
+		if (dataLen < 0)
+			throw new IllegalArgumentException("Negative data length");
+		Objects.requireNonNull(in);
 		return new Trns(Util.readBytes(in, dataLen));
 	}
 	

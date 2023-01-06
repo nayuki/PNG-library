@@ -49,6 +49,10 @@ public record Ztxt(
 	
 	
 	public static Ztxt read(int dataLen, DataInput in) throws IOException {
+		if (dataLen < 0)
+			throw new IllegalArgumentException("Negative data length");
+		Objects.requireNonNull(in);
+		
 		byte[][] parts = Util.readAndSplitByNull(dataLen, in, 2);
 		if (parts[1].length < 1)
 			throw new IllegalArgumentException("Missing compression method");

@@ -40,6 +40,7 @@ public record Phys(
 	
 	
 	public static Phys read(DataInput in) throws IOException {
+		Objects.requireNonNull(in);
 		int pixelsPerUnitX = in.readInt();
 		int pixelsPerUnitY = in.readInt();
 		UnitSpecifier unitSpecifier = Util.indexInto(UnitSpecifier.values(), in.readUnsignedByte());

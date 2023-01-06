@@ -32,6 +32,9 @@ public record Idat(byte[] data) implements BytesDataChunk {
 	
 	
 	public static Idat read(int dataLen, DataInput in) throws IOException {
+		if (dataLen < 0)
+			throw new IllegalArgumentException("Negative data length");
+		Objects.requireNonNull(in);
 		return new Idat(Util.readBytes(in, dataLen));
 	}
 	

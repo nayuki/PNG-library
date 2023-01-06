@@ -43,6 +43,10 @@ public record Gifx(
 	
 	
 	public static Gifx read(int dataLen, DataInput in) throws IOException {
+		if (dataLen < 0)
+			throw new IllegalArgumentException("Negative data length");
+		Objects.requireNonNull(in);
+		
 		byte[] appIdentifier = Util.readBytes(in, 8);
 		byte[] authCode = Util.readBytes(in, 3);
 		byte[] appData = Util.readBytes(in, dataLen - appIdentifier.length - authCode.length);

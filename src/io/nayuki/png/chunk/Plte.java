@@ -61,6 +61,9 @@ public record Plte(byte[] data) implements BytesDataChunk {
 	
 	
 	public static Plte read(int dataLen, DataInput in) throws IOException {
+		if (dataLen < 0)
+			throw new IllegalArgumentException("Negative data length");
+		Objects.requireNonNull(in);
 		return new Plte(Util.readBytes(in, dataLen));
 	}
 	

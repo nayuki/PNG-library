@@ -12,6 +12,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import io.nayuki.png.Chunk;
 
 
@@ -35,6 +36,9 @@ public record Text(String keyword, String text) implements Chunk {
 	
 	
 	public static Text read(int dataLen, DataInput in) throws IOException {
+		if (dataLen < 0)
+			throw new IllegalArgumentException("Negative data length");
+		Objects.requireNonNull(in);
 		byte[][] parts = Util.readAndSplitByNull(dataLen, in, 2);
 		return new Text(
 			new String(parts[0], StandardCharsets.ISO_8859_1),

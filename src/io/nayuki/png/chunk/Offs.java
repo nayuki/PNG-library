@@ -39,6 +39,7 @@ public record Offs(
 	
 	
 	public static Offs read(DataInput in) throws IOException {
+		Objects.requireNonNull(in);
 		int xPosition = in.readInt();
 		int yPosition = in.readInt();
 		UnitSpecifier unitSpecifier = Util.indexInto(UnitSpecifier.values(), in.readUnsignedByte());

@@ -52,6 +52,7 @@ public record Ihdr(
 	
 	
 	public static Ihdr read(DataInput in) throws IOException {
+		Objects.requireNonNull(in);
 		int width = in.readInt();
 		int height = in.readInt();
 		int bitDepth = in.readUnsignedByte();

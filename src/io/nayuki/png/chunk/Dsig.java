@@ -32,6 +32,9 @@ public record Dsig(byte[] data) implements BytesDataChunk {
 	
 	
 	public static Dsig read(int dataLen, DataInput in) throws IOException {
+		if (dataLen < 0)
+			throw new IllegalArgumentException("Negative data length");
+		Objects.requireNonNull(in);
 		return new Dsig(Util.readBytes(in, dataLen));
 	}
 	

@@ -11,6 +11,7 @@ package io.nayuki.png.chunk;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.Objects;
 import io.nayuki.png.Chunk;
 
 
@@ -49,6 +50,7 @@ public record Gama(int gamma) implements Chunk {
 	
 	
 	public static Gama read(DataInput in) throws IOException {
+		Objects.requireNonNull(in);
 		return new Gama(in.readInt());
 	}
 	

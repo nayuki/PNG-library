@@ -69,6 +69,10 @@ public record Itxt(
 	
 	
 	public static Itxt read(int dataLen, DataInput in) throws IOException {
+		if (dataLen < 0)
+			throw new IllegalArgumentException("Negative data length");
+		Objects.requireNonNull(in);
+		
 		byte[][] parts0 = Util.readAndSplitByNull(dataLen, in, 2);
 		if (parts0[1].length < 2)
 			throw new IllegalArgumentException("Missing compression flag or compression method");

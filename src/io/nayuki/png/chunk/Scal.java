@@ -58,6 +58,10 @@ public record Scal(
 	
 	
 	public static Scal read(int dataLen, DataInput in) throws IOException {
+		if (dataLen < 0)
+			throw new IllegalArgumentException("Negative data length");
+		Objects.requireNonNull(in);
+		
 		UnitSpecifier unitSpecifier = Util.indexInto(UnitSpecifier.values(), in.readUnsignedByte() - 1);
 		byte[][] parts = Util.readAndSplitByNull(dataLen - 1, in, 2);
 		return new Scal(

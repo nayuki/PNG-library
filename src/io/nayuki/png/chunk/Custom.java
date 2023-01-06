@@ -32,6 +32,10 @@ public record Custom(String type, byte[] data) implements BytesDataChunk {
 	
 	
 	public static Custom read(String type, int dataLen, DataInput in) throws IOException {
+		Objects.requireNonNull(type);
+		if (dataLen < 0)
+			throw new IllegalArgumentException("Negative data length");
+		Objects.requireNonNull(in);
 		return new Custom(type, Util.readBytes(in, dataLen));
 	}
 	
