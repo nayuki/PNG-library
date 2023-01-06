@@ -103,57 +103,21 @@ public final class ImageDecoder {
 			return;
 		int bitDepth = result.getBitDepths()[0];
 		boolean hasAlpha = result.getBitDepths()[3] > 0;
-		int bytesPerPixel = bitDepth / 8 * (hasAlpha ? 4 : 3);
-		var prevRow = new byte[Math.multiplyExact(Math.addExact(1, width), bytesPerPixel)];
-		var row = prevRow.clone();
+		int filterStride = bitDepth / 8 * (hasAlpha ? 4 : 3);
+		var dec = new RowDecoder(filterStride, Math.multiplyExact(width, filterStride), din);
 		for (int y = 0; y < height; y++) {
-			int filter = din.readUnsignedByte();
-			din.readFully(row, bytesPerPixel, row.length - bytesPerPixel);
-			switch (filter) {
-				case 0:  // None
-					break;
-				case 1:  // Sub
-					for (int i = bytesPerPixel; i < row.length; i++)
-						row[i] += row[i - bytesPerPixel];
-					break;
-				case 2:  // Up
-					for (int i = bytesPerPixel; i < row.length; i++)
-						row[i] += prevRow[i];
-					break;
-				case 3:  // Average
-					for (int i = bytesPerPixel; i < row.length; i++)
-						row[i] += ((row[i - bytesPerPixel] & 0xFF) + (prevRow[i] & 0xFF)) >>> 1;
-					break;
-				case 4:  // Paeth
-					for (int i = bytesPerPixel; i < row.length; i++) {
-						int a = row[i - bytesPerPixel] & 0xFF;  // Left
-						int b = prevRow[i] & 0xFF;  // Up
-						int c = prevRow[i - bytesPerPixel] & 0xFF;  // Up left
-						int p = a + b - c;
-						int pa = Math.abs(p - a);
-						int pb = Math.abs(p - b);
-						int pc = Math.abs(p - c);
-						int pr;
-						if (pa <= pb && pa <= pc) pr = a;
-						else if (pb <= pc) pr = b;
-						else pr = c;
-						row[i] += pr;
-					}
-					break;
-				default:
-					throw new IllegalArgumentException("Unsupported filter type: " + filter);
-			}
+			byte[] row = dec.readRow();
 			
 			if (bitDepth == 8) {
 				if (!hasAlpha) {
-					for (int x = 0, i = bytesPerPixel; x < width; x++, i += 3) {
+					for (int x = 0, i = filterStride; x < width; x++, i += 3) {
 						long val = (row[i + 0] & 0xFFL) << 48
 						         | (row[i + 1] & 0xFFL) << 32
 						         | (row[i + 2] & 0xFFL) << 16;
 						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, val);
 					}
 				} else {
-					for (int x = 0, i = bytesPerPixel; x < width; x++, i += 4) {
+					for (int x = 0, i = filterStride; x < width; x++, i += 4) {
 						long val = (row[i + 0] & 0xFFL) << 48
 						         | (row[i + 1] & 0xFFL) << 32
 						         | (row[i + 2] & 0xFFL) << 16
@@ -163,7 +127,7 @@ public final class ImageDecoder {
 				}
 			} else if (bitDepth == 16) {
 				if (!hasAlpha) {
-					for (int x = 0, i = bytesPerPixel; x < width; x++, i += 6) {
+					for (int x = 0, i = filterStride; x < width; x++, i += 6) {
 						long val = (row[i + 0] & 0xFFL) << 56
 						         | (row[i + 1] & 0xFFL) << 48
 						         | (row[i + 2] & 0xFFL) << 40
@@ -173,7 +137,7 @@ public final class ImageDecoder {
 						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, val);
 					}
 				} else {
-					for (int x = 0, i = bytesPerPixel; x < width; x++, i += 8) {
+					for (int x = 0, i = filterStride; x < width; x++, i += 8) {
 						long val = (row[i + 0] & 0xFFL) << 56
 						         | (row[i + 1] & 0xFFL) << 48
 						         | (row[i + 2] & 0xFFL) << 40
@@ -187,11 +151,6 @@ public final class ImageDecoder {
 				}
 			} else
 				throw new AssertionError("Unsupported bit depth");
-			
-			// Swap row buffers
-			byte[] temp = row;
-			row = prevRow;
-			prevRow = temp;
 		}
 	}
 	
@@ -244,55 +203,19 @@ public final class ImageDecoder {
 			return;
 		int bitDepth = result.getBitDepths()[0];
 		boolean hasAlpha = result.getBitDepths()[1] > 0;
-		int bytesPerPixel = bitDepth / 8 * (hasAlpha ? 2 : 1);
-		var prevRow = new byte[Math.multiplyExact(Math.addExact(1, width), bytesPerPixel)];
-		var row = prevRow.clone();
+		int filterStride = bitDepth / 8 * (hasAlpha ? 2 : 1);
+		var dec = new RowDecoder(filterStride, Math.multiplyExact(width, filterStride), din);
 		for (int y = 0; y < height; y++) {
-			int filter = din.readUnsignedByte();
-			din.readFully(row, bytesPerPixel, row.length - bytesPerPixel);
-			switch (filter) {
-				case 0:  // None
-					break;
-				case 1:  // Sub
-					for (int i = bytesPerPixel; i < row.length; i++)
-						row[i] += row[i - bytesPerPixel];
-					break;
-				case 2:  // Up
-					for (int i = bytesPerPixel; i < row.length; i++)
-						row[i] += prevRow[i];
-					break;
-				case 3:  // Average
-					for (int i = bytesPerPixel; i < row.length; i++)
-						row[i] += ((row[i - bytesPerPixel] & 0xFF) + (prevRow[i] & 0xFF)) >>> 1;
-					break;
-				case 4:  // Paeth
-					for (int i = bytesPerPixel; i < row.length; i++) {
-						int a = row[i - bytesPerPixel] & 0xFF;  // Left
-						int b = prevRow[i] & 0xFF;  // Up
-						int c = prevRow[i - bytesPerPixel] & 0xFF;  // Up left
-						int p = a + b - c;
-						int pa = Math.abs(p - a);
-						int pb = Math.abs(p - b);
-						int pc = Math.abs(p - c);
-						int pr;
-						if (pa <= pb && pa <= pc) pr = a;
-						else if (pb <= pc) pr = b;
-						else pr = c;
-						row[i] += pr;
-					}
-					break;
-				default:
-					throw new IllegalArgumentException("Unsupported filter type: " + filter);
-			}
+			byte[] row = dec.readRow();
 			
 			if (bitDepth == 8) {
 				if (!hasAlpha) {
-					for (int x = 0, i = bytesPerPixel; x < width; x++, i += 1) {
+					for (int x = 0, i = filterStride; x < width; x++, i += 1) {
 						int val = (row[i + 0] & 0xFF) << 16;
 						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, val);
 					}
 				} else {
-					for (int x = 0, i = bytesPerPixel; x < width; x++, i += 2) {
+					for (int x = 0, i = filterStride; x < width; x++, i += 2) {
 						int val = (row[i + 0] & 0xFF) << 16
 						        | (row[i + 1] & 0xFF) <<  0;
 						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, val);
@@ -300,13 +223,13 @@ public final class ImageDecoder {
 				}
 			} else if (bitDepth == 16) {
 				if (!hasAlpha) {
-					for (int x = 0, i = bytesPerPixel; x < width; x++, i += 2) {
+					for (int x = 0, i = filterStride; x < width; x++, i += 2) {
 						int val = (row[i + 0] & 0xFF) << 24
 						        | (row[i + 1] & 0xFF) << 16;
 						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, val);
 					}
 				} else {
-					for (int x = 0, i = bytesPerPixel; x < width; x++, i += 4) {
+					for (int x = 0, i = filterStride; x < width; x++, i += 4) {
 						int val = (row[i + 0] & 0xFF) << 24
 						        | (row[i + 1] & 0xFF) << 16
 						        | (row[i + 2] & 0xFF) <<  8
@@ -316,15 +239,80 @@ public final class ImageDecoder {
 				}
 			} else
 				throw new AssertionError("Unsupported bit depth");
-			
-			// Swap row buffers
-			byte[] temp = row;
-			row = prevRow;
-			prevRow = temp;
 		}
 	}
 	
 	
 	private ImageDecoder() {}
+	
+	
+	
+	private static final class RowDecoder {
+		
+		private DataInput input;
+		private int filterStride;
+		private byte[] previousRow;
+		private byte[] currentRow;
+		
+		
+		public RowDecoder(int filterStride, int rowSizeBytes, DataInput in) {
+			if (filterStride <= 0)
+				throw new IllegalArgumentException("Non-positive filter stride");
+			if (rowSizeBytes <= 0)
+				throw new IllegalArgumentException("Non-positive row size");
+			this.filterStride = filterStride;
+			input = Objects.requireNonNull(in);
+			previousRow = new byte[Math.addExact(rowSizeBytes, filterStride)];
+			currentRow = previousRow.clone();
+		}
+		
+		
+		public byte[] readRow() throws IOException {
+			// Swap buffers
+			byte[] temp = currentRow;
+			currentRow = previousRow;
+			previousRow = temp;
+			
+			int filter = input.readUnsignedByte();
+			input.readFully(currentRow, filterStride, currentRow.length - filterStride);
+			
+			switch (filter) {
+				case 0:  // None
+					break;
+				case 1:  // Sub
+					for (int i = filterStride; i < currentRow.length; i++)
+						currentRow[i] += currentRow[i - filterStride];
+					break;
+				case 2:  // Up
+					for (int i = filterStride; i < currentRow.length; i++)
+						currentRow[i] += previousRow[i];
+					break;
+				case 3:  // Average
+					for (int i = filterStride; i < currentRow.length; i++)
+						currentRow[i] += ((currentRow[i - filterStride] & 0xFF) + (previousRow[i] & 0xFF)) >>> 1;
+					break;
+				case 4:  // Paeth
+					for (int i = filterStride; i < currentRow.length; i++) {
+						int a = currentRow[i - filterStride] & 0xFF;  // Left
+						int b = previousRow[i] & 0xFF;  // Up
+						int c = previousRow[i - filterStride] & 0xFF;  // Up left
+						int p = a + b - c;
+						int pa = Math.abs(p - a);
+						int pb = Math.abs(p - b);
+						int pc = Math.abs(p - c);
+						int pr;
+						if (pa <= pb && pa <= pc) pr = a;
+						else if (pb <= pc) pr = b;
+						else pr = c;
+						currentRow[i] += pr;
+					}
+					break;
+				default:
+					throw new IllegalArgumentException("Unsupported filter type: " + filter);
+			}
+			return currentRow;
+		}
+		
+	}
 	
 }
