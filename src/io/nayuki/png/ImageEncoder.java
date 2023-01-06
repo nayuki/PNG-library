@@ -37,8 +37,9 @@ public final class ImageEncoder {
 		Objects.requireNonNull(img);
 		int[] bitDepths = img.getBitDepths();
 		int bitDepth = bitDepths[0];
-		boolean hasAlpha = bitDepths[3] != 0;
-		if ((bitDepth != 8 && bitDepth != 16) || bitDepths[1] != bitDepth || bitDepths[2] != bitDepth || bitDepths[3] != 0 && bitDepths[3] != bitDepth) {
+		boolean hasAlpha = bitDepths[3] > 0;
+		// If bitDepths is not in the set {(8,8,8,0), (8,8,8,8), (16,16,16,0), (16,16,16,16)}
+		if ((bitDepth != 8 && bitDepth != 16) || bitDepths[1] != bitDepth || bitDepths[2] != bitDepth || hasAlpha && bitDepths[3] != bitDepth) {
 			PngImage result = toPng(new UpBitDepthRgbaImage(img));
 			byte[] bitDepthsBytes;
 			if (!hasAlpha)
@@ -59,7 +60,7 @@ public final class ImageEncoder {
 			Ihdr.FilterMethod.ADAPTIVE,
 			Ihdr.InterlaceMethod.NONE));
 		
-		int bytesPerRow = Math.addExact(1, Math.multiplyExact(width, bitDepth / 8 * (hasAlpha ? 4 : 3)));
+		int bytesPerRow = Math.toIntExact(Math.ceilDiv((long)width * bitDepth * (hasAlpha ? 4 : 3), 8) + 1);
 		var filtersAndSamples = new byte[Math.multiplyExact(bytesPerRow, height)];
 		for (int y = 0, i = 0; y < height; y++) {
 			filtersAndSamples[i] = 0;
@@ -145,7 +146,7 @@ public final class ImageEncoder {
 				throw new IllegalArgumentException("Invalid bit depths array");
 			for (int i = 0; i < bitDepths.length; i++) {
 				int bitDepth = bitDepths[i];
-				if (!((i == 3 ? 0 : 1) <= bitDepth && bitDepth <= 16))
+				if (!((i == bitDepths.length - 1 ? 0 : 1) <= bitDepth && bitDepth <= 16))
 					throw new IllegalArgumentException("Invalid bit depths");
 			}
 			int chosenBitDepth = Math.ceilDiv(IntStream.of(bitDepths).max().getAsInt(), 8) * 8;
@@ -181,6 +182,7 @@ public final class ImageEncoder {
 		
 		@Override public long getPixel(int x, int y) {
 			long val = image.getPixel(x, y);
+			// For each channel: out = floor(in / IN_MAX * OUT_MAX + 0.5)
 			long r = (((val >>> 48) & 0xFFFF) * mul + rDiv) / rDiv >>> 1;
 			long g = (((val >>> 32) & 0xFFFF) * mul + gDiv) / gDiv >>> 1;
 			long b = (((val >>> 16) & 0xFFFF) * mul + bDiv) / bDiv >>> 1;
