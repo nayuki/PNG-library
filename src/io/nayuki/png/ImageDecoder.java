@@ -104,7 +104,8 @@ public final class ImageDecoder {
 		int bitDepth = result.getBitDepths()[0];
 		boolean hasAlpha = result.getBitDepths()[3] > 0;
 		int filterStride = Math.ceilDiv(bitDepth * (hasAlpha ? 4 : 3), 8);
-		var dec = new RowDecoder(filterStride, Math.toIntExact(Math.ceilDiv((long)width * bitDepth * (hasAlpha ? 4 : 3), 8)), din);
+		var dec = new RowDecoder(din, filterStride,
+			Math.toIntExact(Math.ceilDiv((long)width * bitDepth * (hasAlpha ? 4 : 3), 8)));
 		for (int y = 0; y < height; y++) {
 			byte[] row = dec.readRow();
 			
@@ -204,7 +205,8 @@ public final class ImageDecoder {
 		int bitDepth = result.getBitDepths()[0];
 		boolean hasAlpha = result.getBitDepths()[1] > 0;
 		int filterStride = Math.ceilDiv(bitDepth * (hasAlpha ? 2 : 1), 8);
-		var dec = new RowDecoder(filterStride, Math.toIntExact(Math.ceilDiv((long)width * bitDepth * (hasAlpha ? 2 : 1), 8)), din);
+		var dec = new RowDecoder(din, filterStride,
+			Math.toIntExact(Math.ceilDiv((long)width * bitDepth * (hasAlpha ? 2 : 1), 8)));
 		for (int y = 0; y < height; y++) {
 			byte[] row = dec.readRow();
 			
@@ -255,13 +257,13 @@ public final class ImageDecoder {
 		private byte[] currentRow;
 		
 		
-		public RowDecoder(int filterStride, int rowSizeBytes, DataInput in) {
+		public RowDecoder(DataInput in, int filterStride, int rowSizeBytes) {
+			input = Objects.requireNonNull(in);
 			if (filterStride <= 0)
 				throw new IllegalArgumentException("Non-positive filter stride");
+			this.filterStride = filterStride;
 			if (rowSizeBytes <= 0)
 				throw new IllegalArgumentException("Non-positive row size");
-			this.filterStride = filterStride;
-			input = Objects.requireNonNull(in);
 			previousRow = new byte[Math.addExact(rowSizeBytes, filterStride)];
 			currentRow = previousRow.clone();
 		}
