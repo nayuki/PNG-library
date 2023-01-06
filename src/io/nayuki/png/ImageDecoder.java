@@ -103,8 +103,8 @@ public final class ImageDecoder {
 			return;
 		int bitDepth = result.getBitDepths()[0];
 		boolean hasAlpha = result.getBitDepths()[3] > 0;
-		int filterStride = bitDepth / 8 * (hasAlpha ? 4 : 3);
-		var dec = new RowDecoder(filterStride, Math.multiplyExact(width, filterStride), din);
+		int filterStride = Math.ceilDiv(bitDepth * (hasAlpha ? 4 : 3), 8);
+		var dec = new RowDecoder(filterStride, Math.toIntExact(Math.ceilDiv((long)width * bitDepth * (hasAlpha ? 4 : 3), 8)), din);
 		for (int y = 0; y < height; y++) {
 			byte[] row = dec.readRow();
 			
@@ -203,8 +203,8 @@ public final class ImageDecoder {
 			return;
 		int bitDepth = result.getBitDepths()[0];
 		boolean hasAlpha = result.getBitDepths()[1] > 0;
-		int filterStride = bitDepth / 8 * (hasAlpha ? 2 : 1);
-		var dec = new RowDecoder(filterStride, Math.multiplyExact(width, filterStride), din);
+		int filterStride = Math.ceilDiv(bitDepth * (hasAlpha ? 2 : 1), 8);
+		var dec = new RowDecoder(filterStride, Math.toIntExact(Math.ceilDiv((long)width * bitDepth * (hasAlpha ? 2 : 1), 8)), din);
 		for (int y = 0; y < height; y++) {
 			byte[] row = dec.readRow();
 			
