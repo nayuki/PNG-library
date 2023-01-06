@@ -12,7 +12,7 @@ import java.util.Objects;
 
 
 /**
- * A mutable gray-alpha image where all pixels are stored in memory.
+ * A mutable grayscale-alpha image where all pixels are stored in memory.
  */
 public final class BufferedGrayImage implements GrayImage, Cloneable {
 	
@@ -27,7 +27,7 @@ public final class BufferedGrayImage implements GrayImage, Cloneable {
 	 * Constructs an all-zero image with the specified dimensions and
 	 * channel bit depths. {@code bitDepths} is a length-2 array:
 	 * <ul>
-	 *   <li>Index 0: Gray channel bit depth, in the range [1, 16]</li>
+	 *   <li>Index 0: White channel bit depth, in the range [1, 16]</li>
 	 *   <li>Index 1: Alpha channel bit depth, in the range [0, 16], where 0 means all pixels are opaque</li>
 	 * </ul>
 	 * <p>The dimensions and bit depths are immutable after
