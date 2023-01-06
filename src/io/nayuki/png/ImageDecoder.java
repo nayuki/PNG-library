@@ -60,13 +60,10 @@ public final class ImageDecoder {
 	
 	private static BufferedRgbaImage toRgbaImage(PngImage png) {
 		Ihdr ihdr = png.ihdr.get();
-		int width = ihdr.width();
-		int height = ihdr.height();
 		int bitDepth = ihdr.bitDepth();
-		boolean noAlpha = ihdr.colorType() == Ihdr.ColorType.TRUE_COLOR;
 		
-		var result = new BufferedRgbaImage(width, height,
-			new int[]{bitDepth, bitDepth, bitDepth, noAlpha ? 0 : bitDepth});
+		var result = new BufferedRgbaImage(ihdr.width(), ihdr.height(),
+			new int[]{bitDepth, bitDepth, bitDepth, ihdr.colorType() == Ihdr.ColorType.TRUE_COLOR ? 0 : bitDepth});
 		List<InputStream> ins = png.idats.stream()
 			.map(idat -> new ByteArrayInputStream(idat.data()))
 			.collect(Collectors.toList());
@@ -161,13 +158,10 @@ public final class ImageDecoder {
 	
 	private static BufferedGrayImage toGrayImage(PngImage png) {
 		Ihdr ihdr = png.ihdr.get();
-		int width = ihdr.width();
-		int height = ihdr.height();
 		int bitDepth = ihdr.bitDepth();
-		boolean noAlpha = ihdr.colorType() == Ihdr.ColorType.GRAYSCALE;
 		
-		var result = new BufferedGrayImage(width, height,
-			new int[]{bitDepth, noAlpha ? 0 : bitDepth});
+		var result = new BufferedGrayImage(ihdr.width(), ihdr.height(),
+			new int[]{bitDepth, ihdr.colorType() == Ihdr.ColorType.GRAYSCALE ? 0 : bitDepth});
 		List<InputStream> ins = png.idats.stream()
 			.map(idat -> new ByteArrayInputStream(idat.data()))
 			.collect(Collectors.toList());
