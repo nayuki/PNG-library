@@ -22,6 +22,7 @@ import io.nayuki.png.image.RgbaImage;
 
 /**
  * Encodes an image (where pixels can be read) to a {@link PngImage} object. Not instantiable.
+ * @see ImageDecoder
  */
 public final class ImageEncoder {
 	

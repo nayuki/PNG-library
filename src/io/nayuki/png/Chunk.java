@@ -19,8 +19,10 @@ import java.util.zip.InflaterOutputStream;
 /**
  * A PNG/MNG/JNG chunk. Each chunk has a type (4 ASCII uppercase/lowercase
  * letters) and binary data (0 to 2<sup>31</sup>&minus;1 bytes). The CRC-32
- * field is excluded and handled automatically when reading/writing files. Classes
- * that implement this interface can choose to have mutable or immutable instances.
+ * field is excluded and handled automatically when reading/writing files.
+ * Chunk types where the reserved bit is set (e.g. "ABcD") cannot be represented
+ * because they can potentially have a different set of fields. Classes that
+ * implement this interface can choose to have mutable or immutable instances.
  */
 public interface Chunk {
 	
@@ -69,7 +71,7 @@ public interface Chunk {
 	/**
 	 * Returns the byte length of this chunk's data field, which excludes
 	 * the type and CRC-32. This can be any non-negative number.
-	 * The default implementation relies on {@code getData()}.
+	 * The default implementation relies on {@link #getData()}.
 	 * @return the number of data bytes, in the range [0, 2<sup>31</sup>&minus;1)
 	 */
 	public default int getDataLength() {
@@ -79,7 +81,10 @@ public interface Chunk {
 	
 	/**
 	 * Returns a byte array representing this chunk's data field, which excludes
-	 * the type and CRC-32. The default implementation relies on {@code writeData()}.
+	 * the type and CRC-32. The default implementation relies on {@link
+	 * #writeData(DataOutput)}. This method must not throw an exception because of
+	 * invalid data values or the data being too long; these conditions must be checked
+	 * beforehand when the chunk object is constructed or when setters are called.
 	 * @return the data bytes (not {@code null})
 	 */
 	public default byte[] getData() {

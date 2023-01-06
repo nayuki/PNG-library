@@ -27,12 +27,15 @@ import io.nayuki.png.image.BufferedRgbaImage;
 /**
  * Decodes a {@link PngImage} object to a buffered image
  * where pixels can be directly read. Not instantiable.
+ * @see ImageEncoder
  */
 public final class ImageDecoder {
 	
 	/**
 	 * Decodes the specified PNG image to a new mutable buffered image. If the
-	 * PNG's color type is true color, then a {@link BufferedRgbaImage} is returned.
+	 * PNG's color type is true color, then a {@link BufferedRgbaImage} is
+	 * returned. Else if the PNG's color type is grayscale, then a {@link
+	 * BufferedGrayImage} is returned. Else the color type is unsupported.
 	 * @param png the PNG image to decode (not {@code null})
 	 * @return a new buffered image (not {@code null})
 	 * @throws NullPointerException if {@code png} is {@code null}

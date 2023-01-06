@@ -20,6 +20,22 @@ import io.nayuki.png.Chunk;
  */
 public final class Util {
 	
+	/**
+	 * If the specified chunk type is represented by a known class in this package ({@link
+	 * io.nayuki.png.chunk}), then this function calls the {@code read()} function of that
+	 * class to parse and return a chunk of that type. For example, calling this function
+	 * with the chunk type "IHDR" will return an object of the class {@link Ihdr}) or throw an
+	 * {@code IllegalArgumentException} if the data is invalid. Otherwise if the chunk type
+	 * is not of a known type, then a {@link Custom} chunk is returned. This function can read
+	 * fewer than {@code dataLen} bytes; the caller should check for this erroneous behavior.
+	 * @param type the type of the chunk to be parsed
+	 * @param dataLen the expected length of chunk's data field, a non-negative number
+	 * @param in the input stream to read the chunk's data from
+	 * @return a new chunk object representing the data parsed from the input stream
+	 * @throws NullPointerException if the type or input stream is {@code null}
+	 * @throws IllegalArgumentException if the chunk contains invalid data
+	 * @throws IOException if an I/O exception occurs
+	 */
 	public static Chunk readChunk(String type, int dataLen, DataInput in) throws IOException {
 		return switch (type) {
 			case Bkgd.TYPE -> Bkgd.read(dataLen, in);

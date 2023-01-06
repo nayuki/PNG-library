@@ -31,6 +31,7 @@ import io.nayuki.png.chunk.Ihdr;
  * an instance, the resulting list of chunks is: field {@code ihdr} (must be
  * present), field {@beforeIdats} (zero or more), field {@code idats} (one or more),
  * field {@code afterIdats} (zero or more), {@code Iend.SINGLETON} (implicit).
+ * This class operates at the next level up from {@link XngFile}.
  */
 public final class PngImage {
 	
@@ -40,6 +41,8 @@ public final class PngImage {
 	 * @param inFile the input file to read from
 	 * @return a new {@code XngFile} object representing chunks read
 	 * @throws NullPointerException if {@code inFile} is {@code null}
+	 * @throws IllegalArgumentException if the file contains invalid data in the header
+	 * signature, chunk outer structure, chunk inner structure, or constraints between chunks
 	 * @throws IOException if an I/O exception occurs
 	 */
 	public static PngImage read(File inFile) throws IOException {
@@ -57,6 +60,8 @@ public final class PngImage {
 	 * @param in the input stream to read from
 	 * @return a new {@code XngFile} object representing chunks read
 	 * @throws NullPointerException if {@code inFile} is {@code null}
+	 * @throws IllegalArgumentException if the stream contains invalid data in the header
+	 * signature, chunk outer structure, chunk inner structure, or constraints between chunks
 	 * @throws IOException if an I/O exception occurs
 	 */
 	public static PngImage read(InputStream in) throws IOException {

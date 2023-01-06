@@ -34,13 +34,20 @@ import io.nayuki.png.chunk.Util;
 
 
 /**
- * A low-level representation of a list of PNG/MNG/JNG chunks, plus methods to read/write
- * such files. Any list of chunks is considered valid; this structure will not check any
- * constraints within or between chunks (e.g. invalid field values, chunks after IEND).
- * Instances should be treated as immutable, but lists and chunks are not copied defensively.
+ * A low-level representation of a list of PNG/MNG/JNG chunks, plus methods
+ * to read/write such files. This class checks and handles chunk lengths,
+ * basic constraints on chunk types as defined by {@link Chunk#checkType(String)},
+ * and CRC-32 values. This does not check the data within chunks (e.g. invalid
+ * field values) or constraints between chunks (e.g. chunks after IEND). Instances
+ * should be treated as immutable, but lists and chunks are not copied defensively.
  */
 public record XngFile(Type type, List<Chunk> chunks) {
 	
+	/**
+	 * Constructs a new XNG file with the specified type and list of chunks.
+	 * @param type the file type (PNG/MNG/JNG) (not {@code null})
+	 * @param chunks the list of chunks (not {@code null})
+	 */
 	public XngFile {
 		Objects.requireNonNull(type);
 		Objects.requireNonNull(chunks);
@@ -57,6 +64,8 @@ public record XngFile(Type type, List<Chunk> chunks) {
 	 * @param parse whether to try to parse each chunk's internal fields
 	 * @return a new {@code XngFile} object representing the type and chunks read
 	 * @throws NullPointerException if {@code inFile} is {@code null}
+	 * @throws IllegalArgumentException if the file contains invalid data in the header
+	 * signature, chunk outer structure, or chunk inner structure (if parsing is enabled)
 	 * @throws IOException if an I/O exception occurs
 	 */
 	public static XngFile read(File inFile, boolean parse) throws IOException {
@@ -78,6 +87,8 @@ public record XngFile(Type type, List<Chunk> chunks) {
 	 * @param parse whether to try to parse each chunk's internal fields
 	 * @return a new {@code XngFile} object representing the type and chunks read
 	 * @throws NullPointerException if {@code in} is {@code null}
+	 * @throws IllegalArgumentException if the stream contains invalid data in the header
+	 * signature, chunk outer structure, or chunk inner structure (if parsing is enabled)
 	 * @throws IOException if an I/O exception occurs
 	 */
 	@SuppressWarnings("resource")  // This function needs to use many intermediate filters and discard them without closing the top-level stream
