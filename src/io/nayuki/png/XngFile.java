@@ -123,8 +123,6 @@ public record XngFile(Type type, List<Chunk> chunks) {
 				sb.append((char)din1.readUnsignedByte());
 			String type = sb.toString();
 			Chunk.checkType(type);
-			if ((type.charAt(2) & 0x20) != 0)
-				throw new IllegalArgumentException("Reserved chunk type");
 			
 			var bin = new BoundedInputStream(cin, dataLen);
 			if (parse)
