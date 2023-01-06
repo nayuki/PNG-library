@@ -39,7 +39,8 @@ public final class ImageEncoder {
 		int bitDepth = bitDepths[0];
 		boolean hasAlpha = bitDepths[3] > 0;
 		// If bitDepths is not in the set {(8,8,8,0), (8,8,8,8), (16,16,16,0), (16,16,16,16)}
-		if ((bitDepth != 8 && bitDepth != 16) || bitDepths[1] != bitDepth || bitDepths[2] != bitDepth || hasAlpha && bitDepths[3] != bitDepth) {
+		boolean supported = (bitDepth == 8 || bitDepth == 16) && bitDepths[1] == bitDepth && bitDepths[2] == bitDepth && (!hasAlpha || bitDepths[3] == bitDepth);
+		if (!supported) {
 			PngImage result = toPng(new UpBitDepthRgbaImage(img));
 			byte[] bitDepthsBytes;
 			if (!hasAlpha)
@@ -149,6 +150,7 @@ public final class ImageEncoder {
 				if (!((i == bitDepths.length - 1 ? 0 : 1) <= bitDepth && bitDepth <= 16))
 					throw new IllegalArgumentException("Invalid bit depths");
 			}
+			// Round up to nearest multiple of 8
 			int chosenBitDepth = Math.ceilDiv(IntStream.of(bitDepths).max().getAsInt(), 8) * 8;
 			if (chosenBitDepth != 8 && chosenBitDepth != 16)
 				throw new AssertionError("Unsupported bit depth");
@@ -157,7 +159,7 @@ public final class ImageEncoder {
 			rDiv = (1 << bitDepths[0]) - 1;
 			gDiv = (1 << bitDepths[1]) - 1;
 			bDiv = (1 << bitDepths[2]) - 1;
-			aDiv = bitDepths[3] != 0 ? (1 << bitDepths[3]) - 1 : 1;
+			aDiv = Math.max((1 << bitDepths[3]) - 1, 1);
 			
 			bitDepths[0] = chosenBitDepth;
 			bitDepths[1] = chosenBitDepth;

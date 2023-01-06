@@ -208,16 +208,16 @@ public final class ImageDecoder {
 			byte[] row = dec.readRow();
 			
 			if ((bitDepth == 1 || bitDepth == 2 || bitDepth == 4) && !hasAlpha) {
-				int pixelsPerByte = 8 / bitDepth;
+				int xMask = 8 / bitDepth - 1;
 				int shift = bitDepth + 8;
 				int mask = (0xFF00 >>> bitDepth) & 0xFF;
-				for (int x = 0, i = filterStride, b = 0; x < width; x++) {
-					if ((x & (pixelsPerByte - 1)) == 0) {
+				for (int x = 0, i = filterStride, b = 0; x < width; x++, b <<= bitDepth) {
+					if ((x & xMask) == 0) {
 						b = row[i] & 0xFF;
 						i++;
 					}
-					result.setPixel(xOffset + x * xStep, yOffset + y * yStep, (b & mask) << shift);
-					b <<= bitDepth;
+					int val = (b & mask) << shift;
+					result.setPixel(xOffset + x * xStep, yOffset + y * yStep, val);
 				}
 			} else if (bitDepth == 8) {
 				if (!hasAlpha) {
