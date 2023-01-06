@@ -52,7 +52,7 @@ public final class ImageDecoder {
 		
 		return switch (ihdr.colorType()) {
 			case TRUE_COLOR, TRUE_COLOR_WITH_ALPHA -> toRgbaImage(png);
-			case GRAYSCALE, GRAYSCALE_WITH_ALPHA -> toGrayImage(png);
+			case GRAYSCALE , GRAYSCALE_WITH_ALPHA  -> toGrayImage(png);
 			default -> throw new UnsupportedOperationException("Unsupported color type");
 		};
 	}
@@ -100,7 +100,7 @@ public final class ImageDecoder {
 	
 	
 	private static void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep, BufferedRgbaImage result) throws IOException {
-		int width  = Math.ceilDiv(result.getWidth()  - xOffset, xStep);
+		int width  = Math.ceilDiv(result.getWidth () - xOffset, xStep);
 		int height = Math.ceilDiv(result.getHeight() - yOffset, yStep);
 		if (width == 0 || height == 0)
 			return;
@@ -201,7 +201,7 @@ public final class ImageDecoder {
 	
 	
 	private static void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep, BufferedGrayImage result) throws IOException {
-		int width  = Math.ceilDiv(result.getWidth()  - xOffset, xStep);
+		int width  = Math.ceilDiv(result.getWidth () - xOffset, xStep);
 		int height = Math.ceilDiv(result.getHeight() - yOffset, yStep);
 		if (width == 0 || height == 0)
 			return;
