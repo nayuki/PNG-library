@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 import io.nayuki.png.Chunk;
 
 
@@ -28,10 +29,9 @@ import io.nayuki.png.Chunk;
  */
 public record Itxt(
 		String keyword,
-		boolean compressionFlag,
-		CompressionMethod compressionMethod,
 		String languageTag,
 		String translatedKeyword,
+		Optional<CompressionMethod> compressionMethod,
 		byte[] text)
 	implements Chunk {
 	
@@ -43,7 +43,6 @@ public record Itxt(
 	
 	public Itxt {
 		Util.checkKeyword(keyword, true);
-		Objects.requireNonNull(compressionMethod);
 		
 		Objects.requireNonNull(languageTag);
 		if (!languageTag.matches("(?:[A-Za-z0-9]{1,8}(?:-[A-Za-z0-9]{1,8})*)?"))
@@ -55,15 +54,9 @@ public record Itxt(
 				throw new IllegalArgumentException("NUL character in translated keyword");
 		}
 		
+		Objects.requireNonNull(compressionMethod);
 		Objects.requireNonNull(text);
-		byte[] decompText;
-		if (compressionFlag)
-			decompText = compressionMethod.decompress(text);
-		else {
-			if (compressionMethod != CompressionMethod.ZLIB_DEFLATE)
-				throw new IllegalArgumentException("Invalid compression method");
-			decompText = text;
-		}
+		byte[] decompText = compressionMethod.map(cm -> cm.decompress(text)).orElse(text);
 		var textStr = new String(decompText, StandardCharsets.UTF_8);
 		for (int i = 0; i < textStr.length(); i++) {
 			if (textStr.charAt(i) == '\0')
@@ -83,16 +76,18 @@ public record Itxt(
 		byte[][] parts1 = Util.readAndSplitByNull(rest.length,
 			new DataInputStream(new ByteArrayInputStream(rest)), 3);
 		
+		int compFlag = parts0[1][0];
+		int compMethod = parts0[1][1];
+		if (compFlag >>> 1 != 0)
+			throw new IllegalArgumentException("Compression flag out of range");
+		if (compFlag == 0 && compMethod != 0)
+			throw new IllegalArgumentException("Invalid compression method");
+		
 		return new Itxt(
 			new String(parts0[0], StandardCharsets.ISO_8859_1),
-			switch (parts0[1][0]) {
-				case 0 -> false;
-				case 1 -> true;
-				default -> throw new IllegalArgumentException("Compression flag out of range");
-			},
-			Util.indexInto(CompressionMethod.values(), parts0[1][1]),
 			new String(parts1[0], StandardCharsets.ISO_8859_1),
 			new String(parts1[1], StandardCharsets.UTF_8),
+			compFlag == 0 ? Optional.empty() : Optional.of(Util.indexInto(CompressionMethod.values(), compMethod)),
 			parts1[2]);
 	}
 	
@@ -113,8 +108,8 @@ public record Itxt(
 	@Override public void writeData(DataOutput out) throws IOException {
 		out.write(keyword.getBytes(StandardCharsets.ISO_8859_1));
 		out.writeByte(0);
-		out.writeByte(compressionFlag ? 1 : 0);
-		out.writeByte(compressionMethod.ordinal());
+		out.writeByte(compressionMethod.isPresent() ? 1 : 0);
+		out.writeByte(compressionMethod.map(cm -> cm.ordinal()).orElse(0));
 		out.write(languageTag.getBytes(StandardCharsets.ISO_8859_1));
 		out.writeByte(0);
 		out.write(translatedKeyword.getBytes(StandardCharsets.UTF_8));
