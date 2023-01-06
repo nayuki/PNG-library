@@ -63,10 +63,10 @@ public final class ImageDecoder {
 		int width = ihdr.width();
 		int height = ihdr.height();
 		int bitDepth = ihdr.bitDepth();
-		boolean hasAlpha = ihdr.colorType() == Ihdr.ColorType.TRUE_COLOR_WITH_ALPHA;
+		boolean noAlpha = ihdr.colorType() == Ihdr.ColorType.TRUE_COLOR;
 		
 		var result = new BufferedRgbaImage(width, height,
-			new int[]{bitDepth, bitDepth, bitDepth, hasAlpha ? bitDepth : 0});
+			new int[]{bitDepth, bitDepth, bitDepth, noAlpha ? 0 : bitDepth});
 		List<InputStream> ins = png.idats.stream()
 			.map(idat -> new ByteArrayInputStream(idat.data()))
 			.collect(Collectors.toList());
@@ -164,10 +164,10 @@ public final class ImageDecoder {
 		int width = ihdr.width();
 		int height = ihdr.height();
 		int bitDepth = ihdr.bitDepth();
-		boolean hasAlpha = ihdr.colorType() == Ihdr.ColorType.GRAYSCALE_WITH_ALPHA;
+		boolean noAlpha = ihdr.colorType() == Ihdr.ColorType.GRAYSCALE;
 		
 		var result = new BufferedGrayImage(width, height,
-			new int[]{bitDepth, hasAlpha ? bitDepth : 0});
+			new int[]{bitDepth, noAlpha ? 0 : bitDepth});
 		List<InputStream> ins = png.idats.stream()
 			.map(idat -> new ByteArrayInputStream(idat.data()))
 			.collect(Collectors.toList());
