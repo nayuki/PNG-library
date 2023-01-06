@@ -37,7 +37,7 @@ public final class ImageEncoder {
 		int[] bitDepths = img.getBitDepths();
 		int bitDepth = bitDepths[0];
 		boolean hasAlpha = bitDepths[3] != 0;
-		if (bitDepths[1] != bitDepth || bitDepths[2] != bitDepth || bitDepths[3] != 0 && bitDepths[3] != bitDepth) {
+		if ((bitDepth != 8 && bitDepth != 16) || bitDepths[1] != bitDepth || bitDepths[2] != bitDepth || bitDepths[3] != 0 && bitDepths[3] != bitDepth) {
 			PngImage result = toPng(new UpBitDepthRgbaImage(img));
 			byte[] bitDepthsBytes;
 			if (!hasAlpha)
