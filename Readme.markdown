@@ -5,7 +5,7 @@ License
 -------
 
 Copyright © 2023 Project Nayuki. (MIT License)  
-[https://www.nayuki.io/](https://www.nayuki.io/)
+[https://www.nayuki.io/page/png-library](https://www.nayuki.io/page/png-library)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
