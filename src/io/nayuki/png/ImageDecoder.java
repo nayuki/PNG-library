@@ -17,9 +17,11 @@ import java.io.SequenceInputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.zip.InflaterInputStream;
 import io.nayuki.png.chunk.Ihdr;
+import io.nayuki.png.chunk.Sbit;
 import io.nayuki.png.image.BufferedGrayImage;
 import io.nayuki.png.image.BufferedRgbaImage;
 
@@ -60,10 +62,21 @@ public final class ImageDecoder {
 	
 	private static BufferedRgbaImage toRgbaImage(PngImage png) {
 		Ihdr ihdr = png.ihdr.get();
-		int bitDepth = ihdr.bitDepth();
-		
-		var result = new BufferedRgbaImage(ihdr.width(), ihdr.height(),
-			new int[]{bitDepth, bitDepth, bitDepth, ihdr.colorType() == Ihdr.ColorType.TRUE_COLOR ? 0 : bitDepth});
+		int inBitDepth = ihdr.bitDepth();
+		int outRBits = inBitDepth, outGBits = inBitDepth, outBBits = inBitDepth,
+			outABits = ihdr.colorType() == Ihdr.ColorType.TRUE_COLOR ? 0 : inBitDepth;
+		Optional<Sbit> sbit = getSbit(png);
+		if (sbit.isPresent()) {
+			byte[] sb = sbit.get().significantBits();
+			if (sb[0] > outRBits || sb[1] > outGBits || sb[2] > outBBits || outABits > 0 && sb[3] > outABits)
+				throw new IllegalArgumentException("Number of significant bits exceeds bit depth");
+			outRBits = sb[0];
+			outGBits = sb[1];
+			outBBits = sb[2];
+			if (outABits > 0)
+				outABits = sb[3];
+		}
+		var result = new BufferedRgbaImage(ihdr.width(), ihdr.height(), new int[]{outRBits, outGBits, outBBits, outABits});
 		List<InputStream> ins = png.idats.stream()
 			.map(idat -> new ByteArrayInputStream(idat.data()))
 			.collect(Collectors.toList());
@@ -75,14 +88,14 @@ public final class ImageDecoder {
 				case ADAM7 -> 8;
 			};
 			int yStep = xStep;
-			decodeSubimage(din, 0, 0, xStep, yStep, result);
+			decodeSubimage(din, 0, 0, xStep, yStep, inBitDepth, result);
 			while (yStep > 1) {
 				if (xStep == yStep) {
-					decodeSubimage(din, xStep / 2, 0, xStep, yStep, result);
+					decodeSubimage(din, xStep / 2, 0, xStep, yStep, inBitDepth, result);
 					xStep /= 2;
 				} else {
 					assert xStep == yStep / 2;
-					decodeSubimage(din, 0, xStep, xStep, yStep, result);
+					decodeSubimage(din, 0, xStep, xStep, yStep, inBitDepth, result);
 					yStep = xStep;
 				}
 			}
@@ -96,58 +109,59 @@ public final class ImageDecoder {
 	}
 	
 	
-	private static void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep, BufferedRgbaImage result) throws IOException {
+	private static void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep, int inBitDepth, BufferedRgbaImage result) throws IOException {
 		int width  = Math.ceilDiv(result.getWidth () - xOffset, xStep);
 		int height = Math.ceilDiv(result.getHeight() - yOffset, yStep);
 		if (width == 0 || height == 0)
 			return;
-		int bitDepth = result.getBitDepths()[0];
-		boolean hasAlpha = result.getBitDepths()[3] > 0;
-		int filterStride = Math.ceilDiv(bitDepth * (hasAlpha ? 4 : 3), 8);
+		int[] outBitDepths = result.getBitDepths();
+		int rShift = inBitDepth - outBitDepths[0];
+		int gShift = inBitDepth - outBitDepths[1];
+		int bShift = inBitDepth - outBitDepths[2];
+		int aShift = inBitDepth - outBitDepths[3];
+		boolean hasAlpha = outBitDepths[3] > 0;
+		int filterStride = Math.ceilDiv(inBitDepth * (hasAlpha ? 4 : 3), 8);
 		var dec = new RowDecoder(din, filterStride,
-			Math.toIntExact(Math.ceilDiv((long)width * bitDepth * (hasAlpha ? 4 : 3), 8)));
+			Math.toIntExact(Math.ceilDiv((long)width * inBitDepth * (hasAlpha ? 4 : 3), 8)));
 		for (int y = 0; y < height; y++) {
 			byte[] row = dec.readRow();
 			
-			if (bitDepth == 8) {
+			if (inBitDepth == 8) {
 				if (!hasAlpha) {
 					for (int x = 0, i = filterStride; x < width; x++, i += 3) {
-						long val = (row[i + 0] & 0xFFL) << 48
-						         | (row[i + 1] & 0xFFL) << 32
-						         | (row[i + 2] & 0xFFL) << 16;
-						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, val);
+						int r = (row[i + 0] & 0xFF) >>> rShift;
+						int g = (row[i + 1] & 0xFF) >>> gShift;
+						int b = (row[i + 2] & 0xFF) >>> bShift;
+						result.setPixel(xOffset + x * xStep, yOffset + y * yStep,
+							(long)r << 48 | (long)g << 32 | (long)b << 16);
 					}
 				} else {
 					for (int x = 0, i = filterStride; x < width; x++, i += 4) {
-						long val = (row[i + 0] & 0xFFL) << 48
-						         | (row[i + 1] & 0xFFL) << 32
-						         | (row[i + 2] & 0xFFL) << 16
-						         | (row[i + 3] & 0xFFL) <<  0;
-						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, val);
+						int r = (row[i + 0] & 0xFF) >>> rShift;
+						int g = (row[i + 1] & 0xFF) >>> gShift;
+						int b = (row[i + 2] & 0xFF) >>> bShift;
+						int a = (row[i + 3] & 0xFF) >>> aShift;
+						result.setPixel(xOffset + x * xStep, yOffset + y * yStep,
+							(long)r << 48 | (long)g << 32 | (long)b << 16 | (long)a << 0);
 					}
 				}
-			} else if (bitDepth == 16) {
+			} else if (inBitDepth == 16) {
 				if (!hasAlpha) {
 					for (int x = 0, i = filterStride; x < width; x++, i += 6) {
-						long val = (row[i + 0] & 0xFFL) << 56
-						         | (row[i + 1] & 0xFFL) << 48
-						         | (row[i + 2] & 0xFFL) << 40
-						         | (row[i + 3] & 0xFFL) << 32
-						         | (row[i + 4] & 0xFFL) << 24
-						         | (row[i + 5] & 0xFFL) << 16;
-						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, val);
+						int r = ((row[i + 0] & 0xFF) << 8 | (row[i + 1] & 0xFF) << 0) >>> rShift;
+						int g = ((row[i + 2] & 0xFF) << 8 | (row[i + 3] & 0xFF) << 0) >>> gShift;
+						int b = ((row[i + 4] & 0xFF) << 8 | (row[i + 5] & 0xFF) << 0) >>> bShift;
+						result.setPixel(xOffset + x * xStep, yOffset + y * yStep,
+							(long)r << 48 | (long)g << 32 | (long)b << 16);
 					}
 				} else {
 					for (int x = 0, i = filterStride; x < width; x++, i += 8) {
-						long val = (row[i + 0] & 0xFFL) << 56
-						         | (row[i + 1] & 0xFFL) << 48
-						         | (row[i + 2] & 0xFFL) << 40
-						         | (row[i + 3] & 0xFFL) << 32
-						         | (row[i + 4] & 0xFFL) << 24
-						         | (row[i + 5] & 0xFFL) << 16
-						         | (row[i + 6] & 0xFFL) <<  8
-						         | (row[i + 7] & 0xFFL) <<  0;
-						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, val);
+						int r = ((row[i + 0] & 0xFF) << 8 | (row[i + 1] & 0xFF) << 0) >>> rShift;
+						int g = ((row[i + 2] & 0xFF) << 8 | (row[i + 3] & 0xFF) << 0) >>> gShift;
+						int b = ((row[i + 4] & 0xFF) << 8 | (row[i + 5] & 0xFF) << 0) >>> bShift;
+						int a = ((row[i + 6] & 0xFF) << 8 | (row[i + 7] & 0xFF) << 0) >>> aShift;
+						result.setPixel(xOffset + x * xStep, yOffset + y * yStep,
+							(long)r << 48 | (long)g << 32 | (long)b << 16 | (long)a << 0);
 					}
 				}
 			} else
@@ -158,10 +172,18 @@ public final class ImageDecoder {
 	
 	private static BufferedGrayImage toGrayImage(PngImage png) {
 		Ihdr ihdr = png.ihdr.get();
-		int bitDepth = ihdr.bitDepth();
-		
-		var result = new BufferedGrayImage(ihdr.width(), ihdr.height(),
-			new int[]{bitDepth, ihdr.colorType() == Ihdr.ColorType.GRAYSCALE ? 0 : bitDepth});
+		int inBitDepth = ihdr.bitDepth();
+		Optional<Sbit> sbit = getSbit(png);
+		int outWBits = inBitDepth, outABits = ihdr.colorType() == Ihdr.ColorType.GRAYSCALE ? 0 : inBitDepth;
+		if (sbit.isPresent()) {
+			byte[] sb = sbit.get().significantBits();
+			if (sb[0] > outWBits || outABits > 0 && sb[1] > outABits)
+				throw new IllegalArgumentException("Number of significant bits exceeds bit depth");
+			outWBits = sb[0];
+			if (outABits > 0)
+				outABits = sb[1];
+		}
+		var result = new BufferedGrayImage(ihdr.width(), ihdr.height(), new int[]{outWBits, outABits});
 		List<InputStream> ins = png.idats.stream()
 			.map(idat -> new ByteArrayInputStream(idat.data()))
 			.collect(Collectors.toList());
@@ -173,14 +195,14 @@ public final class ImageDecoder {
 				case ADAM7 -> 8;
 			};
 			int yStep = xStep;
-			decodeSubimage(din, 0, 0, xStep, yStep, result);
+			decodeSubimage(din, 0, 0, xStep, yStep, inBitDepth, result);
 			while (yStep > 1) {
 				if (xStep == yStep) {
-					decodeSubimage(din, xStep / 2, 0, xStep, yStep, result);
+					decodeSubimage(din, xStep / 2, 0, xStep, yStep, inBitDepth, result);
 					xStep /= 2;
 				} else {
 					assert xStep == yStep / 2;
-					decodeSubimage(din, 0, xStep, xStep, yStep, result);
+					decodeSubimage(din, 0, xStep, xStep, yStep, inBitDepth, result);
 					yStep = xStep;
 				}
 			}
@@ -194,63 +216,75 @@ public final class ImageDecoder {
 	}
 	
 	
-	private static void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep, BufferedGrayImage result) throws IOException {
+	private static void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep, int inBitDepth, BufferedGrayImage result) throws IOException {
 		int width  = Math.ceilDiv(result.getWidth () - xOffset, xStep);
 		int height = Math.ceilDiv(result.getHeight() - yOffset, yStep);
 		if (width == 0 || height == 0)
 			return;
-		int bitDepth = result.getBitDepths()[0];
-		boolean hasAlpha = result.getBitDepths()[1] > 0;
-		int filterStride = Math.ceilDiv(bitDepth * (hasAlpha ? 2 : 1), 8);
+		int[] outBitDepths = result.getBitDepths();
+		int wShift = inBitDepth - outBitDepths[0];
+		int aShift = inBitDepth - outBitDepths[1];
+		boolean hasAlpha = outBitDepths[1] > 0;
+		int filterStride = Math.ceilDiv(inBitDepth * (hasAlpha ? 2 : 1), 8);
 		var dec = new RowDecoder(din, filterStride,
-			Math.toIntExact(Math.ceilDiv((long)width * bitDepth * (hasAlpha ? 2 : 1), 8)));
+			Math.toIntExact(Math.ceilDiv((long)width * inBitDepth * (hasAlpha ? 2 : 1), 8)));
 		for (int y = 0; y < height; y++) {
 			byte[] row = dec.readRow();
 			
-			if ((bitDepth == 1 || bitDepth == 2 || bitDepth == 4) && !hasAlpha) {
-				int xMask = 8 / bitDepth - 1;
-				int shift = bitDepth + 8;
-				int mask = (0xFF00 >>> bitDepth) & 0xFF;
-				for (int x = 0, i = filterStride, b = 0; x < width; x++, b <<= bitDepth) {
+			if ((inBitDepth == 1 || inBitDepth == 2 || inBitDepth == 4) && !hasAlpha) {
+				int xMask = 8 / inBitDepth - 1;
+				int shift = 8 - inBitDepth + wShift;
+				int mask = (0xFF00 >>> inBitDepth) & 0xFF;
+				for (int x = 0, i = filterStride, b = 0; x < width; x++, b <<= inBitDepth) {
 					if ((x & xMask) == 0) {
 						b = row[i] & 0xFF;
 						i++;
 					}
-					int val = (b & mask) << shift;
-					result.setPixel(xOffset + x * xStep, yOffset + y * yStep, val);
+					int w = (b & mask) >>> shift;
+					result.setPixel(xOffset + x * xStep, yOffset + y * yStep, w << 16);
 				}
-			} else if (bitDepth == 8) {
+			} else if (inBitDepth == 8) {
 				if (!hasAlpha) {
 					for (int x = 0, i = filterStride; x < width; x++, i += 1) {
-						int val = (row[i + 0] & 0xFF) << 16;
-						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, val);
+						int w = (row[i + 0] & 0xFF) >>> wShift;
+						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, w << 16);
 					}
 				} else {
 					for (int x = 0, i = filterStride; x < width; x++, i += 2) {
-						int val = (row[i + 0] & 0xFF) << 16
-						        | (row[i + 1] & 0xFF) <<  0;
-						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, val);
+						int w = (row[i + 0] & 0xFF) >>> wShift;
+						int a = (row[i + 1] & 0xFF) >>> aShift;
+						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, w << 16 | a << 0);
 					}
 				}
-			} else if (bitDepth == 16) {
+			} else if (inBitDepth == 16) {
 				if (!hasAlpha) {
 					for (int x = 0, i = filterStride; x < width; x++, i += 2) {
-						int val = (row[i + 0] & 0xFF) << 24
-						        | (row[i + 1] & 0xFF) << 16;
-						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, val);
+						int w = ((row[i + 0] & 0xFF) << 8 | (row[i + 1] & 0xFF) << 0) >>> wShift;
+						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, w << 16);
 					}
 				} else {
 					for (int x = 0, i = filterStride; x < width; x++, i += 4) {
-						int val = (row[i + 0] & 0xFF) << 24
-						        | (row[i + 1] & 0xFF) << 16
-						        | (row[i + 2] & 0xFF) <<  8
-						        | (row[i + 3] & 0xFF) <<  0;
-						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, val);
+						int w = ((row[i + 0] & 0xFF) << 8 | (row[i + 1] & 0xFF) << 0) >>> wShift;
+						int a = ((row[i + 2] & 0xFF) << 8 | (row[i + 3] & 0xFF) << 0) >>> aShift;
+						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, w << 16 | a << 0);
 					}
 				}
 			} else
 				throw new AssertionError("Unsupported bit depth");
 		}
+	}
+	
+	
+	private static Optional<Sbit> getSbit(PngImage png) {
+		Optional<Sbit> result = Optional.empty();
+		for (Chunk chunk : png.afterIhdr) {
+			if (chunk instanceof Sbit chk) {
+				if (result.isPresent())
+					throw new IllegalArgumentException("Duplicate sBIT chunk");
+				result = Optional.of(chk);
+			}
+		}
+		return result;
 	}
 	
 	
