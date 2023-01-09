@@ -17,9 +17,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import io.nayuki.png.chunk.Idat;
 import io.nayuki.png.chunk.Iend;
 import io.nayuki.png.chunk.Ihdr;
@@ -93,32 +96,91 @@ public final class PngImage {
 	
 	
 	private PngImage(List<Chunk> chunks) {
-		boolean hasIend = false;
-		for (Chunk chunk : chunks) {
-			if (hasIend)
-				throw new IllegalArgumentException("Duplicate IEND chunk");
-			else if (chunk instanceof Iend)
-				hasIend = true;
-			else if (ihdr.isEmpty()) {
-				if (chunk instanceof Ihdr chk)
-					ihdr = Optional.of(chk);
-				else
-					throw new IllegalArgumentException("Expected IHDR chunk");
-			} else if (chunk instanceof Ihdr)
-				throw new IllegalArgumentException("Duplicate IHDR chunk");
-			else if (chunk instanceof Idat chk) {
-				if (afterIdats.isEmpty())
-					idats.add(chk);
-				else
-					throw new IllegalArgumentException("Non-consecutive IDAT chunks");
-			} else if (idats.isEmpty())
-				beforeIdats.add(chunk);
-			else
-				afterIdats.add(chunk);
+		enum State {
+			BEFORE_IHDR,
+			AFTER_IHDR,
+			DURING_IDATS,
+			AFTER_IDATS,
+			AFTER_IEND,
 		}
-		if (ihdr.isEmpty() || idats.isEmpty() || !hasIend)
-			throw new IllegalArgumentException("Missing some mandatory chunks");
+		State state = State.BEFORE_IHDR;
+		Set<String> seenChunkTypes = new HashSet<>();
+		for (Chunk chunk : chunks) {
+			String type = chunk.getType();
+			if (!seenChunkTypes.add(type) && UNIQUE_CHUNK_TYPES.contains(type))
+				throw new IllegalArgumentException("Duplicate " + type + " chunk");
+			
+			switch (state) {
+				case BEFORE_IHDR: {
+					if (chunk instanceof Ihdr chk) {
+						ihdr = Optional.of(chk);
+						state = State.AFTER_IHDR;
+					} else
+						throw new IllegalArgumentException("Expected IHDR chunk");
+					break;
+				}
+				
+				case AFTER_IHDR: {
+					if (chunk instanceof Idat chk) {
+						idats.add(chk);
+						state = State.DURING_IDATS;
+					} else if (chunk instanceof Iend)
+						throw new IllegalArgumentException("Unexpected IEND chunk");
+					else
+						beforeIdats.add(chunk);
+					break;
+				}
+				
+				case DURING_IDATS: {
+					if (chunk instanceof Idat chk)
+						idats.add(chk);
+					else if (chunk instanceof Iend)
+						state = State.AFTER_IEND;
+					else {
+						afterIdats.add(chunk);
+						state = State.AFTER_IDATS;
+					}
+					break;
+				}
+				
+				case AFTER_IDATS: {
+					if (chunk instanceof Iend)
+						state = State.AFTER_IEND;
+					else if (chunk instanceof Idat)
+						throw new IllegalArgumentException("Non-consecutive IDAT chunk");
+					else {
+						afterIdats.add(chunk);
+						state = State.AFTER_IDATS;
+					}
+					break;
+				}
+				
+				case AFTER_IEND:
+					throw new IllegalArgumentException("Unexpected chunk after IEND");
+				
+				default:
+					throw new AssertionError();
+			}
+		}
+		if (state != State.AFTER_IEND)
+			throw new IllegalArgumentException("Missing some required chunks");
 	}
+	
+	
+	private static final Set<String> UNIQUE_CHUNK_TYPES = new HashSet<>(Arrays.asList(
+		"bKGD",
+		"cHRM",
+		"gAMA",
+		"hIST",
+		"iCCP",
+		"IEND",
+		"IHDR",
+		"pHYs",
+		"PLTE",
+		"sBIT",
+		"sRGB",
+		"tIME",
+		"tRNS"));
 	
 	
 	/**
