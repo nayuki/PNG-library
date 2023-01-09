@@ -138,62 +138,53 @@ public final class ImageDecoder {
 		int bShift = inBitDepth - outBitDepths[2];
 		int aShift = inBitDepth - outBitDepths[3];
 		boolean hasAlpha = outBitDepths[3] > 0 && transparentColor == -1;
+		int mode = (inBitDepth / 8 - 1) * 2 + (hasAlpha ? 1 : 0);
 		int filterStride = Math.ceilDiv(inBitDepth * (hasAlpha ? 4 : 3), 8);
 		var dec = new RowDecoder(din, filterStride,
 			Math.toIntExact(Math.ceilDiv((long)width * inBitDepth * (hasAlpha ? 4 : 3), 8)));
 		for (int y = 0; y < height; y++) {
 			byte[] row = dec.readRow();
 			
-			if (inBitDepth == 8) {
-				if (!hasAlpha) {
-					for (int x = 0, i = filterStride; x < width; x++, i += 3) {
-						int r = row[i + 0] & 0xFF;
-						int g = row[i + 1] & 0xFF;
-						int b = row[i + 2] & 0xFF;
-						long temp = (long)r << 48 | (long)g << 32 | (long)b << 16;
-						int a = (temp != transparentColor ? 0xFF : 0x00) >>> aShift;
-						r >>>= rShift;
-						g >>>= gShift;
-						b >>>= bShift;
-						result.setPixel(xOffset + x * xStep, yOffset + y * yStep,
-							(long)r << 48 | (long)g << 32 | (long)b << 16 | (long)a << 0);
-					}
-				} else {
-					for (int x = 0, i = filterStride; x < width; x++, i += 4) {
-						int r = (row[i + 0] & 0xFF) >>> rShift;
-						int g = (row[i + 1] & 0xFF) >>> gShift;
-						int b = (row[i + 2] & 0xFF) >>> bShift;
-						int a = (row[i + 3] & 0xFF) >>> aShift;
-						result.setPixel(xOffset + x * xStep, yOffset + y * yStep,
-							(long)r << 48 | (long)g << 32 | (long)b << 16 | (long)a << 0);
-					}
+			for (int x = 0, i = filterStride; x < width; x++, i += filterStride) {
+				int r, g, b, a;
+				long temp;
+				switch (mode) {
+					case 0:
+						r = row[i + 0] & 0xFF;
+						g = row[i + 1] & 0xFF;
+						b = row[i + 2] & 0xFF;
+						temp = (long)r << 48 | (long)g << 32 | (long)b << 16;
+						a = temp != transparentColor ? 0xFF : 0x00;
+						break;
+					case 1:
+						r = row[i + 0] & 0xFF;
+						g = row[i + 1] & 0xFF;
+						b = row[i + 2] & 0xFF;
+						a = row[i + 3] & 0xFF;
+						break;
+					case 2:
+						r = (row[i + 0] & 0xFF) << 8 | (row[i + 1] & 0xFF) << 0;
+						g = (row[i + 2] & 0xFF) << 8 | (row[i + 3] & 0xFF) << 0;
+						b = (row[i + 4] & 0xFF) << 8 | (row[i + 5] & 0xFF) << 0;
+						temp = (long)r << 48 | (long)g << 32 | (long)b << 16;
+						a = temp != transparentColor ? 0xFFFF : 0x00;
+						break;
+					case 3:
+						r = (row[i + 0] & 0xFF) << 8 | (row[i + 1] & 0xFF) << 0;
+						g = (row[i + 2] & 0xFF) << 8 | (row[i + 3] & 0xFF) << 0;
+						b = (row[i + 4] & 0xFF) << 8 | (row[i + 5] & 0xFF) << 0;
+						a = (row[i + 6] & 0xFF) << 8 | (row[i + 7] & 0xFF) << 0;
+						break;
+					default:
+						throw new AssertionError();
 				}
-			} else if (inBitDepth == 16) {
-				if (!hasAlpha) {
-					for (int x = 0, i = filterStride; x < width; x++, i += 6) {
-						int r = (row[i + 0] & 0xFF) << 8 | (row[i + 1] & 0xFF) << 0;
-						int g = (row[i + 2] & 0xFF) << 8 | (row[i + 3] & 0xFF) << 0;
-						int b = (row[i + 4] & 0xFF) << 8 | (row[i + 5] & 0xFF) << 0;
-						long temp = (long)r << 48 | (long)g << 32 | (long)b << 16;
-						int a = (temp != transparentColor ? 0xFFFF : 0x0000) >>> aShift;
-						r >>>= rShift;
-						g >>>= gShift;
-						b >>>= bShift;
-						result.setPixel(xOffset + x * xStep, yOffset + y * yStep,
-							(long)r << 48 | (long)g << 32 | (long)b << 16 | (long)a << 0);
-					}
-				} else {
-					for (int x = 0, i = filterStride; x < width; x++, i += 8) {
-						int r = ((row[i + 0] & 0xFF) << 8 | (row[i + 1] & 0xFF) << 0) >>> rShift;
-						int g = ((row[i + 2] & 0xFF) << 8 | (row[i + 3] & 0xFF) << 0) >>> gShift;
-						int b = ((row[i + 4] & 0xFF) << 8 | (row[i + 5] & 0xFF) << 0) >>> bShift;
-						int a = ((row[i + 6] & 0xFF) << 8 | (row[i + 7] & 0xFF) << 0) >>> aShift;
-						result.setPixel(xOffset + x * xStep, yOffset + y * yStep,
-							(long)r << 48 | (long)g << 32 | (long)b << 16 | (long)a << 0);
-					}
-				}
-			} else
-				throw new AssertionError("Unsupported bit depth");
+				r >>>= rShift;
+				g >>>= gShift;
+				b >>>= bShift;
+				a >>>= aShift;
+				result.setPixel(xOffset + x * xStep, yOffset + y * yStep,
+					(long)r << 48 | (long)g << 32 | (long)b << 16 | (long)a << 0);
+			}
 		}
 	}
 	
@@ -270,13 +261,44 @@ public final class ImageDecoder {
 		int wShift = inBitDepth - outBitDepths[0];
 		int aShift = inBitDepth - outBitDepths[1];
 		boolean hasAlpha = outBitDepths[1] > 0;
+		int mode = inBitDepth >= 8 ? (inBitDepth / 8 - 1) * 2 + (hasAlpha ? 1 : 0) : 4;
 		int filterStride = Math.ceilDiv(inBitDepth * (hasAlpha ? 2 : 1), 8);
 		var dec = new RowDecoder(din, filterStride,
 			Math.toIntExact(Math.ceilDiv((long)width * inBitDepth * (hasAlpha ? 2 : 1), 8)));
 		for (int y = 0; y < height; y++) {
 			byte[] row = dec.readRow();
 			
-			if ((inBitDepth == 1 || inBitDepth == 2 || inBitDepth == 4) && !hasAlpha) {
+			if (mode < 4) {
+				for (int x = 0, i = filterStride; x < width; x++, i += filterStride) {
+					int w, a, temp;
+					switch (mode) {
+						case 0:
+							w = row[i + 0] & 0xFF;
+							temp = w << 16;
+							a = temp != transparentColor ? 0xFF : 0x00;
+							break;
+						case 1:
+							w = row[i + 0] & 0xFF;
+							a = row[i + 1] & 0xFF;
+							break;
+						case 2:
+							w = (row[i + 0] & 0xFF) << 8 | (row[i + 1] & 0xFF) << 0;
+							temp = w << 16;
+							a = temp != transparentColor ? 0xFFFF : 0x00;
+							break;
+						case 3:
+							w = (row[i + 0] & 0xFF) << 8 | (row[i + 1] & 0xFF) << 0;
+							a = (row[i + 2] & 0xFF) << 8 | (row[i + 3] & 0xFF) << 0;
+							break;
+						default:
+							throw new AssertionError();
+					}
+					w >>>= wShift;
+					a >>>= aShift;
+					result.setPixel(xOffset + x * xStep, yOffset + y * yStep,
+						w << 16 | a << 0);
+				}
+			} else {
 				int xMask = 8 / inBitDepth - 1;
 				int mask = (0xFF00 >>> inBitDepth) & 0xFF;
 				int shift = 8 - inBitDepth;
@@ -292,40 +314,7 @@ public final class ImageDecoder {
 					w >>>= wShift;
 					result.setPixel(xOffset + x * xStep, yOffset + y * yStep, w << 16 | a << 0);
 				}
-			} else if (inBitDepth == 8) {
-				if (!hasAlpha) {
-					for (int x = 0, i = filterStride; x < width; x++, i += 1) {
-						int w = row[i + 0] & 0xFF;
-						int temp = w << 16;
-						int a = (temp != transparentColor ? 0xFF : 0) >>> aShift;
-						w >>>= wShift;
-						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, w << 16 | a << 0);
-					}
-				} else {
-					for (int x = 0, i = filterStride; x < width; x++, i += 2) {
-						int w = (row[i + 0] & 0xFF) >>> wShift;
-						int a = (row[i + 1] & 0xFF) >>> aShift;
-						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, w << 16 | a << 0);
-					}
-				}
-			} else if (inBitDepth == 16) {
-				if (!hasAlpha) {
-					for (int x = 0, i = filterStride; x < width; x++, i += 2) {
-						int w = (row[i + 0] & 0xFF) << 8 | (row[i + 1] & 0xFF) << 0;
-						int temp = w << 16;
-						int a = (temp != transparentColor ? 0xFFFF : 0) >>> aShift;
-						w >>>= wShift;
-						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, w << 16 | a << 0);
-					}
-				} else {
-					for (int x = 0, i = filterStride; x < width; x++, i += 4) {
-						int w = ((row[i + 0] & 0xFF) << 8 | (row[i + 1] & 0xFF) << 0) >>> wShift;
-						int a = ((row[i + 2] & 0xFF) << 8 | (row[i + 3] & 0xFF) << 0) >>> aShift;
-						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, w << 16 | a << 0);
-					}
-				}
-			} else
-				throw new AssertionError("Unsupported bit depth");
+			}
 		}
 	}
 	
