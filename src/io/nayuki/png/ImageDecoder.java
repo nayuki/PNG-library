@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import java.util.zip.InflaterInputStream;
 import io.nayuki.png.chunk.Ihdr;
 import io.nayuki.png.chunk.Sbit;
+import io.nayuki.png.chunk.Trns;
 import io.nayuki.png.image.BufferedGrayImage;
 import io.nayuki.png.image.BufferedRgbaImage;
 
@@ -76,7 +77,24 @@ public final class ImageDecoder {
 			if (outABits > 0)
 				outABits = sb[3];
 		}
+		long transparentColor = -1;
+		Optional<Trns> trns = getTrns(png);
+		if (trns.isPresent()) {
+			if (outABits > 0)
+				throw new IllegalArgumentException("tRNS chunk disallowed in image with alpha channel");
+			byte[] tb = trns.get().data();
+			if (tb.length != 6)
+				throw new IllegalArgumentException("Invalid tRNS data length");
+			for (byte b : tb)
+				transparentColor = (transparentColor << 8) | (b & 0xFF);
+			transparentColor <<= 16;
+			if (outRBits == inBitDepth && outGBits == inBitDepth && outBBits == inBitDepth)
+				outABits = inBitDepth;
+			else
+				outABits = 1;
+		}
 		var result = new BufferedRgbaImage(ihdr.width(), ihdr.height(), new int[]{outRBits, outGBits, outBBits, outABits});
+		
 		List<InputStream> ins = png.idats.stream()
 			.map(idat -> new ByteArrayInputStream(idat.data()))
 			.collect(Collectors.toList());
@@ -88,14 +106,14 @@ public final class ImageDecoder {
 				case ADAM7 -> 8;
 			};
 			int yStep = xStep;
-			decodeSubimage(din, 0, 0, xStep, yStep, inBitDepth, result);
+			decodeSubimage(din, 0, 0, xStep, yStep, inBitDepth, transparentColor, result);
 			while (yStep > 1) {
 				if (xStep == yStep) {
-					decodeSubimage(din, xStep / 2, 0, xStep, yStep, inBitDepth, result);
+					decodeSubimage(din, xStep / 2, 0, xStep, yStep, inBitDepth, transparentColor, result);
 					xStep /= 2;
 				} else {
 					assert xStep == yStep / 2;
-					decodeSubimage(din, 0, xStep, xStep, yStep, inBitDepth, result);
+					decodeSubimage(din, 0, xStep, xStep, yStep, inBitDepth, transparentColor, result);
 					yStep = xStep;
 				}
 			}
@@ -109,7 +127,7 @@ public final class ImageDecoder {
 	}
 	
 	
-	private static void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep, int inBitDepth, BufferedRgbaImage result) throws IOException {
+	private static void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep, int inBitDepth, long transparentColor, BufferedRgbaImage result) throws IOException {
 		int width  = Math.ceilDiv(result.getWidth () - xOffset, xStep);
 		int height = Math.ceilDiv(result.getHeight() - yOffset, yStep);
 		if (width == 0 || height == 0)
@@ -119,7 +137,7 @@ public final class ImageDecoder {
 		int gShift = inBitDepth - outBitDepths[1];
 		int bShift = inBitDepth - outBitDepths[2];
 		int aShift = inBitDepth - outBitDepths[3];
-		boolean hasAlpha = outBitDepths[3] > 0;
+		boolean hasAlpha = outBitDepths[3] > 0 && transparentColor == -1;
 		int filterStride = Math.ceilDiv(inBitDepth * (hasAlpha ? 4 : 3), 8);
 		var dec = new RowDecoder(din, filterStride,
 			Math.toIntExact(Math.ceilDiv((long)width * inBitDepth * (hasAlpha ? 4 : 3), 8)));
@@ -129,11 +147,16 @@ public final class ImageDecoder {
 			if (inBitDepth == 8) {
 				if (!hasAlpha) {
 					for (int x = 0, i = filterStride; x < width; x++, i += 3) {
-						int r = (row[i + 0] & 0xFF) >>> rShift;
-						int g = (row[i + 1] & 0xFF) >>> gShift;
-						int b = (row[i + 2] & 0xFF) >>> bShift;
+						int r = row[i + 0] & 0xFF;
+						int g = row[i + 1] & 0xFF;
+						int b = row[i + 2] & 0xFF;
+						long temp = (long)r << 48 | (long)g << 32 | (long)b << 16;
+						int a = (temp != transparentColor ? 0xFF : 0x00) >>> aShift;
+						r >>>= rShift;
+						g >>>= gShift;
+						b >>>= bShift;
 						result.setPixel(xOffset + x * xStep, yOffset + y * yStep,
-							(long)r << 48 | (long)g << 32 | (long)b << 16);
+							(long)r << 48 | (long)g << 32 | (long)b << 16 | (long)a << 0);
 					}
 				} else {
 					for (int x = 0, i = filterStride; x < width; x++, i += 4) {
@@ -148,11 +171,16 @@ public final class ImageDecoder {
 			} else if (inBitDepth == 16) {
 				if (!hasAlpha) {
 					for (int x = 0, i = filterStride; x < width; x++, i += 6) {
-						int r = ((row[i + 0] & 0xFF) << 8 | (row[i + 1] & 0xFF) << 0) >>> rShift;
-						int g = ((row[i + 2] & 0xFF) << 8 | (row[i + 3] & 0xFF) << 0) >>> gShift;
-						int b = ((row[i + 4] & 0xFF) << 8 | (row[i + 5] & 0xFF) << 0) >>> bShift;
+						int r = (row[i + 0] & 0xFF) << 8 | (row[i + 1] & 0xFF) << 0;
+						int g = (row[i + 2] & 0xFF) << 8 | (row[i + 3] & 0xFF) << 0;
+						int b = (row[i + 4] & 0xFF) << 8 | (row[i + 5] & 0xFF) << 0;
+						long temp = (long)r << 48 | (long)g << 32 | (long)b << 16;
+						int a = (temp != transparentColor ? 0xFFFF : 0x0000) >>> aShift;
+						r >>>= rShift;
+						g >>>= gShift;
+						b >>>= bShift;
 						result.setPixel(xOffset + x * xStep, yOffset + y * yStep,
-							(long)r << 48 | (long)g << 32 | (long)b << 16);
+							(long)r << 48 | (long)g << 32 | (long)b << 16 | (long)a << 0);
 					}
 				} else {
 					for (int x = 0, i = filterStride; x < width; x++, i += 8) {
@@ -183,7 +211,24 @@ public final class ImageDecoder {
 			if (outABits > 0)
 				outABits = sb[1];
 		}
+		int transparentColor = -1;
+		Optional<Trns> trns = getTrns(png);
+		if (trns.isPresent()) {
+			if (outABits > 0)
+				throw new IllegalArgumentException("tRNS chunk disallowed in image with alpha channel");
+			byte[] tb = trns.get().data();
+			if (tb.length != 2)
+				throw new IllegalArgumentException("Invalid tRNS data length");
+			for (byte b : tb)
+				transparentColor = (transparentColor << 8) | (b & 0xFF);
+			transparentColor <<= 16;
+			if (outWBits == inBitDepth)
+				outABits = inBitDepth;
+			else
+				outABits = 1;
+		}
 		var result = new BufferedGrayImage(ihdr.width(), ihdr.height(), new int[]{outWBits, outABits});
+		
 		List<InputStream> ins = png.idats.stream()
 			.map(idat -> new ByteArrayInputStream(idat.data()))
 			.collect(Collectors.toList());
@@ -195,14 +240,14 @@ public final class ImageDecoder {
 				case ADAM7 -> 8;
 			};
 			int yStep = xStep;
-			decodeSubimage(din, 0, 0, xStep, yStep, inBitDepth, result);
+			decodeSubimage(din, 0, 0, xStep, yStep, inBitDepth, transparentColor, result);
 			while (yStep > 1) {
 				if (xStep == yStep) {
-					decodeSubimage(din, xStep / 2, 0, xStep, yStep, inBitDepth, result);
+					decodeSubimage(din, xStep / 2, 0, xStep, yStep, inBitDepth, transparentColor, result);
 					xStep /= 2;
 				} else {
 					assert xStep == yStep / 2;
-					decodeSubimage(din, 0, xStep, xStep, yStep, inBitDepth, result);
+					decodeSubimage(din, 0, xStep, xStep, yStep, inBitDepth, transparentColor, result);
 					yStep = xStep;
 				}
 			}
@@ -216,7 +261,7 @@ public final class ImageDecoder {
 	}
 	
 	
-	private static void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep, int inBitDepth, BufferedGrayImage result) throws IOException {
+	private static void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep, int inBitDepth, int transparentColor, BufferedGrayImage result) throws IOException {
 		int width  = Math.ceilDiv(result.getWidth () - xOffset, xStep);
 		int height = Math.ceilDiv(result.getHeight() - yOffset, yStep);
 		if (width == 0 || height == 0)
@@ -233,21 +278,28 @@ public final class ImageDecoder {
 			
 			if ((inBitDepth == 1 || inBitDepth == 2 || inBitDepth == 4) && !hasAlpha) {
 				int xMask = 8 / inBitDepth - 1;
-				int shift = 8 - inBitDepth + wShift;
 				int mask = (0xFF00 >>> inBitDepth) & 0xFF;
+				int shift = 8 - inBitDepth;
+				int opaque = (1 << inBitDepth) - 1;
 				for (int x = 0, i = filterStride, b = 0; x < width; x++, b <<= inBitDepth) {
 					if ((x & xMask) == 0) {
 						b = row[i] & 0xFF;
 						i++;
 					}
 					int w = (b & mask) >>> shift;
-					result.setPixel(xOffset + x * xStep, yOffset + y * yStep, w << 16);
+					int temp = w << 16;
+					int a = (temp != transparentColor ? opaque : 0) >>> aShift;
+					w >>>= wShift;
+					result.setPixel(xOffset + x * xStep, yOffset + y * yStep, w << 16 | a << 0);
 				}
 			} else if (inBitDepth == 8) {
 				if (!hasAlpha) {
 					for (int x = 0, i = filterStride; x < width; x++, i += 1) {
-						int w = (row[i + 0] & 0xFF) >>> wShift;
-						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, w << 16);
+						int w = row[i + 0] & 0xFF;
+						int temp = w << 16;
+						int a = (temp != transparentColor ? 0xFF : 0) >>> aShift;
+						w >>>= wShift;
+						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, w << 16 | a << 0);
 					}
 				} else {
 					for (int x = 0, i = filterStride; x < width; x++, i += 2) {
@@ -259,8 +311,11 @@ public final class ImageDecoder {
 			} else if (inBitDepth == 16) {
 				if (!hasAlpha) {
 					for (int x = 0, i = filterStride; x < width; x++, i += 2) {
-						int w = ((row[i + 0] & 0xFF) << 8 | (row[i + 1] & 0xFF) << 0) >>> wShift;
-						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, w << 16);
+						int w = (row[i + 0] & 0xFF) << 8 | (row[i + 1] & 0xFF) << 0;
+						int temp = w << 16;
+						int a = (temp != transparentColor ? 0xFFFF : 0) >>> aShift;
+						w >>>= wShift;
+						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, w << 16 | a << 0);
 					}
 				} else {
 					for (int x = 0, i = filterStride; x < width; x++, i += 4) {
@@ -281,6 +336,19 @@ public final class ImageDecoder {
 			if (chunk instanceof Sbit chk) {
 				if (result.isPresent())
 					throw new IllegalArgumentException("Duplicate sBIT chunk");
+				result = Optional.of(chk);
+			}
+		}
+		return result;
+	}
+	
+	
+	private static Optional<Trns> getTrns(PngImage png) {
+		Optional<Trns> result = Optional.empty();
+		for (Chunk chunk : png.afterPlte) {
+			if (chunk instanceof Trns chk) {
+				if (result.isPresent())
+					throw new IllegalArgumentException("Duplicate tRNS chunk");
 				result = Optional.of(chk);
 			}
 		}
