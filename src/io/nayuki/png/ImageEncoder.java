@@ -48,7 +48,7 @@ public final class ImageEncoder {
 				bitDepthsBytes = new byte[]{(byte)bitDepths[0], (byte)bitDepths[1], (byte)bitDepths[2]};
 			else
 				bitDepthsBytes = new byte[]{(byte)bitDepths[0], (byte)bitDepths[1], (byte)bitDepths[2], (byte)bitDepths[3]};
-			result.beforeIdats.add(new Sbit(bitDepthsBytes));
+			result.afterIhdr.add(new Sbit(bitDepthsBytes));
 			return result;
 		}
 
@@ -147,7 +147,7 @@ public final class ImageEncoder {
 				bitDepthsBytes = new byte[]{(byte)bitDepths[0]};
 			else
 				bitDepthsBytes = new byte[]{(byte)bitDepths[0], (byte)bitDepths[1]};
-			result.beforeIdats.add(new Sbit(bitDepthsBytes));
+			result.afterIhdr.add(new Sbit(bitDepthsBytes));
 			return result;
 		}
 

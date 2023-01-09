@@ -26,15 +26,24 @@ import java.util.Set;
 import io.nayuki.png.chunk.Idat;
 import io.nayuki.png.chunk.Iend;
 import io.nayuki.png.chunk.Ihdr;
+import io.nayuki.png.chunk.Plte;
 
 
 /**
- * A structured representation of chunks that form a PNG file. Instances are mutable.
- * There is some degree of validation and exclusion of invalid data. When serializing
- * an instance, the resulting list of chunks is: field {@code ihdr} (must be
- * present), field {@beforeIdats} (zero or more), field {@code idats} (one or more),
- * field {@code afterIdats} (zero or more), {@code Iend.SINGLETON} (implicit).
- * This class operates at the next level up from {@link XngFile}.
+ * A structured representation of chunks that form a PNG file. Instances
+ * are mutable. There is some degree of validation and exclusion of invalid
+ * data. This class operates at the next level up from {@link XngFile}.
+ * <p>When serializing a {@code PngImage} object, the resulting
+ * list of chunks is composed in the following order:</p>
+ * <ol>
+ *   <li>Field {@code ihdr} (must be present)</li>
+ *   <li>Field {@code afterIhdr} (zero or more chunks)</li>
+ *   <li>Field {@code plte} (optional)</li>
+ *   <li>Field {@code afterPlte} (zero or more chunks)</li>
+ *   <li>Field {@code idats} (one or more chunks)</li>
+ *   <li>Field {@code afterIdats} (zero or more chunks)</li>
+ *   <li>Constant {@code Iend.SINGLETON}</li>
+ * </ol>
  */
 public final class PngImage {
 	
@@ -79,8 +88,14 @@ public final class PngImage {
 	/** The single IHDR chunk, if present. */
 	public Optional<Ihdr> ihdr = Optional.empty();
 	
-	/** The chunks positioned before the IDAT chunks. */
-	public List<Chunk> beforeIdats = new ArrayList<>();
+	/** The chunks positioned after IHDR and before PLTE. */
+	public List<Chunk> afterIhdr = new ArrayList<>();
+	
+	/** The single PLTE chunk, if present. */
+	public Optional<Plte> plte = Optional.empty();
+	
+	/** The chunks positioned after PLTE and before IDAT. */
+	public List<Chunk> afterPlte = new ArrayList<>();
 	
 	/** The consecutive IDAT chunks. */
 	public List<Idat> idats = new ArrayList<>();
@@ -99,6 +114,7 @@ public final class PngImage {
 		enum State {
 			BEFORE_IHDR,
 			AFTER_IHDR,
+			AFTER_PLTE,
 			DURING_IDATS,
 			AFTER_IDATS,
 			AFTER_IEND,
@@ -121,18 +137,34 @@ public final class PngImage {
 				}
 				
 				case AFTER_IHDR: {
+					if (chunk instanceof Plte chk0) {
+						plte = Optional.of(chk0);
+						state = State.AFTER_PLTE;
+					} else if (chunk instanceof Idat chk1) {
+						idats.add(chk1);
+						state = State.DURING_IDATS;
+					} else if (chunk instanceof Iend)
+						throw new IllegalArgumentException("Unexpected IEND chunk");
+					else
+						afterIhdr.add(chunk);
+					break;
+				}
+				
+				case AFTER_PLTE: {
 					if (chunk instanceof Idat chk) {
 						idats.add(chk);
 						state = State.DURING_IDATS;
 					} else if (chunk instanceof Iend)
 						throw new IllegalArgumentException("Unexpected IEND chunk");
 					else
-						beforeIdats.add(chunk);
+						afterPlte.add(chunk);
 					break;
 				}
 				
 				case DURING_IDATS: {
-					if (chunk instanceof Idat chk)
+					if (chunk instanceof Plte)
+						throw new IllegalArgumentException("Unexpected PLTE chunk");
+					else if (chunk instanceof Idat chk)
 						idats.add(chk);
 					else if (chunk instanceof Iend)
 						state = State.AFTER_IEND;
@@ -144,7 +176,9 @@ public final class PngImage {
 				}
 				
 				case AFTER_IDATS: {
-					if (chunk instanceof Iend)
+					if (chunk instanceof Plte)
+						throw new IllegalArgumentException("Unexpected PLTE chunk");
+					else if (chunk instanceof Iend)
 						state = State.AFTER_IEND;
 					else if (chunk instanceof Idat)
 						throw new IllegalArgumentException("Non-consecutive IDAT chunk");
@@ -215,7 +249,9 @@ public final class PngImage {
 		
 		List<Chunk> chunks = new ArrayList<>();
 		chunks.add(ihdr.get());
-		chunks.addAll(beforeIdats);
+		chunks.addAll(afterIhdr);
+		plte.ifPresent(chk -> chunks.add(chk));
+		chunks.addAll(afterPlte);
 		chunks.addAll(idats);
 		chunks.addAll(afterIdats);
 		chunks.add(Iend.SINGLETON);
