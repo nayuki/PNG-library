@@ -98,10 +98,10 @@ public record Ihdr(
 	/*---- Enumerations ----*/
 	
 	public enum ColorType {
-		GRAYSCALE(0, 1, 16),
-		TRUE_COLOR(2, 8, 16),
-		INDEXED_COLOR(3, 1, 8),
-		GRAYSCALE_WITH_ALPHA(4, 8, 16),
+		GRAYSCALE            (0, 1, 16),
+		TRUE_COLOR           (2, 8, 16),
+		INDEXED_COLOR        (3, 1,  8),
+		GRAYSCALE_WITH_ALPHA (4, 8, 16),
 		TRUE_COLOR_WITH_ALPHA(6, 8, 16);
 		
 		public final int value;
