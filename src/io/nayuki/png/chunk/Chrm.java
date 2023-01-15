@@ -23,9 +23,9 @@ import io.nayuki.png.Chunk;
  */
 public record Chrm(
 		int whitePointX, int whitePointY,
-		int redX, int redY,
-		int greenX, int greenY,
-		int blueX, int blueY)
+		int redX       , int redY       ,
+		int greenX     , int greenY     ,
+		int blueX      , int blueY      )
 	implements Chunk {
 	
 	
@@ -36,22 +36,22 @@ public record Chrm(
 	
 	public Chrm {
 		if (whitePointX == Integer.MIN_VALUE || whitePointY == Integer.MIN_VALUE) throw new IllegalArgumentException("Invalid int32 value");
-		if (redX == Integer.MIN_VALUE || redY == Integer.MIN_VALUE) throw new IllegalArgumentException("Invalid int32 value");
-		if (greenX == Integer.MIN_VALUE || greenY == Integer.MIN_VALUE) throw new IllegalArgumentException("Invalid int32 value");
-		if (blueX == Integer.MIN_VALUE || blueY == Integer.MIN_VALUE) throw new IllegalArgumentException("Invalid int32 value");
+		if (redX        == Integer.MIN_VALUE || redY        == Integer.MIN_VALUE) throw new IllegalArgumentException("Invalid int32 value");
+		if (greenX      == Integer.MIN_VALUE || greenY      == Integer.MIN_VALUE) throw new IllegalArgumentException("Invalid int32 value");
+		if (blueX       == Integer.MIN_VALUE || blueY       == Integer.MIN_VALUE) throw new IllegalArgumentException("Invalid int32 value");
 	}
 	
 	
 	public Chrm(
 			double whitePointX, double whitePointY,
-			double redX, double redY,
-			double greenX, double greenY,
-			double blueX, double blueY) {
+			double redX       , double redY       ,
+			double greenX     , double greenY     ,
+			double blueX      , double blueY      ) {
 		this(
 			convert(whitePointX), convert(whitePointY),
-			convert(redX), convert(redY),
-			convert(greenX), convert(greenY),
-			convert(blueX), convert(blueY));
+			convert(redX       ), convert(redY       ),
+			convert(greenX     ), convert(greenY     ),
+			convert(blueX      ), convert(blueY      ));
 	}
 	
 	
@@ -70,17 +70,17 @@ public record Chrm(
 		Objects.requireNonNull(in);
 		int whitePointX = in.readInt();
 		int whitePointY = in.readInt();
-		int redX = in.readInt();
-		int redY = in.readInt();
-		int greenX = in.readInt();
-		int greenY = in.readInt();
-		int blueX = in.readInt();
-		int blueY = in.readInt();
+		int redX        = in.readInt();
+		int redY        = in.readInt();
+		int greenX      = in.readInt();
+		int greenY      = in.readInt();
+		int blueX       = in.readInt();
+		int blueY       = in.readInt();
 		return new Chrm(
 			whitePointX, whitePointY,
-			redX, redY,
-			greenX, greenY,
-			blueX, blueY);
+			redX       , redY       ,
+			greenX     , greenY     ,
+			blueX      , blueY      );
 	}
 	
 	
@@ -99,12 +99,12 @@ public record Chrm(
 	@Override public void writeData(DataOutput out) throws IOException {
 		out.writeInt(whitePointX);
 		out.writeInt(whitePointY);
-		out.writeInt(redX);
-		out.writeInt(redY);
-		out.writeInt(greenX);
-		out.writeInt(greenY);
-		out.writeInt(blueX);
-		out.writeInt(blueY);
+		out.writeInt(redX       );
+		out.writeInt(redY       );
+		out.writeInt(greenX     );
+		out.writeInt(greenY     );
+		out.writeInt(blueX      );
+		out.writeInt(blueY      );
 	}
 	
 }
