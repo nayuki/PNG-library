@@ -93,7 +93,7 @@ public record Chrm(
 	
 	
 	@Override public int getDataLength() {
-		return 32;
+		return 8 * Integer.BYTES;
 	}
 	
 	

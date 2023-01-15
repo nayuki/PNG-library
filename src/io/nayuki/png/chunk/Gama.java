@@ -63,7 +63,7 @@ public record Gama(int gamma) implements Chunk {
 	
 	
 	@Override public int getDataLength() {
-		return 4;
+		return Integer.BYTES;
 	}
 	
 	

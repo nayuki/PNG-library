@@ -57,7 +57,7 @@ public record Offs(
 	
 	
 	@Override public int getDataLength() {
-		return 9;
+		return 2 * Integer.BYTES + 1 * Byte.BYTES;
 	}
 	
 	

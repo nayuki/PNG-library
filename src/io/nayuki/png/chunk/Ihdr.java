@@ -79,7 +79,7 @@ public record Ihdr(
 	
 	
 	@Override public int getDataLength() {
-		return 13;
+		return 2 * Integer.BYTES + 5 * Byte.BYTES;
 	}
 	
 	
