@@ -35,6 +35,8 @@ public record Gifg(
 	public Gifg {
 		if (disposalMethod >>> 3 != 0)
 			throw new IllegalArgumentException("Disposal method out of range");
+		if (delayTime >>> 16 != 0)
+			throw new IllegalArgumentException("Delay time out of range");
 	}
 	
 	
