@@ -35,10 +35,11 @@ public record Chrm(
 	/*---- Constructor ----*/
 	
 	public Chrm {
-		if (whitePointX == Integer.MIN_VALUE || whitePointY == Integer.MIN_VALUE) throw new IllegalArgumentException("Invalid int32 value");
-		if (redX        == Integer.MIN_VALUE || redY        == Integer.MIN_VALUE) throw new IllegalArgumentException("Invalid int32 value");
-		if (greenX      == Integer.MIN_VALUE || greenY      == Integer.MIN_VALUE) throw new IllegalArgumentException("Invalid int32 value");
-		if (blueX       == Integer.MIN_VALUE || blueY       == Integer.MIN_VALUE) throw new IllegalArgumentException("Invalid int32 value");
+		if (whitePointX == Integer.MIN_VALUE || whitePointY == Integer.MIN_VALUE ||
+		    redX        == Integer.MIN_VALUE || redY        == Integer.MIN_VALUE ||
+		    greenX      == Integer.MIN_VALUE || greenY      == Integer.MIN_VALUE ||
+		    blueX       == Integer.MIN_VALUE || blueY       == Integer.MIN_VALUE)
+			throw new IllegalArgumentException("Invalid int32 value");
 	}
 	
 	
