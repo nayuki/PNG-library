@@ -68,7 +68,7 @@ public final class ImageDecoder {
 			outABits = ihdr.colorType() == Ihdr.ColorType.TRUE_COLOR ? 0 : inBitDepth;
 		Optional<Sbit> sbit = getSbit(png);
 		if (sbit.isPresent()) {
-			byte[] sb = sbit.get().significantBits();
+			byte[] sb = sbit.get().data();
 			if (sb[0] > outRBits || sb[1] > outGBits || sb[2] > outBBits || outABits > 0 && sb[3] > outABits)
 				throw new IllegalArgumentException("Number of significant bits exceeds bit depth");
 			outRBits = sb[0];
@@ -195,7 +195,7 @@ public final class ImageDecoder {
 		Optional<Sbit> sbit = getSbit(png);
 		int outWBits = inBitDepth, outABits = ihdr.colorType() == Ihdr.ColorType.GRAYSCALE ? 0 : inBitDepth;
 		if (sbit.isPresent()) {
-			byte[] sb = sbit.get().significantBits();
+			byte[] sb = sbit.get().data();
 			if (sb[0] > outWBits || outABits > 0 && sb[1] > outABits)
 				throw new IllegalArgumentException("Number of significant bits exceeds bit depth");
 			outWBits = sb[0];
