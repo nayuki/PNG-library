@@ -34,6 +34,14 @@ public record Chrm(
 	
 	/*---- Constructor ----*/
 	
+	public Chrm {
+		if (whitePointX == Integer.MIN_VALUE || whitePointY == Integer.MIN_VALUE) throw new IllegalArgumentException("Invalid int32 value");
+		if (redX == Integer.MIN_VALUE || redY == Integer.MIN_VALUE) throw new IllegalArgumentException("Invalid int32 value");
+		if (greenX == Integer.MIN_VALUE || greenY == Integer.MIN_VALUE) throw new IllegalArgumentException("Invalid int32 value");
+		if (blueX == Integer.MIN_VALUE || blueY == Integer.MIN_VALUE) throw new IllegalArgumentException("Invalid int32 value");
+	}
+	
+	
 	public Chrm(
 			double whitePointX, double whitePointY,
 			double redX, double redY,
@@ -49,10 +57,10 @@ public record Chrm(
 	
 	private static int convert(double val) {
 		val *= 100_000;
-		if (!(Double.isFinite(val) && Integer.MIN_VALUE <= val && val <= Integer.MAX_VALUE))
+		if (!(Double.isFinite(val) && Integer.MIN_VALUE < val && val <= Integer.MAX_VALUE))
 			throw new IllegalArgumentException("Coordinate value out of range");
 		long result = Math.round(val);
-		if (!(Integer.MIN_VALUE <= result && result <= Integer.MAX_VALUE))
+		if (!(Integer.MIN_VALUE < result && result <= Integer.MAX_VALUE))
 			throw new IllegalArgumentException("Coordinate value out of range");
 		return Math.toIntExact(result);
 	}
