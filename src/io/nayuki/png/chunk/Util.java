@@ -76,6 +76,8 @@ public final class Util {
 	}
 	
 	
+	// Fully reads dataLen bytes, then splits the array by the foremost
+	// (numParts - 1) NUL bytes, throwing an exception if not enough exist.
 	static byte[][] readAndSplitByNull(int dataLen, DataInput in, int numParts) throws IOException {
 		byte[] data = readBytes(in, dataLen);
 		
@@ -99,6 +101,7 @@ public final class Util {
 	}
 	
 	
+	// Throws an exception if the string is invalid.
 	static void checkKeyword(String s, boolean checkSpaces) {
 		Objects.requireNonNull(s);
 		if (!(1 <= s.length() && s.length() <= 79))
@@ -109,6 +112,7 @@ public final class Util {
 	}
 	
 	
+	// Throws an exception if the string is invalid.
 	static void checkIso8859_1(String s, boolean allowNewline) {
 		Objects.requireNonNull(s);
 		for (int i = 0; i < s.length(); i++) {
@@ -120,6 +124,8 @@ public final class Util {
 	}
 	
 	
+	// Adds the given integers / array lengths / string lengths,
+	// ensuring the sum doesn't exceed Integer.MAX_VALUE.
 	static int checkedLengthSum(Object... componentLengths) {
 		Objects.requireNonNull(componentLengths);
 		long result = 0;
@@ -144,6 +150,7 @@ public final class Util {
 	}
 	
 	
+	// Returns a new array of fully reading the given number of bytes.
 	static byte[] readBytes(DataInput in, int len) throws IOException {
 		var result = new byte[len];
 		in.readFully(result);
@@ -151,6 +158,7 @@ public final class Util {
 	}
 	
 	
+	// Returns the given array element or throws a specific exception.
 	static <E> E indexInto(E[] array, int index) {
 		if (0 <= index && index < array.length)
 			return array[index];
