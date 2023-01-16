@@ -77,7 +77,7 @@ public final class Util {
 	
 	
 	static byte[][] readAndSplitByNull(int dataLen, DataInput in, int numParts) throws IOException {
-		var data = readBytes(in, dataLen);
+		byte[] data = readBytes(in, dataLen);
 		
 		var result = new byte[numParts][];
 		int start = 0;
