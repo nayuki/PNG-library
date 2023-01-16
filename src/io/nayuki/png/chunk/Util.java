@@ -43,10 +43,13 @@ public final class Util {
 			throw new IllegalArgumentException("Negative data length");
 		
 		return switch (type) {
+			case Actl.TYPE -> Actl.read(         in);
 			case Bkgd.TYPE -> Bkgd.read(dataLen, in);
 			case Chrm.TYPE -> Chrm.read(         in);
 			case Dsig.TYPE -> Dsig.read(dataLen, in);
 			case Exif.TYPE -> Exif.read(dataLen, in);
+			case Fctl.TYPE -> Fctl.read(         in);
+			case Fdat.TYPE -> Fdat.read(dataLen, in);
 			case Gama.TYPE -> Gama.read(         in);
 			case Gifg.TYPE -> Gifg.read(         in);
 			case Gifx.TYPE -> Gifx.read(dataLen, in);

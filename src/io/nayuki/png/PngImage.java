@@ -202,6 +202,7 @@ public final class PngImage {
 	
 	
 	private static final Set<String> UNIQUE_CHUNK_TYPES = new HashSet<>(Arrays.asList(
+		"acTL",
 		"bKGD",
 		"cHRM",
 		"gAMA",
