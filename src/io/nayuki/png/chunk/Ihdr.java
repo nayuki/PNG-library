@@ -63,6 +63,8 @@ public record Ihdr(
 			if (val.value == colorTypeInt)
 				colorType = val;
 		}
+		if (colorType == null)
+			throw new IllegalArgumentException("Unrecognized value for enumeration");
 		
 		CompressionMethod compressionMethod = Util.indexInto(CompressionMethod.values(), in.readUnsignedByte());
 		FilterMethod filterMethod = Util.indexInto(FilterMethod.values(), in.readUnsignedByte());
