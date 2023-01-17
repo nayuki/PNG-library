@@ -195,7 +195,7 @@ public final class PngImage {
 					throw new IllegalArgumentException("Unexpected chunk after IEND");
 				
 				default:
-					throw new AssertionError();
+					throw new AssertionError("Unhandled state");
 			}
 		}
 		if (state != State.AFTER_IEND)
