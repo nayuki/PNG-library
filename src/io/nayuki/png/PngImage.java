@@ -145,8 +145,6 @@ public final class PngImage {
 						state = State.DURING_IDATS;
 					} else if (chunk instanceof Iend)
 						throw new IllegalArgumentException("Unexpected IEND chunk");
-					else if (AFTER_PLTE_CHUNK_TYPES.contains(chunk.getType()))
-						afterPlte.add(chunk);
 					else
 						afterIhdr.add(chunk);
 					break;
@@ -228,12 +226,6 @@ public final class PngImage {
 		"iCCP",
 		"sBIT",
 		"sRGB"));
-	
-	
-	private static final Set<String> AFTER_PLTE_CHUNK_TYPES = new HashSet<>(Arrays.asList(
-		"bKGD",
-		"hIST",
-		"tRNS"));
 	
 	
 	/**
