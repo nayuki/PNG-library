@@ -58,6 +58,15 @@ public record Fctl(
 	}
 	
 	
+	/**
+	 * Reads a constant number of bytes from the specified input stream,
+	 * parses the fields, and returns a new chunk object of this type.
+	 * @param in the input stream to read from (not {@code null})
+	 * @return a new chunk object of this type (not {@code null})
+	 * @throws NullPointerException if the input stream is {@code null}
+	 * @throws IllegalArgumentException if the read data is invalid for this chunk type
+	 * @throws IOException if an I/O exception occurs
+	 */
 	public static Fctl read(DataInput in) throws IOException {
 		Objects.requireNonNull(in);
 		int sequence = in.readInt();

@@ -31,6 +31,17 @@ public record Custom(String type, byte[] data) implements BytesDataChunk {
 	}
 	
 	
+	/**
+	 * Reads the specified number of bytes from the specified input stream, stores the byte
+	 * data and the specified type string, and returns a new chunk object of this type.
+	 * @param type the chunk type string, which must satisfy {@code Chunk.checkType()}
+	 * @param dataLen the expected number of bytes of chunk data (non-negative)
+	 * @param in the input stream to read from (not {@code null})
+	 * @return a new {@code Custom} chunk object (not {@code null})
+	 * @throws NullPointerException if the input stream is {@code null}
+	 * @throws IllegalArgumentException if {@code dataLen} is negative
+	 * @throws IOException if an I/O exception occurs
+	 */
 	public static Custom read(String type, int dataLen, DataInput in) throws IOException {
 		Objects.requireNonNull(type);
 		if (dataLen < 0)

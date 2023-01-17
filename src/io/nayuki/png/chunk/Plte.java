@@ -60,6 +60,17 @@ public record Plte(byte[] data) implements BytesDataChunk {
 	}
 	
 	
+	/**
+	 * Reads the specified number of bytes from the specified input stream,
+	 * parses the fields, and returns a new chunk object of this type.
+	 * @param dataLen the expected number of bytes of chunk data (non-negative)
+	 * @param in the input stream to read from (not {@code null})
+	 * @return a new chunk object of this type (not {@code null})
+	 * @throws NullPointerException if the input stream is {@code null}
+	 * @throws IllegalArgumentException if {@code dataLen} is negative
+	 * or the read data is invalid for this chunk type
+	 * @throws IOException if an I/O exception occurs
+	 */
 	public static Plte read(int dataLen, DataInput in) throws IOException {
 		if (dataLen < 0)
 			throw new IllegalArgumentException("Negative data length");
