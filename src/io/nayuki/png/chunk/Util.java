@@ -62,6 +62,7 @@ public final class Util {
 			case Ihdr.TYPE -> Ihdr.read(         in);
 			case Itxt.TYPE -> Itxt.read(dataLen, in);
 			case Offs.TYPE -> Offs.read(         in);
+			case Pcal.TYPE -> Pcal.read(dataLen, in);
 			case Phys.TYPE -> Phys.read(         in);
 			case Plte.TYPE -> Plte.read(dataLen, in);
 			case Sbit.TYPE -> Sbit.read(dataLen, in);
