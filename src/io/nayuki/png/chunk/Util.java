@@ -79,8 +79,13 @@ public final class Util {
 	// Fully reads dataLen bytes, then splits the array by the foremost
 	// (numParts - 1) NUL bytes, throwing an exception if not enough exist.
 	static byte[][] readAndSplitByNul(int dataLen, DataInput in, int numParts) throws IOException {
-		byte[] data = readBytes(in, dataLen);
-		
+		return splitByNul(readBytes(in, dataLen), numParts);
+	}
+	
+	
+	// Splits the array by the foremost (numParts - 1) NUL
+	// bytes, throwing an exception if not enough exist.
+	static byte[][] splitByNul(byte[] data, int numParts) {
 		var result = new byte[numParts][];
 		int start = 0;
 		for (int i = 0; i < result.length - 1; i++) {

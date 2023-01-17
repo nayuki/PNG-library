@@ -8,9 +8,7 @@
 
 package io.nayuki.png.chunk;
 
-import java.io.ByteArrayInputStream;
 import java.io.DataInput;
-import java.io.DataInputStream;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -88,8 +86,7 @@ public record Itxt(
 		if (parts0[1].length < 2)
 			throw new IllegalArgumentException("Missing compression flag or compression method");
 		byte[] rest = Arrays.copyOfRange(parts0[1], 2, parts0[1].length);
-		byte[][] parts1 = Util.readAndSplitByNul(rest.length,
-			new DataInputStream(new ByteArrayInputStream(rest)), 3);
+		byte[][] parts1 = Util.splitByNul(rest, 3);
 		
 		int compFlag = parts0[1][0];
 		int compMethod = parts0[1][1];
