@@ -74,7 +74,7 @@ public record Scal(
 		Objects.requireNonNull(in);
 		
 		UnitSpecifier unitSpecifier = Util.indexInto(UnitSpecifier.values(), in.readUnsignedByte() - 1);
-		byte[][] parts = Util.readAndSplitByNull(dataLen - 1, in, 2);
+		byte[][] parts = Util.readAndSplitByNul(dataLen - 1, in, 2);
 		return new Scal(
 			unitSpecifier,
 			new String(parts[0], StandardCharsets.UTF_8),

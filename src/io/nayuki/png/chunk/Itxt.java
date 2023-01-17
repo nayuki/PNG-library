@@ -84,11 +84,11 @@ public record Itxt(
 			throw new IllegalArgumentException("Negative data length");
 		Objects.requireNonNull(in);
 		
-		byte[][] parts0 = Util.readAndSplitByNull(dataLen, in, 2);
+		byte[][] parts0 = Util.readAndSplitByNul(dataLen, in, 2);
 		if (parts0[1].length < 2)
 			throw new IllegalArgumentException("Missing compression flag or compression method");
 		byte[] rest = Arrays.copyOfRange(parts0[1], 2, parts0[1].length);
-		byte[][] parts1 = Util.readAndSplitByNull(rest.length,
+		byte[][] parts1 = Util.readAndSplitByNul(rest.length,
 			new DataInputStream(new ByteArrayInputStream(rest)), 3);
 		
 		int compFlag = parts0[1][0];

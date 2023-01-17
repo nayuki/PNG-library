@@ -50,7 +50,7 @@ public record Text(String keyword, String text) implements Chunk {
 		if (dataLen < 0)
 			throw new IllegalArgumentException("Negative data length");
 		Objects.requireNonNull(in);
-		byte[][] parts = Util.readAndSplitByNull(dataLen, in, 2);
+		byte[][] parts = Util.readAndSplitByNul(dataLen, in, 2);
 		return new Text(
 			new String(parts[0], StandardCharsets.ISO_8859_1),
 			new String(parts[1], StandardCharsets.ISO_8859_1));

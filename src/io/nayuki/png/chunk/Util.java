@@ -78,7 +78,7 @@ public final class Util {
 	
 	// Fully reads dataLen bytes, then splits the array by the foremost
 	// (numParts - 1) NUL bytes, throwing an exception if not enough exist.
-	static byte[][] readAndSplitByNull(int dataLen, DataInput in, int numParts) throws IOException {
+	static byte[][] readAndSplitByNul(int dataLen, DataInput in, int numParts) throws IOException {
 		byte[] data = readBytes(in, dataLen);
 		
 		var result = new byte[numParts][];
