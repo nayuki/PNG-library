@@ -12,6 +12,8 @@ import java.io.DataInput;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import io.nayuki.png.Chunk;
 
 
@@ -153,6 +155,24 @@ public final class Util {
 		}
 		return Math.toIntExact(result);
 	}
+	
+	
+	// Classifies the given string which should be in scientific notation.
+	static int testAsciiFloat(String s) {
+		Objects.requireNonNull(s);
+		Matcher m = ASCII_FLOAT.matcher(s);
+		if (!m.matches())
+			return -1;  // Invalid syntax
+		else if (m.group(1).equals("-") || !NONZERO.matcher(m.group(2)).find())
+			return 0;  // Negative or zero
+		else
+			return 1;  // Positive
+	}
+	
+	private static final Pattern ASCII_FLOAT = Pattern.compile(
+		"([+-]?)(\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][+-]?\\d+)?");
+	
+	private static final Pattern NONZERO = Pattern.compile("[1-9]");
 	
 	
 	// Returns a new array of fully reading the given number of bytes.

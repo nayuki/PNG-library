@@ -13,8 +13,6 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import io.nayuki.png.Chunk;
 
 
@@ -33,26 +31,13 @@ public record Scal(
 	
 	static final String TYPE = "sCAL";
 	
-	private static final Pattern ASCII_FLOAT =
-		Pattern.compile("([+-]?)(\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][+-]?\\d+)?");
-	
-	private static final Pattern NONZERO = Pattern.compile("[1-9]");
-	
 	
 	/*---- Constructor ----*/
 	
 	public Scal {
 		Objects.requireNonNull(unitSpecifier);
-		Objects.requireNonNull(pixelWidth);
-		Objects.requireNonNull(pixelHeight);
-		
-		Matcher m = ASCII_FLOAT.matcher(pixelWidth);
-		if (!m.matches() || m.group(1).equals("-") || !NONZERO.matcher(m.group(2)).find())
+		if (Util.testAsciiFloat(pixelWidth) != 1 || Util.testAsciiFloat(pixelHeight) != 1)
 			throw new IllegalArgumentException("Invalid number string");
-		m = ASCII_FLOAT.matcher(pixelHeight);
-		if (!m.matches() || m.group(1).equals("-") || !NONZERO.matcher(m.group(2)).find())
-			throw new IllegalArgumentException("Invalid number string");
-		
 		Util.checkedLengthSum(pixelWidth, pixelHeight, 2);
 	}
 	
