@@ -32,7 +32,7 @@ public record Fdat(
 	/*---- Constructor ----*/
 	
 	public Fdat {
-		if (sequence <= 0)
+		if (sequence < 0)
 			throw new IllegalArgumentException("Invalid sequence number");
 		Objects.requireNonNull(data);
 		Util.checkedLengthSum(data, Integer.BYTES);

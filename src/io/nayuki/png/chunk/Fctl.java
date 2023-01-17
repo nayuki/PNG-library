@@ -39,7 +39,7 @@ public record Fctl(
 	/*---- Constructor ----*/
 	
 	public Fctl {
-		if (sequence <= 0)
+		if (sequence < 0)
 			throw new IllegalArgumentException("Invalid sequence number");
 		if (width <= 0)
 			throw new IllegalArgumentException("Invalid width");
