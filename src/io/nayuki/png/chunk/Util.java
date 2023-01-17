@@ -54,6 +54,7 @@ public final class Util {
 			case Fdat.TYPE -> Fdat.read(dataLen, in);
 			case Gama.TYPE -> Gama.read(         in);
 			case Gifg.TYPE -> Gifg.read(         in);
+			case Gift.TYPE -> Gift.read(dataLen, in);
 			case Gifx.TYPE -> Gifx.read(dataLen, in);
 			case Hist.TYPE -> Hist.read(dataLen, in);
 			case Iccp.TYPE -> Iccp.read(dataLen, in);
