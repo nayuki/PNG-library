@@ -77,8 +77,8 @@ public record Scal(
 		byte[][] parts = Util.readAndSplitByNul(dataLen - 1, in, 2);
 		return new Scal(
 			unitSpecifier,
-			new String(parts[0], StandardCharsets.UTF_8),
-			new String(parts[1], StandardCharsets.UTF_8));
+			new String(parts[0], StandardCharsets.US_ASCII),
+			new String(parts[1], StandardCharsets.US_ASCII));
 	}
 	
 	
@@ -96,9 +96,9 @@ public record Scal(
 	
 	@Override public void writeData(DataOutput out) throws IOException {
 		out.writeByte(unitSpecifier.ordinal() + 1);
-		out.write(pixelWidth.getBytes(StandardCharsets.UTF_8));
+		out.write(pixelWidth.getBytes(StandardCharsets.US_ASCII));
 		out.writeByte(0);
-		out.write(pixelHeight.getBytes(StandardCharsets.UTF_8));
+		out.write(pixelHeight.getBytes(StandardCharsets.US_ASCII));
 	}
 	
 	
