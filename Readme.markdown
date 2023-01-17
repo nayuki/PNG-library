@@ -78,7 +78,7 @@ These translate between `PngImage` objects (with chunks and compressed bytes) an
 All function arguments, return values, and object fields must not be `null`. Users of this library must not pass in `null` values, and in turn, the library will not return `null` values. The optionality of a value is instead conveyed by `java.util.Optional`. The library might use `null` internally within functions, but does not expose these values to user code.
 
 ### Immutability
-Objects of any chunk type included in this library must be treated as immutable. If a chunk type is composed entirely of immutable fields (e.g. `int`, `String`), then it is truly immutable. Otherwise, a chunk type might choose to return its internal `byte[]` directly to avoid the cost of making defensive copies, but this means immutability cannot be enforced.
+Objects of any chunk type included in this library must be treated as immutable. All their fields are private. Due to `record`, each field implicitly generates a getter method with the same name. There are no setter methods. If a chunk type is composed entirely of immutable fields (e.g. `int`, `String`), then it is truly immutable. Otherwise, a chunk type might choose to return its internal `byte[]` directly to avoid the cost of making defensive copies, but this means immutability cannot be enforced.
 
 `XngFile` objects should be treated as immutable, but their `List<Chunk>` and the chunks themselves might not be able to enforce immutability.
 
