@@ -46,11 +46,6 @@ final class BoundedOutputStream extends FilterOutputStream {
 	}
 	
 	
-	@Override public void write(byte[] b) throws IOException {
-		write(b, 0, b.length);
-	}
-	
-	
 	@Override public void write(byte[] b, int off, int len) throws IOException {
 		if (len > remain)
 			throw new IllegalStateException("Insufficient remaining bytes");
