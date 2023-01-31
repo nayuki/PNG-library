@@ -127,16 +127,15 @@ public final class PngImage {
 				throw new IllegalArgumentException("Duplicate " + type + " chunk");
 			
 			switch (state) {
-				case BEFORE_IHDR: {
+				case BEFORE_IHDR -> {
 					if (chunk instanceof Ihdr chk) {
 						ihdr = Optional.of(chk);
 						state = State.AFTER_IHDR;
 					} else
 						throw new IllegalArgumentException("Expected IHDR chunk");
-					break;
 				}
 				
-				case AFTER_IHDR: {
+				case AFTER_IHDR -> {
 					if (chunk instanceof Plte chk0) {
 						plte = Optional.of(chk0);
 						state = State.AFTER_PLTE;
@@ -147,10 +146,9 @@ public final class PngImage {
 						throw new IllegalArgumentException("Unexpected IEND chunk");
 					else
 						afterIhdr.add(chunk);
-					break;
 				}
 				
-				case AFTER_PLTE: {
+				case AFTER_PLTE -> {
 					if (chunk instanceof Idat chk) {
 						idats.add(chk);
 						state = State.DURING_IDATS;
@@ -160,10 +158,9 @@ public final class PngImage {
 						throw new IllegalArgumentException("Unexpected " + chunk.getType() + " chunk");
 					else
 						afterPlte.add(chunk);
-					break;
 				}
 				
-				case DURING_IDATS: {
+				case DURING_IDATS -> {
 					if (chunk instanceof Plte)
 						throw new IllegalArgumentException("Unexpected PLTE chunk");
 					else if (chunk instanceof Idat chk)
@@ -174,10 +171,9 @@ public final class PngImage {
 						afterIdats.add(chunk);
 						state = State.AFTER_IDATS;
 					}
-					break;
 				}
 				
-				case AFTER_IDATS: {
+				case AFTER_IDATS -> {
 					if (chunk instanceof Plte)
 						throw new IllegalArgumentException("Unexpected PLTE chunk");
 					else if (chunk instanceof Iend)
@@ -188,14 +184,11 @@ public final class PngImage {
 						afterIdats.add(chunk);
 						state = State.AFTER_IDATS;
 					}
-					break;
 				}
 				
-				case AFTER_IEND:
-					throw new IllegalArgumentException("Unexpected chunk after IEND");
+				case AFTER_IEND -> throw new IllegalArgumentException("Unexpected chunk after IEND");
 				
-				default:
-					throw new AssertionError("Unhandled state");
+				default -> throw new AssertionError("Unhandled state");
 			}
 		}
 		if (state != State.AFTER_IEND)

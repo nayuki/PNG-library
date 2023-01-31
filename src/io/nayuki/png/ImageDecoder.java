@@ -149,34 +149,33 @@ public final class ImageDecoder {
 				int r, g, b, a;
 				long temp;
 				switch (mode) {
-					case 0:
+					case 0 -> {
 						r = row[i + 0] & 0xFF;
 						g = row[i + 1] & 0xFF;
 						b = row[i + 2] & 0xFF;
 						temp = (long)r << 48 | (long)g << 32 | (long)b << 16;
 						a = temp != transparentColor ? 0xFF : 0x00;
-						break;
-					case 1:
+					}
+					case 1 -> {
 						r = row[i + 0] & 0xFF;
 						g = row[i + 1] & 0xFF;
 						b = row[i + 2] & 0xFF;
 						a = row[i + 3] & 0xFF;
-						break;
-					case 2:
+					}
+					case 2 -> {
 						r = (row[i + 0] & 0xFF) << 8 | (row[i + 1] & 0xFF) << 0;
 						g = (row[i + 2] & 0xFF) << 8 | (row[i + 3] & 0xFF) << 0;
 						b = (row[i + 4] & 0xFF) << 8 | (row[i + 5] & 0xFF) << 0;
 						temp = (long)r << 48 | (long)g << 32 | (long)b << 16;
 						a = temp != transparentColor ? 0xFFFF : 0x00;
-						break;
-					case 3:
+					}
+					case 3 -> {
 						r = (row[i + 0] & 0xFF) << 8 | (row[i + 1] & 0xFF) << 0;
 						g = (row[i + 2] & 0xFF) << 8 | (row[i + 3] & 0xFF) << 0;
 						b = (row[i + 4] & 0xFF) << 8 | (row[i + 5] & 0xFF) << 0;
 						a = (row[i + 6] & 0xFF) << 8 | (row[i + 7] & 0xFF) << 0;
-						break;
-					default:
-						throw new AssertionError();
+					}
+					default -> throw new AssertionError();
 				}
 				r >>>= rShift;
 				g >>>= gShift;
@@ -272,26 +271,25 @@ public final class ImageDecoder {
 				for (int x = 0, i = filterStride; x < width; x++, i += filterStride) {
 					int w, a, temp;
 					switch (mode) {
-						case 0:
+						case 0 -> {
 							w = row[i + 0] & 0xFF;
 							temp = w << 16;
 							a = temp != transparentColor ? 0xFF : 0x00;
-							break;
-						case 1:
+						}
+						case 1 -> {
 							w = row[i + 0] & 0xFF;
 							a = row[i + 1] & 0xFF;
-							break;
-						case 2:
+						}
+						case 2 -> {
 							w = (row[i + 0] & 0xFF) << 8 | (row[i + 1] & 0xFF) << 0;
 							temp = w << 16;
 							a = temp != transparentColor ? 0xFFFF : 0x00;
-							break;
-						case 3:
+						}
+						case 3 -> {
 							w = (row[i + 0] & 0xFF) << 8 | (row[i + 1] & 0xFF) << 0;
 							a = (row[i + 2] & 0xFF) << 8 | (row[i + 3] & 0xFF) << 0;
-							break;
-						default:
-							throw new AssertionError();
+						}
+						default -> throw new AssertionError();
 					}
 					w >>>= wShift;
 					a >>>= aShift;
@@ -379,21 +377,21 @@ public final class ImageDecoder {
 			input.readFully(currentRow, filterStride, currentRow.length - filterStride);
 			
 			switch (filter) {
-				case 0:  // None
-					break;
-				case 1:  // Sub
+				case 0 -> {  // None
+				}
+				case 1 -> {  // Sub
 					for (int i = filterStride; i < currentRow.length; i++)
 						currentRow[i] += currentRow[i - filterStride];
-					break;
-				case 2:  // Up
+				}
+				case 2 -> {  // Up
 					for (int i = filterStride; i < currentRow.length; i++)
 						currentRow[i] += previousRow[i];
-					break;
-				case 3:  // Average
+				}
+				case 3 -> {  // Average
 					for (int i = filterStride; i < currentRow.length; i++)
 						currentRow[i] += ((currentRow[i - filterStride] & 0xFF) + (previousRow[i] & 0xFF)) >>> 1;
-					break;
-				case 4:  // Paeth
+				}
+				case 4 -> {  // Paeth
 					for (int i = filterStride; i < currentRow.length; i++) {
 						int a = currentRow[i - filterStride] & 0xFF;  // Left
 						int b = previousRow[i] & 0xFF;  // Up
@@ -408,9 +406,8 @@ public final class ImageDecoder {
 						else pr = c;
 						currentRow[i] += pr;
 					}
-					break;
-				default:
-					throw new IllegalArgumentException("Unsupported filter type: " + filter);
+				}
+				default -> throw new IllegalArgumentException("Unsupported filter type: " + filter);
 			}
 			return currentRow;
 		}
