@@ -36,6 +36,8 @@ import io.nayuki.png.image.BufferedRgbaImage;
 public abstract sealed class ImageDecoder permits
 		ImageDecoder.RgbaImageDecoder, ImageDecoder.GrayImageDecoder, ImageDecoder.PaletteImageDecoder {
 	
+	/*---- Public function ----*/
+	
 	/**
 	 * Decodes the specified PNG image to a new mutable buffered image. If the
 	 * PNG's color type is true color, then a {@link BufferedRgbaImage} is
@@ -48,6 +50,7 @@ public abstract sealed class ImageDecoder permits
 	 * @throws UnsupportedOperationException if the PNG image's color type is not supported
 	 */
 	public static Object toImage(PngImage png) {
+		// Check header chunk
 		Objects.requireNonNull(png);
 		Ihdr ihdr = png.ihdr.orElseThrow(() -> new IllegalArgumentException("Missing IHDR chunk"));
 		if (ihdr.compressionMethod() != Ihdr.CompressionMethod.ZLIB_DEFLATE)
@@ -55,6 +58,7 @@ public abstract sealed class ImageDecoder permits
 		if (ihdr.filterMethod() != Ihdr.FilterMethod.ADAPTIVE)
 			throw new IllegalArgumentException("Unsupported filter method");
 		
+		// Decode image by color type
 		return (switch (ihdr.colorType()) {
 			case TRUE_COLOR, TRUE_COLOR_WITH_ALPHA -> new RgbaImageDecoder(png);
 			case GRAYSCALE , GRAYSCALE_WITH_ALPHA  -> new GrayImageDecoder(png);
@@ -63,6 +67,7 @@ public abstract sealed class ImageDecoder permits
 	}
 	
 	
+	/*---- ImageDecoder instance members ----*/
 	
 	final PngImage png;
 	final Ihdr ihdr;
@@ -76,6 +81,7 @@ public abstract sealed class ImageDecoder permits
 		ihdr = png.ihdr.get();
 		inBitDepth = ihdr.bitDepth();
 		
+		// Find 0 or 1 significant bits chunk
 		for (Chunk chunk : png.afterIhdr) {
 			if (chunk instanceof Sbit chk) {
 				if (sbit.isPresent())
@@ -84,6 +90,7 @@ public abstract sealed class ImageDecoder permits
 			}
 		}
 		
+		// Find 0 or 1 transparency chunk
 		for (Chunk chunk : png.afterPlte) {
 			if (chunk instanceof Trns chk) {
 				if (trns.isPresent())
@@ -95,6 +102,7 @@ public abstract sealed class ImageDecoder permits
 	
 	
 	final Object decode() {
+		// Virtually concatenate bytes from all data chunks, then decompress
 		List<InputStream> ins = png.idats.stream()
 			.map(idat -> new ByteArrayInputStream(idat.data()))
 			.collect(Collectors.toList());
@@ -102,6 +110,7 @@ public abstract sealed class ImageDecoder permits
 		var in1 = new InflaterInputStream(in0);
 		try (var in2 = new DataInputStream(in1)) {
 			
+			// Handle progressive and interlaced images
 			int xStep = switch (ihdr.interlaceMethod()) {
 				case NONE  -> 1;
 				case ADAM7 -> 8;
@@ -135,6 +144,8 @@ public abstract sealed class ImageDecoder permits
 	
 	
 	
+	/*---- Helper class ----*/
+	
 	private static final class RowDecoder {
 		
 		private DataInput input;
@@ -161,9 +172,11 @@ public abstract sealed class ImageDecoder permits
 			currentRow = previousRow;
 			previousRow = temp;
 			
+			// Read all the necessary bytes
 			int filter = input.readUnsignedByte();
 			input.readFully(currentRow, filterStride, currentRow.length - filterStride);
 			
+			// Do un-filtering
 			switch (filter) {
 				case 0 -> {  // None
 				}
@@ -204,15 +217,18 @@ public abstract sealed class ImageDecoder permits
 	
 	
 	
+	/*---- A decoder subclass ----*/
+	
 	static final class RgbaImageDecoder extends ImageDecoder {
 		
-		private final long transparentColor;
+		private final long transparentColor;  // Either -1 or 0xRRRRGGGGBBBB0000
 		private BufferedRgbaImage result;
 		
 		
 		public RgbaImageDecoder(PngImage png) {
 			super(png);
 			
+			// Handle significant bits
 			int outRBits = inBitDepth, outGBits = inBitDepth, outBBits = inBitDepth,
 				outABits = ihdr.colorType() == Ihdr.ColorType.TRUE_COLOR ? 0 : inBitDepth;
 			if (sbit.isPresent()) {
@@ -226,6 +242,7 @@ public abstract sealed class ImageDecoder permits
 					outABits = sb[3];
 			}
 			
+			// Handle transparent color
 			if (trns.isEmpty())
 				transparentColor = -1;
 			else {
@@ -253,6 +270,7 @@ public abstract sealed class ImageDecoder permits
 			int height = Math.ceilDiv(result.getHeight() - yOffset, yStep);
 			if (width == 0 || height == 0)
 				return;
+			
 			int[] outBitDepths = result.getBitDepths();
 			int rShift = inBitDepth - outBitDepths[0];
 			int gShift = inBitDepth - outBitDepths[1];
@@ -260,6 +278,7 @@ public abstract sealed class ImageDecoder permits
 			int aShift = inBitDepth - outBitDepths[3];
 			boolean hasAlpha = outBitDepths[3] > 0 && transparentColor == -1;
 			int mode = (inBitDepth / 8 - 1) * 2 + (hasAlpha ? 1 : 0);
+			
 			int filterStride = Math.ceilDiv(inBitDepth * (hasAlpha ? 4 : 3), 8);
 			var dec = new RowDecoder(din, filterStride,
 				Math.toIntExact(Math.ceilDiv((long)width * inBitDepth * (hasAlpha ? 4 : 3), 8)));
@@ -317,15 +336,18 @@ public abstract sealed class ImageDecoder permits
 	
 	
 	
+	/*---- A decoder subclass ----*/
+	
 	static final class GrayImageDecoder extends ImageDecoder {
 		
-		private final int transparentColor;
+		private final int transparentColor;  // Either -1 or 0xWWWW0000
 		private BufferedGrayImage result;
 		
 		
 		public GrayImageDecoder(PngImage png) {
 			super(png);
 			
+			// Handle significant bits
 			int outWBits = inBitDepth, outABits = ihdr.colorType() == Ihdr.ColorType.GRAYSCALE ? 0 : inBitDepth;
 			if (sbit.isPresent()) {
 				byte[] sb = sbit.get().data();
@@ -336,6 +358,7 @@ public abstract sealed class ImageDecoder permits
 					outABits = sb[1];
 			}
 			
+			// Handle transparent color
 			if (trns.isEmpty())
 				transparentColor = -1;
 			else {
@@ -363,11 +386,13 @@ public abstract sealed class ImageDecoder permits
 			int height = Math.ceilDiv(result.getHeight() - yOffset, yStep);
 			if (width == 0 || height == 0)
 				return;
+			
 			int[] outBitDepths = result.getBitDepths();
 			int wShift = inBitDepth - outBitDepths[0];
 			int aShift = inBitDepth - outBitDepths[1];
 			boolean hasAlpha = outBitDepths[1] > 0;
 			int mode = inBitDepth >= 8 ? (inBitDepth / 8 - 1) * 2 + (hasAlpha ? 1 : 0) : 4;
+			
 			int filterStride = Math.ceilDiv(inBitDepth * (hasAlpha ? 2 : 1), 8);
 			var dec = new RowDecoder(din, filterStride,
 				Math.toIntExact(Math.ceilDiv((long)width * inBitDepth * (hasAlpha ? 2 : 1), 8)));
@@ -431,6 +456,8 @@ public abstract sealed class ImageDecoder permits
 	
 	
 	
+	/*---- A decoder subclass ----*/
+	
 	static final class PaletteImageDecoder extends ImageDecoder {
 		
 		private BufferedPaletteImage result;
@@ -439,6 +466,7 @@ public abstract sealed class ImageDecoder permits
 		public PaletteImageDecoder(PngImage png) {
 			super(png);
 			
+			// Handle palette and transparency
 			if (png.plte.isEmpty())
 				throw new IllegalArgumentException("Missing PLTE chunk");
 			byte[] paletteBytes = png.plte.get().data();
@@ -465,6 +493,7 @@ public abstract sealed class ImageDecoder permits
 			int height = Math.ceilDiv(result.getHeight() - yOffset, yStep);
 			if (width == 0 || height == 0)
 				return;
+			
 			int filterStride = 1;  // Equal to ceil(inBitDepth / 8)
 			var dec = new RowDecoder(din, filterStride,
 				Math.toIntExact(Math.ceilDiv((long)width * inBitDepth, 8)));
