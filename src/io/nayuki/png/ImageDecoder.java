@@ -95,12 +95,7 @@ public final class ImageDecoder {
 		}
 		var result = new BufferedRgbaImage(ihdr.width(), ihdr.height(), new int[]{outRBits, outGBits, outBBits, outABits});
 		
-		List<InputStream> ins = png.idats.stream()
-			.map(idat -> new ByteArrayInputStream(idat.data()))
-			.collect(Collectors.toList());
-		try (var din = new DataInputStream(new InflaterInputStream(
-				new SequenceInputStream(Collections.enumeration(ins))))) {
-			
+		try (var din = decompressIdats(png)) {
 			int xStep = switch (ihdr.interlaceMethod()) {
 				case NONE  -> 1;
 				case ADAM7 -> 8;
@@ -221,12 +216,7 @@ public final class ImageDecoder {
 		}
 		var result = new BufferedGrayImage(ihdr.width(), ihdr.height(), new int[]{outWBits, outABits});
 		
-		List<InputStream> ins = png.idats.stream()
-			.map(idat -> new ByteArrayInputStream(idat.data()))
-			.collect(Collectors.toList());
-		try (var din = new DataInputStream(new InflaterInputStream(
-				new SequenceInputStream(Collections.enumeration(ins))))) {
-			
+		try (var din = decompressIdats(png)) {
 			int xStep = switch (ihdr.interlaceMethod()) {
 				case NONE  -> 1;
 				case ADAM7 -> 8;
@@ -343,6 +333,17 @@ public final class ImageDecoder {
 			}
 		}
 		return result;
+	}
+	
+	
+	private static DataInputStream decompressIdats(PngImage png) throws IOException {
+		List<InputStream> ins = png.idats.stream()
+			.map(idat -> new ByteArrayInputStream(idat.data()))
+			.collect(Collectors.toList());
+		var in0 = new SequenceInputStream(Collections.enumeration(ins));
+		var in1 = new InflaterInputStream(in0);
+		var in2 = new DataInputStream(in1);
+		return in2;
 	}
 	
 	
