@@ -68,15 +68,16 @@ public final class ImageEncoder {
 			filtersAndSamples[i] = 0;
 			i++;
 			
-			if (bitDepth == 8) {
-				if (!hasAlpha) {
+			switch (bitDepth * 10 + (hasAlpha ? 1 : 0)) {
+				case 8_0 -> {
 					for (int x = 0; x < width; x++, i += 3) {
 						long val = img.getPixel(x, y);
 						filtersAndSamples[i + 0] = (byte)(val >>> 48);
 						filtersAndSamples[i + 1] = (byte)(val >>> 32);
 						filtersAndSamples[i + 2] = (byte)(val >>> 16);
 					}
-				} else {
+				}
+				case 8_1 -> {
 					for (int x = 0; x < width; x++, i += 4) {
 						long val = img.getPixel(x, y);
 						filtersAndSamples[i + 0] = (byte)(val >>> 48);
@@ -85,8 +86,7 @@ public final class ImageEncoder {
 						filtersAndSamples[i + 3] = (byte)(val >>>  0);
 					}
 				}
-			} else if (bitDepth == 16) {
-				if (!hasAlpha) {
+				case 16_0 -> {
 					for (int x = 0; x < width; x++, i += 6) {
 						long val = img.getPixel(x, y);
 						filtersAndSamples[i + 0] = (byte)(val >>> 56);
@@ -96,7 +96,8 @@ public final class ImageEncoder {
 						filtersAndSamples[i + 4] = (byte)(val >>> 24);
 						filtersAndSamples[i + 5] = (byte)(val >>> 16);
 					}
-				} else {
+				}
+				case 16_1 -> {
 					for (int x = 0; x < width; x++, i += 8) {
 						long val = img.getPixel(x, y);
 						filtersAndSamples[i + 0] = (byte)(val >>> 56);
@@ -109,8 +110,8 @@ public final class ImageEncoder {
 						filtersAndSamples[i + 7] = (byte)(val >>>  0);
 					}
 				}
-			} else
-				throw new AssertionError("Unsupported bit depth");
+				default -> throw new AssertionError("Unsupported bit depth");
+			}
 		}
 		
 		var bout = new ByteArrayOutputStream();
@@ -167,42 +168,44 @@ public final class ImageEncoder {
 			filtersAndSamples[i] = 0;
 			i++;
 			
-			if ((bitDepth == 1 || bitDepth == 2 || bitDepth == 4) && !hasAlpha) {
-				int xMask = 8 / bitDepth - 1;
-				int b = 0;
-				for (int x = 0; x < width; x++) {
-					int val = img.getPixel(x, y);
-					b = (b << bitDepth) | (val >>> 16);
-					if ((x & xMask) == xMask) {
-						filtersAndSamples[i] = (byte)b;
+			switch (bitDepth * 10 + (hasAlpha ? 1 : 0)) {
+				case 1_0, 2_0, 4_0 -> {
+					int xMask = 8 / bitDepth - 1;
+					int b = 0;
+					for (int x = 0; x < width; x++) {
+						int val = img.getPixel(x, y);
+						b = (b << bitDepth) | (val >>> 16);
+						if ((x & xMask) == xMask) {
+							filtersAndSamples[i] = (byte)b;
+							i++;
+						}
+					}
+					if ((width & xMask) != 0) {
+						filtersAndSamples[i] = (byte)(b << (8 - (width & xMask) * bitDepth));
 						i++;
 					}
 				}
-				if ((width & xMask) != 0) {
-					filtersAndSamples[i] = (byte)(b << (8 - (width & xMask) * bitDepth));
-					i++;
-				}
-			} else if (bitDepth == 8) {
-				if (!hasAlpha) {
+				case 8_0 -> {
 					for (int x = 0; x < width; x++, i += 1) {
 						int val = img.getPixel(x, y);
 						filtersAndSamples[i + 0] = (byte)(val >>> 16);
 					}
-				} else {
+				}
+				case 8_1 -> {
 					for (int x = 0; x < width; x++, i += 2) {
 						int val = img.getPixel(x, y);
 						filtersAndSamples[i + 0] = (byte)(val >>> 16);
 						filtersAndSamples[i + 1] = (byte)(val >>>  0);
 					}
 				}
-			} else if (bitDepth == 16) {
-				if (!hasAlpha) {
+				case 16_0 -> {
 					for (int x = 0; x < width; x++, i += 2) {
 						int val = img.getPixel(x, y);
 						filtersAndSamples[i + 0] = (byte)(val >>> 24);
 						filtersAndSamples[i + 1] = (byte)(val >>> 16);
 					}
-				} else {
+				}
+				case 16_1 -> {
 					for (int x = 0; x < width; x++, i += 4) {
 						int val = img.getPixel(x, y);
 						filtersAndSamples[i + 0] = (byte)(val >>> 24);
@@ -211,8 +214,8 @@ public final class ImageEncoder {
 						filtersAndSamples[i + 3] = (byte)(val >>>  0);
 					}
 				}
-			} else
-				throw new AssertionError("Unsupported bit depth");
+				default -> throw new AssertionError("Unsupported bit depth");
+			}
 		}
 		
 		var bout = new ByteArrayOutputStream();
