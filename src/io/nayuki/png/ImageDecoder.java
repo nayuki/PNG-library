@@ -127,7 +127,9 @@ public final class ImageDecoder {
 	}
 	
 	
-	private static void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep, int inBitDepth, long transparentColor, BufferedRgbaImage result) throws IOException {
+	private static void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep,
+			int inBitDepth, long transparentColor, BufferedRgbaImage result) throws IOException {
+		
 		int width  = Math.ceilDiv(result.getWidth () - xOffset, xStep);
 		int height = Math.ceilDiv(result.getHeight() - yOffset, yStep);
 		if (width == 0 || height == 0)
@@ -251,7 +253,9 @@ public final class ImageDecoder {
 	}
 	
 	
-	private static void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep, int inBitDepth, int transparentColor, BufferedGrayImage result) throws IOException {
+	private static void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep,
+			int inBitDepth, int transparentColor, BufferedGrayImage result) throws IOException {
+		
 		int width  = Math.ceilDiv(result.getWidth () - xOffset, xStep);
 		int height = Math.ceilDiv(result.getHeight() - yOffset, yStep);
 		if (width == 0 || height == 0)
