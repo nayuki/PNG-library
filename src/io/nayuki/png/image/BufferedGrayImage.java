@@ -113,7 +113,7 @@ public final class BufferedGrayImage implements GrayImage, Cloneable {
 	
 	@Override public BufferedGrayImage clone() {
 		try {
-			BufferedGrayImage result = (BufferedGrayImage)super.clone();
+			var result = (BufferedGrayImage)super.clone();
 			result.bitDepths = result.bitDepths.clone();
 			result.pixels = result.pixels.clone();
 			return result;

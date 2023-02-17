@@ -115,7 +115,7 @@ public final class BufferedRgbaImage implements RgbaImage, Cloneable {
 	
 	@Override public BufferedRgbaImage clone() {
 		try {
-			BufferedRgbaImage result = (BufferedRgbaImage)super.clone();
+			var result = (BufferedRgbaImage)super.clone();
 			result.bitDepths = result.bitDepths.clone();
 			result.pixels = result.pixels.clone();
 			return result;
