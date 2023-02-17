@@ -24,6 +24,7 @@ import io.nayuki.png.chunk.Ihdr;
 import io.nayuki.png.chunk.Sbit;
 import io.nayuki.png.chunk.Trns;
 import io.nayuki.png.image.BufferedGrayImage;
+import io.nayuki.png.image.BufferedPaletteImage;
 import io.nayuki.png.image.BufferedRgbaImage;
 
 
@@ -56,7 +57,7 @@ public final class ImageDecoder {
 		return switch (ihdr.colorType()) {
 			case TRUE_COLOR, TRUE_COLOR_WITH_ALPHA -> toRgbaImage(png);
 			case GRAYSCALE , GRAYSCALE_WITH_ALPHA  -> toGrayImage(png);
-			default -> throw new UnsupportedOperationException("Unsupported color type");
+			case INDEXED_COLOR                     -> toPaletteImage(png);
 		};
 	}
 	
@@ -305,6 +306,88 @@ public final class ImageDecoder {
 					w >>>= wShift;
 					result.setPixel(xOffset + x * xStep, yOffset + y * yStep, w << 16 | a << 0);
 				}
+			}
+		}
+	}
+	
+	
+	private static BufferedPaletteImage toPaletteImage(PngImage png) {
+		Ihdr ihdr = png.ihdr.get();
+		int bitDepth = ihdr.bitDepth();
+		if (png.plte.isEmpty())
+			throw new IllegalArgumentException("Missing PLTE chunk");
+		byte[] paletteBytes = png.plte.get().data();
+		var palette = new int[paletteBytes.length / 3];
+		if (palette.length > (1 << bitDepth))
+			throw new IllegalArgumentException("Palette length exceeds bit depth");
+		byte[] trnsBytes = getTrns(png).map(trns -> trns.data()).orElse(new byte[0]);
+		if (trnsBytes.length > palette.length)
+			throw new IllegalArgumentException("Transparency has more entries than palette");
+		for (int i = 0; i < palette.length; i++) {
+			palette[i] =
+				(paletteBytes[i * 3 + 0] & 0xFF) << 24 |
+				(paletteBytes[i * 3 + 1] & 0xFF) << 16 |
+				(paletteBytes[i * 3 + 2] & 0xFF) <<  8 |
+				(i < trnsBytes.length ? trnsBytes[i] & 0xFF : 0xFF) << 0;
+		}
+		var result = new BufferedPaletteImage(ihdr.width(), ihdr.height(), palette);
+		
+		try (var din = decompressIdats(png)) {
+			int xStep = switch (ihdr.interlaceMethod()) {
+				case NONE  -> 1;
+				case ADAM7 -> 8;
+			};
+			int yStep = xStep;
+			decodeSubimage(din, 0, 0, xStep, yStep, bitDepth, result);
+			while (yStep > 1) {
+				if (xStep == yStep) {
+					decodeSubimage(din, xStep / 2, 0, xStep, yStep, bitDepth, result);
+					xStep /= 2;
+				} else {
+					assert xStep == yStep / 2;
+					decodeSubimage(din, 0, xStep, xStep, yStep, bitDepth, result);
+					yStep = xStep;
+				}
+			}
+			
+			if (din.read() != -1)
+				throw new IllegalArgumentException("Extra decompressed data after all pixels");
+		} catch (IOException e) {
+			throw new IllegalArgumentException(e);
+		}
+		return result;
+	}
+	
+	
+	private static void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep,
+			int bitDepth, BufferedPaletteImage result) throws IOException {
+		
+		int width  = Math.ceilDiv(result.getWidth () - xOffset, xStep);
+		int height = Math.ceilDiv(result.getHeight() - yOffset, yStep);
+		if (width == 0 || height == 0)
+			return;
+		int filterStride = 1;  // Equal to ceil(bitDepth / 8)
+		var dec = new RowDecoder(din, filterStride,
+			Math.toIntExact(Math.ceilDiv((long)width * bitDepth, 8)));
+		for (int y = 0; y < height; y++) {
+			byte[] row = dec.readRow();
+			switch (bitDepth) {
+				case 1, 2, 4 -> {
+					int xMask = 8 / bitDepth - 1;
+					int shift = 8 - bitDepth;
+					for (int x = 0, i = filterStride, b = 0; x < width; x++, b = (b << bitDepth) & 0xFF) {
+						if ((x & xMask) == 0) {
+							b = row[i] & 0xFF;
+							i++;
+						}
+						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, b >>> shift);
+					}
+				}
+				case 8 -> {
+					for (int x = 0, i = filterStride; x < width; x++, i += filterStride)
+						result.setPixel(xOffset + x * xStep, yOffset + y * yStep, row[i] & 0xFF);
+				}
+				default -> throw new AssertionError("Unreachable value");
 			}
 		}
 	}

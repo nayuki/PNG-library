@@ -16,8 +16,11 @@ import java.util.stream.IntStream;
 import java.util.zip.DeflaterOutputStream;
 import io.nayuki.png.chunk.Idat;
 import io.nayuki.png.chunk.Ihdr;
+import io.nayuki.png.chunk.Plte;
 import io.nayuki.png.chunk.Sbit;
+import io.nayuki.png.chunk.Trns;
 import io.nayuki.png.image.GrayImage;
+import io.nayuki.png.image.PaletteImage;
 import io.nayuki.png.image.RgbaImage;
 
 
@@ -215,6 +218,97 @@ public final class ImageEncoder {
 					}
 				}
 				default -> throw new AssertionError("Unsupported bit depth");
+			}
+		}
+		
+		var bout = new ByteArrayOutputStream();
+		try (var dout = new DeflaterOutputStream(bout)) {
+			dout.write(filtersAndSamples);
+		} catch (IOException e) {
+			throw new AssertionError("Caught impossible exception", e);
+		}
+		result.idats.add(new Idat(bout.toByteArray()));
+		
+		return result;
+	}
+	
+	
+	/**
+	 * Encodes the specified image to a new PNG image.
+	 * @param img the image to encode (not {@code null})
+	 * @return a new PNG image (not {@code null})
+	 * @throws NullPointerException if {@code img} is {@code null}
+	 */
+	public static PngImage toPng(PaletteImage img) {
+		Objects.requireNonNull(img);
+		int[] palette = img.getPalette();
+		int bitDepth;  // Equal to 2^ceil(log2(ceil(log2(palette.length))))}
+		if (palette.length <= (1 << 1))
+			bitDepth = 1;
+		else if (palette.length <= (1 << 2))
+			bitDepth = 2;
+		else if (palette.length <= (1 << 4))
+			bitDepth = 4;
+		else if (palette.length <= (1 << 8))
+			bitDepth = 8;
+		else
+			throw new AssertionError("Unreachable value");
+		
+		int width = img.getWidth();
+		int height = img.getHeight();
+		var result = new PngImage();
+		result.ihdr = Optional.of(new Ihdr(
+			width, height, bitDepth,
+			Ihdr.ColorType.INDEXED_COLOR,
+			Ihdr.CompressionMethod.ZLIB_DEFLATE,
+			Ihdr.FilterMethod.ADAPTIVE,
+			Ihdr.InterlaceMethod.NONE));
+		
+		var paletteBytes = new byte[Math.multiplyExact(palette.length, 3)];
+		int transpLen = 0;
+		for (int i = 0; i < palette.length; i++) {
+			int rgba = palette[i];
+			paletteBytes[i * 3 + 0] = (byte)(rgba >>> 24);
+			paletteBytes[i * 3 + 1] = (byte)(rgba >>> 16);
+			paletteBytes[i * 3 + 2] = (byte)(rgba >>>  8);
+			if ((rgba & 0xFF) != 0xFF)
+				transpLen = i + 1;
+		}
+		result.plte = Optional.of(new Plte(paletteBytes));
+		if (transpLen > 0) {
+			var transpBytes = new byte[transpLen];
+			for (int i = 0; i < transpBytes.length; i++)
+				transpBytes[i] = (byte)palette[i];
+			result.afterPlte.add(new Trns(transpBytes));
+		}
+		
+		int bytesPerRow = Math.toIntExact(Math.ceilDiv((long)width * bitDepth, 8) + 1);
+		var filtersAndSamples = new byte[Math.multiplyExact(bytesPerRow, height)];
+		for (int y = 0, i = 0; y < height; y++) {
+			filtersAndSamples[i] = 0;
+			i++;
+			
+			switch (bitDepth) {
+				case 1, 2, 4 -> {
+					int xMask = 8 / bitDepth - 1;
+					int b = 0;
+					for (int x = 0; x < width; x++) {
+						b = (b << bitDepth) | img.getPixel(x, y);
+						if ((x & xMask) == xMask) {
+							filtersAndSamples[i] = (byte)b;
+							i++;
+						}
+					}
+					if ((width & xMask) != 0) {
+						filtersAndSamples[i] = (byte)(b << (8 - (width & xMask) * bitDepth));
+						i++;
+					}
+				}
+				case 8 -> {
+					for (int x = 0; x < width; x++, i++)
+						filtersAndSamples[i] = (byte)img.getPixel(x, y);
+				}
+				default -> throw new AssertionError("Unreachable value");
 			}
 		}
 		
