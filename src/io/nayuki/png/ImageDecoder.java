@@ -470,7 +470,7 @@ public abstract sealed class ImageDecoder permits
 			if (png.plte.isEmpty())
 				throw new IllegalArgumentException("Missing PLTE chunk");
 			byte[] paletteBytes = png.plte.get().data();
-			var palette = new int[paletteBytes.length / 3];
+			var palette = new long[paletteBytes.length / 3];
 			if (palette.length > (1 << inBitDepth))
 				throw new IllegalArgumentException("Palette length exceeds bit depth");
 			byte[] trnsBytes = trns.map(trns -> trns.data()).orElse(new byte[0]);
@@ -478,9 +478,9 @@ public abstract sealed class ImageDecoder permits
 				throw new IllegalArgumentException("Transparency has more entries than palette");
 			for (int i = 0; i < palette.length; i++) {
 				palette[i] =
-					(paletteBytes[i * 3 + 0] & 0xFF) << 24 |
-					(paletteBytes[i * 3 + 1] & 0xFF) << 16 |
-					(paletteBytes[i * 3 + 2] & 0xFF) <<  8 |
+					(paletteBytes[i * 3 + 0] & 0xFFL) << 48 |
+					(paletteBytes[i * 3 + 1] & 0xFFL) << 32 |
+					(paletteBytes[i * 3 + 2] & 0xFFL) << 16 |
 					(i < trnsBytes.length ? trnsBytes[i] & 0xFF : 0xFF) << 0;
 			}
 			

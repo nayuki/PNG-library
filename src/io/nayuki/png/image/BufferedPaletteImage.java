@@ -18,7 +18,7 @@ public final class BufferedPaletteImage implements PaletteImage, Cloneable {
 	
 	private final int width;
 	private final int height;
-	private int[] palette;
+	private long[] palette;
 	private byte[] pixels;
 	
 	
@@ -31,7 +31,7 @@ public final class BufferedPaletteImage implements PaletteImage, Cloneable {
 	 * @throws IllegalArgumentException if the width, height, or palette length is out of range
 	 * @throws ArithmeticException if {@code width * height > Integer.MAX_VALUE}
 	 */
-	public BufferedPaletteImage(int width, int height, int[] pal) {
+	public BufferedPaletteImage(int width, int height, long[] pal) {
 		if (width <= 0 || height <= 0)
 			throw new IllegalArgumentException("Non-positive dimensions");
 		this.width = width;
@@ -51,7 +51,7 @@ public final class BufferedPaletteImage implements PaletteImage, Cloneable {
 	}
 	
 	
-	@Override public int[] getPalette() {
+	@Override public long[] getPalette() {
 		return palette.clone();
 	}
 	
@@ -67,7 +67,7 @@ public final class BufferedPaletteImage implements PaletteImage, Cloneable {
 	 * @throws IllegalArgumentException if the new palette's length is not in the
 	 * range [1, 256], or any pixel is not in the range [0, {@code pal.length})
 	 */
-	public void setPalette(int[] pal) {
+	public void setPalette(long[] pal) {
 		Objects.requireNonNull(pal);
 		if (!(1 <= pal.length && pal.length <= 256))
 			throw new IllegalArgumentException("Invalid palette size");

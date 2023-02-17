@@ -241,7 +241,7 @@ public final class ImageEncoder {
 	 */
 	public static PngImage toPng(PaletteImage img) {
 		Objects.requireNonNull(img);
-		int[] palette = img.getPalette();
+		long[] palette = img.getPalette();
 		int bitDepth;  // Equal to 2^ceil(log2(ceil(log2(palette.length))))}
 		if (palette.length <= (1 << 1))
 			bitDepth = 1;
@@ -267,10 +267,10 @@ public final class ImageEncoder {
 		var paletteBytes = new byte[Math.multiplyExact(palette.length, 3)];
 		int transpLen = 0;
 		for (int i = 0; i < palette.length; i++) {
-			int rgba = palette[i];
-			paletteBytes[i * 3 + 0] = (byte)(rgba >>> 24);
-			paletteBytes[i * 3 + 1] = (byte)(rgba >>> 16);
-			paletteBytes[i * 3 + 2] = (byte)(rgba >>>  8);
+			long rgba = palette[i];
+			paletteBytes[i * 3 + 0] = (byte)(rgba >>> 48);
+			paletteBytes[i * 3 + 1] = (byte)(rgba >>> 32);
+			paletteBytes[i * 3 + 2] = (byte)(rgba >>> 16);
 			if ((rgba & 0xFF) != 0xFF)
 				transpLen = i + 1;
 		}

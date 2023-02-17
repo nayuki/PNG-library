@@ -31,11 +31,11 @@ public interface PaletteImage {
 	
 	/**
 	 * Returns the palette of this image, with length between 1 and 256 (inclusive).
-	 * Each entry equals {@code (red << 24 | green << 16 | blue << 8 | alpha << 0)},
+	 * Each entry equals {@code (red << 48 | green << 32 | blue << 16 | alpha << 0)},
 	 * where {@code red} is in the range [0, 2<sup>8</sup>), etc.
 	 * @return the palette of this image (not {@code null})
 	 */
-	public int[] getPalette();
+	public long[] getPalette();
 	
 	
 	/**
