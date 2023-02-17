@@ -298,15 +298,14 @@ public final class ImageDecoder {
 				}
 			} else {
 				int xMask = 8 / inBitDepth - 1;
-				int mask = (0xFF00 >>> inBitDepth) & 0xFF;
 				int shift = 8 - inBitDepth;
 				int opaque = (1 << inBitDepth) - 1;
-				for (int x = 0, i = filterStride, b = 0; x < width; x++, b <<= inBitDepth) {
+				for (int x = 0, i = filterStride, b = 0; x < width; x++, b = (b << inBitDepth) & 0xFF) {
 					if ((x & xMask) == 0) {
 						b = row[i] & 0xFF;
 						i++;
 					}
-					int w = (b & mask) >>> shift;
+					int w = b >>> shift;
 					int temp = w << 16;
 					int a = (temp != transparentColor ? opaque : 0) >>> aShift;
 					w >>>= wShift;
