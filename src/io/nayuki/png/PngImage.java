@@ -293,14 +293,13 @@ public final class PngImage {
 	 */
 	public void write(OutputStream out) throws IOException {
 		Objects.requireNonNull(out);
-		if (ihdr.isEmpty() || idats.isEmpty())
-			throw new IllegalStateException("Missing some mandatory chunks");
-		
 		List<Chunk> chunks = new ArrayList<>();
 		chunks.add(ihdr.orElseThrow(() -> new IllegalStateException("Missing IHDR chunk")));
 		chunks.addAll(afterIhdr);
-		plte.ifPresent(chk -> chunks.add(chk));
+		plte.ifPresent(chunks::add);
 		chunks.addAll(afterPlte);
+		if (idats.isEmpty())
+			throw new IllegalStateException("Missing IDAT chunks");
 		chunks.addAll(idats);
 		chunks.addAll(afterIdats);
 		chunks.add(Iend.SINGLETON);
