@@ -27,7 +27,7 @@ public final class BufferedPaletteImage implements PaletteImage, Cloneable {
 	
 	
 	
-	/*---- Constructor ----*/
+	/*---- Constructors ----*/
 	
 	/**
 	 * Constructs an all-zero image with the specified dimensions, channel bit depths
@@ -76,6 +76,21 @@ public final class BufferedPaletteImage implements PaletteImage, Cloneable {
 		
 		setPalette(pal);
 		pixels = new byte[Math.multiplyExact(width, height)];
+	}
+	
+	
+	/**
+	 * Constructs an image by copying pixel values and bit depths from the specified image.
+	 * @param img the image to copy from (not {@code null})
+	 * @throws NullPointerException if {@code img} is {@code null}
+	 * @throws ArithmeticException if {@code width * height > Integer.MAX_VALUE}
+	 */
+	public BufferedPaletteImage(PaletteImage img) {
+		this(img.getWidth(), img.getHeight(), img.getBitDepths(), img.getPalette());
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++)
+				pixels[y * width + x] = (byte)img.getPixel(x, y);
+		}
 	}
 	
 	

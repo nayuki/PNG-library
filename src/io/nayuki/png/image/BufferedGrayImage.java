@@ -26,7 +26,7 @@ public final class BufferedGrayImage implements GrayImage, Cloneable {
 	
 	
 	
-	/*---- Constructor ----*/
+	/*---- Constructors ----*/
 	
 	/**
 	 * Constructs an all-zero image with the specified dimensions and
@@ -68,6 +68,21 @@ public final class BufferedGrayImage implements GrayImage, Cloneable {
 		illegalOnes = temp;
 		
 		pixels = new int[Math.multiplyExact(width, height)];
+	}
+	
+	
+	/**
+	 * Constructs an image by copying pixel values and bit depths from the specified image.
+	 * @param img the image to copy from (not {@code null})
+	 * @throws NullPointerException if {@code img} is {@code null}
+	 * @throws ArithmeticException if {@code width * height > Integer.MAX_VALUE}
+	 */
+	public BufferedGrayImage(GrayImage img) {
+		this(img.getWidth(), img.getHeight(), img.getBitDepths());
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++)
+				pixels[y * width + x] = img.getPixel(x, y);
+		}
 	}
 	
 	
