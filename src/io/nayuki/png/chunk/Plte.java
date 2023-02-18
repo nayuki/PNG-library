@@ -30,11 +30,7 @@ public record Plte(byte[] data) implements BytesDataChunk {
 		Objects.requireNonNull(data);
 		if (data.length % 3 != 0)
 			throw new IllegalArgumentException("Invalid data length");
-		checkNumEntries(data.length / 3);
-	}
-	
-	
-	private static void checkNumEntries(int numEntries) {
+		int numEntries = data.length / 3;
 		if (!(1 <= numEntries && numEntries <= 256))
 			throw new IllegalArgumentException("Number of entries out of range");
 	}
