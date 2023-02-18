@@ -34,26 +34,6 @@ public record Plte(byte[] data) implements BytesDataChunk {
 	}
 	
 	
-	public Plte(int[] entries) {
-		this(convert(entries));
-	}
-	
-	
-	private static byte[] convert(int[] entries) {
-		Objects.requireNonNull(entries);
-		checkNumEntries(entries.length);
-		var result = new byte[Math.multiplyExact(entries.length, 3)];
-		int i = 0;
-		for (int entry : entries) {
-			if (entry >>> 24 != 0)
-				throw new IllegalArgumentException("Uint24 value out of range");
-			for (int j = 16; j >= 0; j -= 8, i++)
-				result[i] = (byte)(entry >>> j);
-		}
-		return result;
-	}
-	
-	
 	private static void checkNumEntries(int numEntries) {
 		if (!(1 <= numEntries && numEntries <= 256))
 			throw new IllegalArgumentException("Number of entries out of range");
