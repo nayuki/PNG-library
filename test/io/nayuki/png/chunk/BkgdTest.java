@@ -67,7 +67,7 @@ public final class BkgdTest {
 		
 		for (String cs : CASES) {
 			byte[] b = hexToBytes(cs);
-			assertArrayEquals(b,  new Bkgd(b).getData());
+			assertArrayEquals(b, new Bkgd(b).getData());
 		}
 	}
 	
