@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 import java.util.zip.CheckedOutputStream;
@@ -138,6 +140,41 @@ public record XngFile(Type type, List<Chunk> chunks) {
 				throw new IllegalArgumentException("Chunk CRC-32 mismatch");
 		}
 		return new XngFile(fileType, chunks);
+	}
+	
+	
+	/**
+	 * Returns the single chunk that matches the specified type or empty.
+	 * @param <T> the chunk type
+	 * @param type the class object of the desired chunk type
+	 * @return the single chunk matching the type or empty
+	 * @throws IllegalArgumentException if multiple chunks match the type
+	 */
+	public <T> Optional<T> getChunk(Class<T> type) {
+		Optional<T> result = Optional.empty();
+		for (Chunk chk : chunks) {
+			if (type.isInstance(chk)) {
+				if (result.isPresent())
+					throw new IllegalArgumentException("Multiple chunks with given type");
+				result = Optional.of(type.cast(chk));
+			}
+		}
+		return result;
+	}
+	
+	
+	/**
+	 * Returns a readable list of all the chunks that
+	 * match the specified type, possibly an empty list.
+	 * @param <T> the chunk type
+	 * @param type the class object of the desired chunk type
+	 * @return a list (not {@code null}) of all the chunks matching the type
+	 */
+	public <T> List<T> getChunks(Class<T> type) {
+		return chunks.stream()
+			.filter(chk -> type.isInstance(chk))
+			.map(chk -> type.cast(chk))
+			.collect(Collectors.toList());
 	}
 	
 	

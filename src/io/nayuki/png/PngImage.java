@@ -85,6 +85,51 @@ public final class PngImage {
 	}
 	
 	
+	/**
+	 * From the specified lists, returns the single chunk that matches the specified type or empty.
+	 * @param <T> the chunk type
+	 * @param type the class object of the desired chunk type
+	 * @param lists the list of lists of chunks to read from
+	 * @return the single chunk matching the type or empty
+	 * @throws IllegalArgumentException if multiple chunks match the type
+	 */
+	@SafeVarargs
+	public static <T> Optional<T> getChunk(Class<T> type, List<Chunk>... lists) {
+		Optional<T> result = Optional.empty();
+		for (List<Chunk> lst : lists) {
+			for (Chunk chk : lst) {
+				if (type.isInstance(chk)) {
+					if (result.isPresent())
+						throw new IllegalArgumentException("Multiple chunks with given type");
+					result = Optional.of(type.cast(chk));
+				}
+			}
+		}
+		return result;
+	}
+	
+	
+	/**
+	 * From the specified lists, returns a readable list of all the
+	 * chunks that match the specified type, possibly an empty list.
+	 * @param <T> the chunk type
+	 * @param type the class object of the desired chunk type
+	 * @param lists the list of lists of chunks to read from
+	 * @return a list (not {@code null}) of all the chunks matching the type
+	 */
+	@SafeVarargs
+	public static <T> List<T> getChunks(Class<T> type, List<Chunk>... lists) {
+		List<T> result = new ArrayList<>();
+		for (List<Chunk> lst : lists) {
+			for (Chunk chk : lst) {
+				if (type.isInstance(chk))
+					result.add(type.cast(chk));
+			}
+		}
+		return result;
+	}
+	
+	
 	/** The single IHDR chunk, if present. */
 	public Optional<Ihdr> ihdr = Optional.empty();
 	
