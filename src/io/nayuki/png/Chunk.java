@@ -93,7 +93,7 @@ public interface Chunk {
 			writeData(new DataOutputStream(out));
 			return out.toByteArray();
 		} catch (IOException e) {
-			throw new AssertionError("Caught impossible exception", e);
+			throw new AssertionError("Unreachable exception", e);
 		}
 	}
 	

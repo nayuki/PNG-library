@@ -118,7 +118,7 @@ public final class BufferedGrayImage implements GrayImage, Cloneable {
 			result.pixels = result.pixels.clone();
 			return result;
 		} catch (CloneNotSupportedException e) {
-			throw new AssertionError("Caught impossible exception", e);
+			throw new AssertionError("Unreachable exception", e);
 		}
 	}
 	

@@ -161,7 +161,7 @@ public final class BufferedPaletteImage implements PaletteImage, Cloneable {
 			result.pixels = result.pixels.clone();
 			return result;
 		} catch (CloneNotSupportedException e) {
-			throw new AssertionError("Caught impossible exception", e);
+			throw new AssertionError("Unreachable exception", e);
 		}
 	}
 	

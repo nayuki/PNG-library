@@ -121,7 +121,7 @@ public final class ImageEncoder {
 		try (var dout = new DeflaterOutputStream(bout)) {
 			dout.write(filtersAndSamples);
 		} catch (IOException e) {
-			throw new AssertionError("Caught impossible exception", e);
+			throw new AssertionError("Unreachable exception", e);
 		}
 		result.idats.add(new Idat(bout.toByteArray()));
 		
@@ -225,7 +225,7 @@ public final class ImageEncoder {
 		try (var dout = new DeflaterOutputStream(bout)) {
 			dout.write(filtersAndSamples);
 		} catch (IOException e) {
-			throw new AssertionError("Caught impossible exception", e);
+			throw new AssertionError("Unreachable exception", e);
 		}
 		result.idats.add(new Idat(bout.toByteArray()));
 		
@@ -332,7 +332,7 @@ public final class ImageEncoder {
 		try (var dout = new DeflaterOutputStream(bout)) {
 			dout.write(filtersAndSamples);
 		} catch (IOException e) {
-			throw new AssertionError("Caught impossible exception", e);
+			throw new AssertionError("Unreachable exception", e);
 		}
 		result.idats.add(new Idat(bout.toByteArray()));
 		
