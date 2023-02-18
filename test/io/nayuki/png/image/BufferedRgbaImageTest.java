@@ -271,6 +271,49 @@ public final class BufferedRgbaImageTest {
 	}
 	
 	
+	@Test public void testCreateCopy() {
+		var img = new BufferedRgbaImage(new RgbaImage() {
+			public int getWidth() { return 7; }
+			public int getHeight() { return 4; }
+			public int[] getBitDepths() { return new int[]{4, 3, 2, 1}; }
+			public long getPixel(int x, int y) { return (long)x << 48 | (long)y << 32; }
+		});
+		assertEquals(7, img.getWidth());
+		assertEquals(4, img.getHeight());
+		assertArrayEquals(new int[]{4, 3, 2, 1}, img.getBitDepths());
+		assertEquals(0x0000_0000_0000_0000L, img.getPixel(0, 0));
+		assertEquals(0x0001_0000_0000_0000L, img.getPixel(1, 0));
+		assertEquals(0x0003_0000_0000_0000L, img.getPixel(3, 0));
+		assertEquals(0x0000_0001_0000_0000L, img.getPixel(0, 1));
+		assertEquals(0x0002_0001_0000_0000L, img.getPixel(2, 1));
+		assertEquals(0x0000_0003_0000_0000L, img.getPixel(0, 3));
+		assertEquals(0x0006_0000_0000_0000L, img.getPixel(6, 0));
+		assertEquals(0x0006_0003_0000_0000L, img.getPixel(6, 3));
+	}
+	
+	
+	@Test public void testClone() {
+		var img0 = new BufferedRgbaImage(2, 1, DEFAULT_BIT_DEPTHS);
+		img0.setPixel(0, 0, 0x000F_00F0_0000_0000L);
+		img0.setPixel(1, 0, 0x0000_0000_0000_0000L);
+		var img1 = img0.clone();
+		assertEquals(0x000F_00F0_0000_0000L, img0.getPixel(0, 0));
+		assertEquals(0x0000_0000_0000_0000L, img0.getPixel(1, 0));
+		assertEquals(0x000F_00F0_0000_0000L, img1.getPixel(0, 0));
+		assertEquals(0x0000_0000_0000_0000L, img1.getPixel(1, 0));
+		img0.setPixel(0, 0, 0x00AA_00BB_0000_0000L);
+		assertEquals(0x00AA_00BB_0000_0000L, img0.getPixel(0, 0));
+		assertEquals(0x0000_0000_0000_0000L, img0.getPixel(1, 0));
+		assertEquals(0x000F_00F0_0000_0000L, img1.getPixel(0, 0));
+		assertEquals(0x0000_0000_0000_0000L, img1.getPixel(1, 0));
+		img1.setPixel(1, 0, 0x0000_00C0_000D_0000L);
+		assertEquals(0x00AA_00BB_0000_0000L, img0.getPixel(0, 0));
+		assertEquals(0x0000_0000_0000_0000L, img0.getPixel(1, 0));
+		assertEquals(0x000F_00F0_0000_0000L, img1.getPixel(0, 0));
+		assertEquals(0x0000_00C0_000D_0000L, img1.getPixel(1, 0));
+	}
+	
+	
 	private static final int[] DEFAULT_BIT_DEPTHS = new int[]{8, 8, 8, 0};
 	
 	private static Random rand = new Random();

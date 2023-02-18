@@ -263,6 +263,49 @@ public final class BufferedGrayImageTest {
 	}
 	
 	
+	@Test public void testCreateCopy() {
+		var img = new BufferedGrayImage(new GrayImage() {
+			public int getWidth() { return 7; }
+			public int getHeight() { return 4; }
+			public int[] getBitDepths() { return new int[]{4, 3}; }
+			public int getPixel(int x, int y) { return x << 16 | y << 0; }
+		});
+		assertEquals(7, img.getWidth());
+		assertEquals(4, img.getHeight());
+		assertArrayEquals(new int[]{4, 3}, img.getBitDepths());
+		assertEquals(0x0000_0000, img.getPixel(0, 0));
+		assertEquals(0x0001_0000, img.getPixel(1, 0));
+		assertEquals(0x0003_0000, img.getPixel(3, 0));
+		assertEquals(0x0000_0001, img.getPixel(0, 1));
+		assertEquals(0x0002_0001, img.getPixel(2, 1));
+		assertEquals(0x0000_0003, img.getPixel(0, 3));
+		assertEquals(0x0006_0000, img.getPixel(6, 0));
+		assertEquals(0x0006_0003, img.getPixel(6, 3));
+	}
+	
+	
+	@Test public void testClone() {
+		var img0 = new BufferedGrayImage(2, 1, new int[]{8, 8});
+		img0.setPixel(0, 0, 0x000F_00F0);
+		img0.setPixel(1, 0, 0x0000_0000);
+		var img1 = img0.clone();
+		assertEquals(0x000F_00F0, img0.getPixel(0, 0));
+		assertEquals(0x0000_0000, img0.getPixel(1, 0));
+		assertEquals(0x000F_00F0, img1.getPixel(0, 0));
+		assertEquals(0x0000_0000, img1.getPixel(1, 0));
+		img0.setPixel(0, 0, 0x00AA_00BB);
+		assertEquals(0x00AA_00BB, img0.getPixel(0, 0));
+		assertEquals(0x0000_0000, img0.getPixel(1, 0));
+		assertEquals(0x000F_00F0, img1.getPixel(0, 0));
+		assertEquals(0x0000_0000, img1.getPixel(1, 0));
+		img1.setPixel(1, 0, 0x000D_00C0);
+		assertEquals(0x00AA_00BB, img0.getPixel(0, 0));
+		assertEquals(0x0000_0000, img0.getPixel(1, 0));
+		assertEquals(0x000F_00F0, img1.getPixel(0, 0));
+		assertEquals(0x000D_00C0, img1.getPixel(1, 0));
+	}
+	
+	
 	private static final int[] DEFAULT_BIT_DEPTHS = new int[]{8, 0};
 	
 	private static Random rand = new Random();

@@ -411,6 +411,50 @@ public final class BufferedPaletteImageTest {
 	}
 	
 	
+	@Test public void testCreateCopy() {
+		var img = new BufferedPaletteImage(new PaletteImage() {
+			public int getWidth() { return 7; }
+			public int getHeight() { return 4; }
+			public int[] getBitDepths() { return new int[]{4, 3, 2, 0}; }
+			public long[] getPalette() { return new long[getWidth() * getHeight()]; }
+			public int getPixel(int x, int y) { return y * getWidth() + x; }
+		});
+		assertEquals(7, img.getWidth());
+		assertEquals(4, img.getHeight());
+		assertArrayEquals(new int[]{4, 3, 2, 0}, img.getBitDepths());
+		assertEquals( 0, img.getPixel(0, 0));
+		assertEquals( 1, img.getPixel(1, 0));
+		assertEquals( 3, img.getPixel(3, 0));
+		assertEquals( 7, img.getPixel(0, 1));
+		assertEquals( 9, img.getPixel(2, 1));
+		assertEquals(21, img.getPixel(0, 3));
+		assertEquals( 6, img.getPixel(6, 0));
+		assertEquals(27, img.getPixel(6, 3));
+	}
+	
+	
+	@Test public void testClone() {
+		var img0 = new BufferedPaletteImage(2, 1, DEFAULT_BIT_DEPTHS, new long[4]);
+		img0.setPixel(0, 0, 1);
+		img0.setPixel(1, 0, 0);
+		var img1 = img0.clone();
+		assertEquals(1, img0.getPixel(0, 0));
+		assertEquals(0, img0.getPixel(1, 0));
+		assertEquals(1, img1.getPixel(0, 0));
+		assertEquals(0, img1.getPixel(1, 0));
+		img0.setPixel(0, 0, 2);
+		assertEquals(2, img0.getPixel(0, 0));
+		assertEquals(0, img0.getPixel(1, 0));
+		assertEquals(1, img1.getPixel(0, 0));
+		assertEquals(0, img1.getPixel(1, 0));
+		img1.setPixel(1, 0, 3);
+		assertEquals(2, img0.getPixel(0, 0));
+		assertEquals(0, img0.getPixel(1, 0));
+		assertEquals(1, img1.getPixel(0, 0));
+		assertEquals(3, img1.getPixel(1, 0));
+	}
+	
+	
 	private static final int[] DEFAULT_BIT_DEPTHS = new int[]{8, 8, 8, 0};
 	
 	private static Random rand = new Random();
