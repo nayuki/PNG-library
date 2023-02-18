@@ -78,7 +78,7 @@ public abstract sealed class ImageDecoder permits
 	
 	ImageDecoder(PngImage png) {
 		this.png = png;
-		ihdr = png.ihdr.get();
+		ihdr = png.ihdr.orElseThrow(() -> new IllegalArgumentException("Missing IHDR chunk"));
 		inBitDepth = ihdr.bitDepth();
 		sbit = PngImage.getChunk(Sbit.class, png.afterIhdr);
 		trns = PngImage.getChunk(Trns.class, png.afterPlte);
@@ -468,9 +468,7 @@ public abstract sealed class ImageDecoder permits
 			}
 			
 			// Handle palette and transparency
-			if (png.plte.isEmpty())
-				throw new IllegalArgumentException("Missing PLTE chunk");
-			byte[] paletteBytes = png.plte.get().data();
+			byte[] paletteBytes = png.plte.orElseThrow(() -> new IllegalArgumentException("Missing PLTE chunk")).data();
 			var palette = new long[paletteBytes.length / 3];
 			if (palette.length > (1 << inBitDepth))
 				throw new IllegalArgumentException("Palette length exceeds bit depth");

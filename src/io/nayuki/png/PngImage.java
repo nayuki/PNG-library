@@ -297,7 +297,7 @@ public final class PngImage {
 			throw new IllegalStateException("Missing some mandatory chunks");
 		
 		List<Chunk> chunks = new ArrayList<>();
-		chunks.add(ihdr.get());
+		chunks.add(ihdr.orElseThrow(() -> new IllegalStateException("Missing IHDR chunk")));
 		chunks.addAll(afterIhdr);
 		plte.ifPresent(chk -> chunks.add(chk));
 		chunks.addAll(afterPlte);
