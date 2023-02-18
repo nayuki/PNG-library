@@ -72,32 +72,16 @@ public abstract sealed class ImageDecoder permits
 	final PngImage png;
 	final Ihdr ihdr;
 	final int inBitDepth;
-	Optional<Sbit> sbit = Optional.empty();
-	Optional<Trns> trns = Optional.empty();
+	final Optional<Sbit> sbit;
+	final Optional<Trns> trns;
 	
 	
 	ImageDecoder(PngImage png) {
 		this.png = png;
 		ihdr = png.ihdr.get();
 		inBitDepth = ihdr.bitDepth();
-		
-		// Find 0 or 1 significant bits chunk
-		for (Chunk chunk : png.afterIhdr) {
-			if (chunk instanceof Sbit chk) {
-				if (sbit.isPresent())
-					throw new IllegalArgumentException("Duplicate sBIT chunk");
-				sbit = Optional.of(chk);
-			}
-		}
-		
-		// Find 0 or 1 transparency chunk
-		for (Chunk chunk : png.afterPlte) {
-			if (chunk instanceof Trns chk) {
-				if (trns.isPresent())
-					throw new IllegalArgumentException("Duplicate tRNS chunk");
-				trns = Optional.of(chk);
-			}
-		}
+		sbit = PngImage.getChunk(Sbit.class, png.afterIhdr);
+		trns = PngImage.getChunk(Trns.class, png.afterPlte);
 	}
 	
 	
