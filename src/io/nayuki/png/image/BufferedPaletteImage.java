@@ -107,13 +107,13 @@ public final class BufferedPaletteImage implements PaletteImage, Cloneable {
 	}
 	
 	
-	@Override public long[] getPalette() {
-		return palette.clone();
+	@Override public int[] getBitDepths() {
+		return bitDepths.clone();
 	}
 	
 	
-	@Override public int[] getBitDepths() {
-		return bitDepths.clone();
+	@Override public long[] getPalette() {
+		return palette.clone();
 	}
 	
 	
