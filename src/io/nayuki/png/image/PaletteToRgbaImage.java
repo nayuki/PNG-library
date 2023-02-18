@@ -16,15 +16,21 @@ import java.util.Objects;
  */
 public final class PaletteToRgbaImage implements RgbaImage {
 	
+	/*---- Fields ----*/
+	
 	private final PaletteImage image;
 	private final long[] palette;
 	
+	
+	/*---- Constructor ----*/
 	
 	public PaletteToRgbaImage(PaletteImage img) {
 		image = Objects.requireNonNull(img);
 		palette = image.getPalette();
 	}
 	
+	
+	/*---- Methods ----*/
 	
 	@Override public int getWidth() {
 		return image.getWidth();

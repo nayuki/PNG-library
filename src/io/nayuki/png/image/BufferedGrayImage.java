@@ -16,12 +16,17 @@ import java.util.Objects;
  */
 public final class BufferedGrayImage implements GrayImage, Cloneable {
 	
+	/*---- Fields ----*/
+	
 	private final int width;
 	private final int height;
 	private int[] bitDepths;
 	private final int illegalOnes;
 	private int[] pixels;
 	
+	
+	
+	/*---- Constructor ----*/
 	
 	/**
 	 * Constructs an all-zero image with the specified dimensions and
@@ -65,6 +70,9 @@ public final class BufferedGrayImage implements GrayImage, Cloneable {
 		pixels = new int[Math.multiplyExact(width, height)];
 	}
 	
+	
+	
+	/*---- Methods ----*/
 	
 	@Override public int[] getBitDepths() {
 		return bitDepths.clone();

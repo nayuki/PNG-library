@@ -16,6 +16,8 @@ import java.util.Objects;
  */
 public final class BufferedPaletteImage implements PaletteImage, Cloneable {
 	
+	/*---- Fields ----*/
+	
 	private final int width;
 	private final int height;
 	private int[] bitDepths;
@@ -23,6 +25,9 @@ public final class BufferedPaletteImage implements PaletteImage, Cloneable {
 	private long[] palette;
 	private byte[] pixels;
 	
+	
+	
+	/*---- Constructor ----*/
 	
 	/**
 	 * Constructs an all-zero image with the specified dimensions, channel bit depths
@@ -73,6 +78,9 @@ public final class BufferedPaletteImage implements PaletteImage, Cloneable {
 		pixels = new byte[Math.multiplyExact(width, height)];
 	}
 	
+	
+	
+	/*---- Methods ----*/
 	
 	@Override public int getWidth() {
 		return width;

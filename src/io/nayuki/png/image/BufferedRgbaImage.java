@@ -16,12 +16,17 @@ import java.util.Objects;
  */
 public final class BufferedRgbaImage implements RgbaImage, Cloneable {
 	
+	/*---- Fields ----*/
+	
 	private final int width;
 	private final int height;
 	private int[] bitDepths;
 	private final long illegalOnes;
 	private long[] pixels;
 	
+	
+	
+	/*---- Constructor ----*/
 	
 	/**
 	 * Constructs an all-zero image with the specified dimensions and
@@ -67,6 +72,9 @@ public final class BufferedRgbaImage implements RgbaImage, Cloneable {
 		pixels = new long[Math.multiplyExact(width, height)];
 	}
 	
+	
+	
+	/*---- Methods ----*/
 	
 	@Override public int[] getBitDepths() {
 		return bitDepths.clone();

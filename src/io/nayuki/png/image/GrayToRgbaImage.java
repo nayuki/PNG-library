@@ -16,13 +16,19 @@ import java.util.Objects;
  */
 public final class GrayToRgbaImage implements RgbaImage {
 	
+	/*---- Fields ----*/
+	
 	private final GrayImage image;
 	
+	
+	/*---- Constructor ----*/
 	
 	public GrayToRgbaImage(GrayImage img) {
 		image = Objects.requireNonNull(img);
 	}
 	
+	
+	/*---- Methods ----*/
 	
 	@Override public int getWidth() {
 		return image.getWidth();
