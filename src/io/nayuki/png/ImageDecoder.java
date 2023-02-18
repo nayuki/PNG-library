@@ -233,6 +233,8 @@ public abstract sealed class ImageDecoder permits
 				outABits = ihdr.colorType() == Ihdr.ColorType.TRUE_COLOR ? 0 : inBitDepth;
 			if (sbit.isPresent()) {
 				byte[] sb = sbit.get().data();
+				if (sb.length != (outABits > 0 ? 4 : 3))
+					throw new IllegalArgumentException("Invalid sBIT data length");
 				if (sb[0] > outRBits || sb[1] > outGBits || sb[2] > outBBits || outABits > 0 && sb[3] > outABits)
 					throw new IllegalArgumentException("Number of significant bits exceeds bit depth");
 				outRBits = sb[0];
@@ -351,6 +353,8 @@ public abstract sealed class ImageDecoder permits
 			int outWBits = inBitDepth, outABits = ihdr.colorType() == Ihdr.ColorType.GRAYSCALE ? 0 : inBitDepth;
 			if (sbit.isPresent()) {
 				byte[] sb = sbit.get().data();
+				if (sb.length != (outABits > 0 ? 2 : 1))
+					throw new IllegalArgumentException("Invalid sBIT data length");
 				if (sb[0] > outWBits || outABits > 0 && sb[1] > outABits)
 					throw new IllegalArgumentException("Number of significant bits exceeds bit depth");
 				outWBits = sb[0];
