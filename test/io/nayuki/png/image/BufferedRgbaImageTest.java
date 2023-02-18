@@ -78,6 +78,7 @@ public final class BufferedRgbaImageTest {
 			{2, 5, 9, 13},
 			{7, 14, 12, 0},
 		};
+		
 		for (int[] cs : CASES) {
 			var img = new BufferedRgbaImage(1, 1, cs);
 			assertArrayEquals(cs, img.getBitDepths());
@@ -102,6 +103,7 @@ public final class BufferedRgbaImageTest {
 			{16, 16, -16, 16},
 			{Integer.MAX_VALUE, 1, 2, 3},
 		};
+		
 		for (int[] cs : CASES) {
 			try {
 				new BufferedRgbaImage(1, 1, cs);
@@ -301,11 +303,13 @@ public final class BufferedRgbaImageTest {
 		assertEquals(0x0000_0000_0000_0000L, img0.getPixel(1, 0));
 		assertEquals(0x000F_00F0_0000_0000L, img1.getPixel(0, 0));
 		assertEquals(0x0000_0000_0000_0000L, img1.getPixel(1, 0));
+		
 		img0.setPixel(0, 0, 0x00AA_00BB_0000_0000L);
 		assertEquals(0x00AA_00BB_0000_0000L, img0.getPixel(0, 0));
 		assertEquals(0x0000_0000_0000_0000L, img0.getPixel(1, 0));
 		assertEquals(0x000F_00F0_0000_0000L, img1.getPixel(0, 0));
 		assertEquals(0x0000_0000_0000_0000L, img1.getPixel(1, 0));
+		
 		img1.setPixel(1, 0, 0x0000_00C0_000D_0000L);
 		assertEquals(0x00AA_00BB_0000_0000L, img0.getPixel(0, 0));
 		assertEquals(0x0000_0000_0000_0000L, img0.getPixel(1, 0));

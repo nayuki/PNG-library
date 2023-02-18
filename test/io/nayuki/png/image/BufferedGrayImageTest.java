@@ -84,6 +84,7 @@ public final class BufferedGrayImageTest {
 			{14, 0},
 			{12, 0},
 		};
+		
 		for (int[] cs : CASES) {
 			var img = new BufferedGrayImage(1, 1, cs);
 			assertArrayEquals(cs, img.getBitDepths());
@@ -108,6 +109,7 @@ public final class BufferedGrayImageTest {
 			{-16, 16},
 			{Integer.MAX_VALUE, 1},
 		};
+		
 		for (int[] cs : CASES) {
 			try {
 				new BufferedGrayImage(1, 1, cs);
@@ -293,11 +295,13 @@ public final class BufferedGrayImageTest {
 		assertEquals(0x0000_0000, img0.getPixel(1, 0));
 		assertEquals(0x000F_00F0, img1.getPixel(0, 0));
 		assertEquals(0x0000_0000, img1.getPixel(1, 0));
+		
 		img0.setPixel(0, 0, 0x00AA_00BB);
 		assertEquals(0x00AA_00BB, img0.getPixel(0, 0));
 		assertEquals(0x0000_0000, img0.getPixel(1, 0));
 		assertEquals(0x000F_00F0, img1.getPixel(0, 0));
 		assertEquals(0x0000_0000, img1.getPixel(1, 0));
+		
 		img1.setPixel(1, 0, 0x000D_00C0);
 		assertEquals(0x00AA_00BB, img0.getPixel(0, 0));
 		assertEquals(0x0000_0000, img0.getPixel(1, 0));

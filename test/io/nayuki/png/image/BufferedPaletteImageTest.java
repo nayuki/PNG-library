@@ -75,6 +75,7 @@ public final class BufferedPaletteImageTest {
 			{2, 5, 8, 8},
 			{7, 4, 2, 0},
 		};
+		
 		for (int[] cs : CASES) {
 			var img = new BufferedPaletteImage(1, 1, cs, new long[1]);
 			assertArrayEquals(cs, img.getBitDepths());
@@ -104,6 +105,7 @@ public final class BufferedPaletteImageTest {
 			{16, 16, -16, 16},
 			{Integer.MAX_VALUE, 1, 2, 3},
 		};
+		
 		for (int[] cs : CASES) {
 			try {
 				new BufferedPaletteImage(1, 1, cs, new long[1]);
@@ -442,11 +444,13 @@ public final class BufferedPaletteImageTest {
 		assertEquals(0, img0.getPixel(1, 0));
 		assertEquals(1, img1.getPixel(0, 0));
 		assertEquals(0, img1.getPixel(1, 0));
+		
 		img0.setPixel(0, 0, 2);
 		assertEquals(2, img0.getPixel(0, 0));
 		assertEquals(0, img0.getPixel(1, 0));
 		assertEquals(1, img1.getPixel(0, 0));
 		assertEquals(0, img1.getPixel(1, 0));
+		
 		img1.setPixel(1, 0, 3);
 		assertEquals(2, img0.getPixel(0, 0));
 		assertEquals(0, img0.getPixel(1, 0));
