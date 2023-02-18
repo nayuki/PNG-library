@@ -101,7 +101,7 @@ public interface Chunk {
 	/**
 	 * Writes this chunk's data field (excluding type
 	 * and CRC-32) to the specified output stream.
-	 * @param out the output stream to write to
+	 * @param out the output stream to write to (not {@code null})
 	 * @throws NullPointerException if {@code out} is {@code null}
 	 * @throws IOException if an I/O exceptions occurs
 	 */
