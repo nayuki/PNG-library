@@ -12,15 +12,12 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInput;
 import java.io.DataInputStream;
-import java.io.DataOutput;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,7 +25,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
-import java.util.zip.CheckedOutputStream;
 import io.nayuki.png.chunk.Custom;
 import io.nayuki.png.chunk.Ihdr;
 import io.nayuki.png.chunk.Util;
@@ -201,27 +197,8 @@ public record XngFile(Type type, List<Chunk> chunks) {
 	public void write(OutputStream out) throws IOException {
 		Objects.requireNonNull(out);
 		out.write(type.getSignature());
-		DataOutput dout = new DataOutputStream(out);
-		for (Chunk chunk : chunks) {
-			int dataLen = chunk.getDataLength();
-			if (dataLen < 0)
-				throw new IllegalArgumentException("Chunk data length out of range");
-			dout.writeInt(dataLen);
-			
-			String type = chunk.getType();
-			Chunk.checkType(type);
-			var cout = new CheckedOutputStream(out, new CRC32());
-			cout.write(type.getBytes(StandardCharsets.US_ASCII));
-			
-			var bout = new BoundedOutputStream(cout, dataLen);
-			chunk.writeData(new DataOutputStream(bout));
-			bout.finish();
-			
-			long crc = cout.getChecksum().getValue();
-			if (crc >>> 32 != 0)
-				throw new AssertionError("CRC-32 must be uint32");
-			dout.writeInt((int)crc);
-		}
+		for (Chunk chk : chunks)
+			chk.writeChunk(out);
 	}
 	
 	
