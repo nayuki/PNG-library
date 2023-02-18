@@ -10,6 +10,7 @@ package io.nayuki.png.chunk;
 
 import static org.junit.Assert.assertArrayEquals;
 import org.junit.Test;
+import io.nayuki.png.TestUtil;
 
 
 public final class HistTest {

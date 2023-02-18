@@ -8,10 +8,11 @@
 
 package io.nayuki.png.chunk;
 
-import static io.nayuki.png.chunk.TestUtil.hexToBytes;
+import static io.nayuki.png.TestUtil.hexToBytes;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+import io.nayuki.png.TestUtil;
 
 
 public final class GamaTest {

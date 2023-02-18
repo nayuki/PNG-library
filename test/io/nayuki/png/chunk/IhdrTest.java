@@ -9,12 +9,13 @@
 package io.nayuki.png.chunk;
 
 import static io.nayuki.png.Chunk.CompressionMethod.ZLIB_DEFLATE;
+import static io.nayuki.png.TestUtil.hexToBytes;
 import static io.nayuki.png.chunk.Ihdr.FilterMethod.ADAPTIVE;
 import static io.nayuki.png.chunk.Ihdr.InterlaceMethod.ADAM7;
 import static io.nayuki.png.chunk.Ihdr.InterlaceMethod.NONE;
-import static io.nayuki.png.chunk.TestUtil.hexToBytes;
 import static org.junit.Assert.assertArrayEquals;
 import org.junit.Test;
+import io.nayuki.png.TestUtil;
 import io.nayuki.png.chunk.Ihdr.ColorType;
 
 

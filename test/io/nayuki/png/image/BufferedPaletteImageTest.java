@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.Random;
 import org.junit.Assert;
 import org.junit.Test;
-import io.nayuki.png.chunk.TestUtil;
+import io.nayuki.png.TestUtil;
 
 
 public final class BufferedPaletteImageTest {

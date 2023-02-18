@@ -11,6 +11,7 @@ package io.nayuki.png.chunk;
 import static org.junit.Assert.assertEquals;
 import org.junit.Assert;
 import org.junit.Test;
+import io.nayuki.png.TestUtil;
 
 
 public final class UtilTest {

@@ -9,7 +9,6 @@
 package io.nayuki.png;
 
 import org.junit.Test;
-import io.nayuki.png.chunk.TestUtil;
 
 
 public final class ChunkTest {

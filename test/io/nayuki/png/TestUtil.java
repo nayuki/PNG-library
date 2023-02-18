@@ -6,7 +6,7 @@
  * https://www.nayuki.io/page/png-library
  */
 
-package io.nayuki.png.chunk;
+package io.nayuki.png;
 
 import java.util.Random;
 import org.junit.Assert;
