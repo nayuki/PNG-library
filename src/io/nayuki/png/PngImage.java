@@ -171,11 +171,11 @@ public final class PngImage {
 			if (!seenChunkTypes.add(type) && UNIQUE_CHUNK_TYPES.contains(type))
 				throw new IllegalArgumentException("Duplicate " + type + " chunk");
 			
-			switch (state) {
+			state = switch (state) {
 				case BEFORE_IHDR -> {
 					if (chunk instanceof Ihdr chk) {
 						ihdr = Optional.of(chk);
-						state = State.AFTER_IHDR;
+						yield State.AFTER_IHDR;
 					} else
 						throw new IllegalArgumentException("Expected IHDR chunk");
 				}
@@ -183,38 +183,43 @@ public final class PngImage {
 				case AFTER_IHDR -> {
 					if (chunk instanceof Plte chk0) {
 						plte = Optional.of(chk0);
-						state = State.AFTER_PLTE;
+						yield State.AFTER_PLTE;
 					} else if (chunk instanceof Idat chk1) {
 						idats.add(chk1);
-						state = State.DURING_IDATS;
+						yield State.DURING_IDATS;
 					} else if (chunk instanceof Iend)
 						throw new IllegalArgumentException("Unexpected IEND chunk");
-					else
+					else {
 						afterIhdr.add(chunk);
+						yield State.AFTER_IHDR;
+					}
 				}
 				
 				case AFTER_PLTE -> {
 					if (chunk instanceof Idat chk) {
 						idats.add(chk);
-						state = State.DURING_IDATS;
+						yield State.DURING_IDATS;
 					} else if (chunk instanceof Iend)
 						throw new IllegalArgumentException("Unexpected IEND chunk");
 					else if (BEFORE_PLTE_CHUNK_TYPES.contains(chunk.getType()))
 						throw new IllegalArgumentException("Unexpected " + chunk.getType() + " chunk");
-					else
+					else {
 						afterPlte.add(chunk);
+						yield State.AFTER_PLTE;
+					}
 				}
 				
 				case DURING_IDATS -> {
 					if (chunk instanceof Plte)
 						throw new IllegalArgumentException("Unexpected PLTE chunk");
-					else if (chunk instanceof Idat chk)
+					else if (chunk instanceof Idat chk) {
 						idats.add(chk);
-					else if (chunk instanceof Iend)
-						state = State.AFTER_IEND;
+						yield State.DURING_IDATS;
+					} else if (chunk instanceof Iend)
+						yield State.AFTER_IEND;
 					else {
 						afterIdats.add(chunk);
-						state = State.AFTER_IDATS;
+						yield State.AFTER_IDATS;
 					}
 				}
 				
@@ -222,19 +227,18 @@ public final class PngImage {
 					if (chunk instanceof Plte)
 						throw new IllegalArgumentException("Unexpected PLTE chunk");
 					else if (chunk instanceof Iend)
-						state = State.AFTER_IEND;
+						yield State.AFTER_IEND;
 					else if (chunk instanceof Idat)
 						throw new IllegalArgumentException("Non-consecutive IDAT chunk");
 					else {
 						afterIdats.add(chunk);
-						state = State.AFTER_IDATS;
+						yield State.AFTER_IDATS;
 					}
 				}
 				
-				case AFTER_IEND -> throw new IllegalArgumentException("Unexpected chunk after IEND");
-				
-				default -> throw new AssertionError("Unreachable state");
-			}
+				case AFTER_IEND ->
+					throw new IllegalArgumentException("Unexpected chunk after IEND");
+			};
 		}
 		if (state != State.AFTER_IEND)
 			throw new IllegalArgumentException("Missing some required chunks");
