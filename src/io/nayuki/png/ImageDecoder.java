@@ -18,7 +18,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.zip.InflaterInputStream;
 import io.nayuki.png.chunk.Ihdr;
 import io.nayuki.png.chunk.Sbit;
@@ -88,8 +87,8 @@ public abstract sealed class ImageDecoder permits
 	final Object decode() {
 		// Virtually concatenate bytes from all data chunks, then decompress
 		List<InputStream> ins = png.idats.stream()
-			.map(idat -> new ByteArrayInputStream(idat.data()))
-			.collect(Collectors.toList());
+			.map(idat -> (InputStream)new ByteArrayInputStream(idat.data()))
+			.toList();
 		var in0 = new SequenceInputStream(Collections.enumeration(ins));
 		var in1 = new InflaterInputStream(in0);
 		try (var in2 = new DataInputStream(in1)) {

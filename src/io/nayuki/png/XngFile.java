@@ -26,7 +26,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 import java.util.zip.CheckedOutputStream;
@@ -174,7 +173,7 @@ public record XngFile(Type type, List<Chunk> chunks) {
 		return chunks.stream()
 			.filter(chk -> type.isInstance(chk))
 			.map(chk -> type.cast(chk))
-			.collect(Collectors.toList());
+			.toList();
 	}
 	
 	
