@@ -113,7 +113,7 @@ public final class ImageEncoder {
 						filtersAndSamples[i + 7] = (byte)(val >>>  0);
 					}
 				}
-				default -> throw new AssertionError("Unsupported bit depth");
+				default -> throw new AssertionError("Unreachable value");
 			}
 		}
 		
@@ -217,7 +217,7 @@ public final class ImageEncoder {
 						filtersAndSamples[i + 3] = (byte)(val >>>  0);
 					}
 				}
-				default -> throw new AssertionError("Unsupported bit depth");
+				default -> throw new AssertionError("Unreachable value");
 			}
 		}
 		
@@ -369,7 +369,7 @@ public final class ImageEncoder {
 			// Round up to nearest multiple of 8
 			int chosenBitDepth = Math.ceilDiv(IntStream.of(bitDepths).max().getAsInt(), 8) * 8;
 			if (chosenBitDepth != 8 && chosenBitDepth != 16)
-				throw new AssertionError("Unsupported bit depth");
+				throw new AssertionError("Unreachable value");
 			
 			mul = (2 << chosenBitDepth) - 2;
 			rDiv = (1 << bitDepths[0]) - 1;
@@ -440,12 +440,12 @@ public final class ImageEncoder {
 				// Round up to nearest multiple of 8
 				chosenBitDepth = Math.ceilDiv(IntStream.of(bitDepths).max().getAsInt(), 8) * 8;
 				if (chosenBitDepth != 8 && chosenBitDepth != 16)
-					throw new AssertionError("Unsupported bit depth");
+					throw new AssertionError("Unreachable value");
 			} else {
 				// Round up to nearest power of 2, i.e. 2^ceil(log2(bitDepths[0]))
 				chosenBitDepth = 0x8000_0000 >>> (Integer.numberOfLeadingZeros(bitDepths[0] - 1) - 1);
 				if (chosenBitDepth != 1 && chosenBitDepth != 2 && chosenBitDepth != 4 && chosenBitDepth != 8 && chosenBitDepth != 16)
-					throw new AssertionError("Unsupported bit depth");
+					throw new AssertionError("Unreachable value");
 			}
 			
 			mul = (2 << chosenBitDepth) - 2;

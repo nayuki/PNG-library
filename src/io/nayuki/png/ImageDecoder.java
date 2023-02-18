@@ -317,7 +317,7 @@ public abstract sealed class ImageDecoder permits
 							b = (row[i + 4] & 0xFF) << 8 | (row[i + 5] & 0xFF) << 0;
 							a = (row[i + 6] & 0xFF) << 8 | (row[i + 7] & 0xFF) << 0;
 						}
-						default -> throw new AssertionError();
+						default -> throw new AssertionError("Unreachable value");
 					}
 					r >>>= rShift;
 					g >>>= gShift;
@@ -425,7 +425,7 @@ public abstract sealed class ImageDecoder permits
 								w = (row[i + 0] & 0xFF) << 8 | (row[i + 1] & 0xFF) << 0;
 								a = (row[i + 2] & 0xFF) << 8 | (row[i + 3] & 0xFF) << 0;
 							}
-							default -> throw new AssertionError();
+							default -> throw new AssertionError("Unreachable value");
 						}
 						w >>>= wShift;
 						a >>>= aShift;
