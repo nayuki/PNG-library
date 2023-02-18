@@ -188,7 +188,7 @@ public final class PngImage {
 				
 				case AFTER_IEND -> throw new IllegalArgumentException("Unexpected chunk after IEND");
 				
-				default -> throw new AssertionError("Unhandled state");
+				default -> throw new AssertionError("Unreachable state");
 			}
 		}
 		if (state != State.AFTER_IEND)
