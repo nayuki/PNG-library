@@ -32,10 +32,23 @@ public interface PaletteImage {
 	/**
 	 * Returns the palette of this image, with length between 1 and 256 (inclusive).
 	 * Each entry equals {@code (red << 48 | green << 32 | blue << 16 | alpha << 0)},
-	 * where {@code red} is in the range [0, 2<sup>8</sup>), etc.
+	 * where {@code red} is in the range [0, 2<sup>bitDepths[0]</sup>), etc.
 	 * @return the palette of this image (not {@code null})
 	 */
 	public long[] getPalette();
+	
+	
+	/**
+	 * Returns the bit depths of the channels of this image, a length-4 array:
+	 * <ul>
+	 *   <li>Index 0: The bit depth of the red channel, in the range [1, 8]</li>
+	 *   <li>Index 1: The bit depth of the green channel, in the range [1, 8]</li>
+	 *   <li>Index 2: The bit depth of the blue channel, in the range [1, 8]</li>
+	 *   <li>Index 3: The bit depth of the alpha channel, either 0 or 8, and where 0 means all pixels are opaque</li>
+	 * </ul>
+	 * @return the bit depths of the channels of this image (not {@code null})
+	 */
+	public int[] getBitDepths();
 	
 	
 	/**

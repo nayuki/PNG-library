@@ -470,6 +470,19 @@ public abstract sealed class ImageDecoder permits
 		public PaletteImageDecoder(PngImage png) {
 			super(png);
 			
+			// Handle significant bits
+			int outRBits = 8, outGBits = 8, outBBits = 8;
+			if (sbit.isPresent()) {
+				byte[] sb = sbit.get().data();
+				if (sb.length != 3)
+					throw new IllegalArgumentException("Invalid sBIT data length");
+				if (sb[0] > outRBits || sb[1] > outGBits || sb[2] > outBBits)
+					throw new IllegalArgumentException("Number of significant bits exceeds bit depth");
+				outRBits = sb[0];
+				outGBits = sb[1];
+				outBBits = sb[2];
+			}
+			
 			// Handle palette and transparency
 			if (png.plte.isEmpty())
 				throw new IllegalArgumentException("Missing PLTE chunk");
@@ -480,15 +493,18 @@ public abstract sealed class ImageDecoder permits
 			byte[] trnsBytes = trns.map(trns -> trns.data()).orElse(new byte[0]);
 			if (trnsBytes.length > palette.length)
 				throw new IllegalArgumentException("Transparency has more entries than palette");
+			int outABits = trnsBytes.length > 0 ? 8 : 0;
 			for (int i = 0; i < palette.length; i++) {
-				palette[i] =
-					(paletteBytes[i * 3 + 0] & 0xFFL) << 48 |
-					(paletteBytes[i * 3 + 1] & 0xFFL) << 32 |
-					(paletteBytes[i * 3 + 2] & 0xFFL) << 16 |
-					(i < trnsBytes.length ? trnsBytes[i] & 0xFF : 0xFF) << 0;
+				int r = (paletteBytes[i * 3 + 0] & 0xFF) >>> (8 - outRBits);
+				int g = (paletteBytes[i * 3 + 1] & 0xFF) >>> (8 - outGBits);
+				int b = (paletteBytes[i * 3 + 2] & 0xFF) >>> (8 - outBBits);
+				int a = outABits == 0 ? 0 :
+					(i < trnsBytes.length ? trnsBytes[i] & 0xFF : 0xFF);
+				palette[i] = (long)r << 48 | (long)g << 32 | (long)b << 16 | (long)a << 0;
 			}
 			
-			result = new BufferedPaletteImage(ihdr.width(), ihdr.height(), palette);
+			result = new BufferedPaletteImage(ihdr.width(), ihdr.height(),
+				new int[]{outRBits, outGBits, outBBits, outABits}, palette);
 		}
 		
 		

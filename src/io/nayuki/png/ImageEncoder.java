@@ -266,13 +266,29 @@ public final class ImageEncoder {
 		
 		var paletteBytes = new byte[Math.multiplyExact(palette.length, 3)];
 		int transpLen = 0;
-		for (int i = 0; i < palette.length; i++) {
-			long rgba = palette[i];
-			paletteBytes[i * 3 + 0] = (byte)(rgba >>> 48);
-			paletteBytes[i * 3 + 1] = (byte)(rgba >>> 32);
-			paletteBytes[i * 3 + 2] = (byte)(rgba >>> 16);
-			if ((rgba & 0xFF) != 0xFF)
-				transpLen = i + 1;
+		{  // Up-convert RGB channels to 8 bits
+			long mul = (2 << 8) - 2;
+			int[] bitDepths = img.getBitDepths();
+			long rDiv = (1 << bitDepths[0]) - 1;
+			long gDiv = (1 << bitDepths[1]) - 1;
+			long bDiv = (1 << bitDepths[2]) - 1;
+			for (int i = 0; i < palette.length; i++) {
+				long rgba = palette[i];
+				long r = (rgba >>> 48) & 0xFF;
+				long g = (rgba >>> 32) & 0xFF;
+				long b = (rgba >>> 16) & 0xFF;
+				long a = (rgba >>>  0) & 0xFF;
+				r = (r * mul + rDiv) / rDiv >>> 1;
+				g = (g * mul + gDiv) / gDiv >>> 1;
+				b = (b * mul + bDiv) / bDiv >>> 1;
+				paletteBytes[i * 3 + 0] = (byte)r;
+				paletteBytes[i * 3 + 1] = (byte)g;
+				paletteBytes[i * 3 + 2] = (byte)b;
+				if (bitDepths[3] > 0 && a < 0xFF)
+					transpLen = i + 1;
+			}
+			if (bitDepths[0] != 8 || bitDepths[1] != 8 || bitDepths[2] != 8)
+				result.afterIhdr.add(new Sbit(new byte[]{(byte)bitDepths[0], (byte)bitDepths[1], (byte)bitDepths[2]}));
 		}
 		result.plte = Optional.of(new Plte(paletteBytes));
 		if (transpLen > 0) {
