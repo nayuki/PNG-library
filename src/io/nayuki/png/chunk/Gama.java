@@ -40,7 +40,7 @@ public record Gama(int gamma) implements Chunk {
 	
 	private static int convert(double gamma) {
 		gamma *= 100_000;
-		if (!(Double.isFinite(gamma) && 0 < gamma && gamma <= Integer.MAX_VALUE))
+		if (!(Double.isFinite(gamma) && 0 < gamma && gamma <= Integer.MAX_VALUE + 1.0))
 			throw new IllegalArgumentException("Gamma value out of range");
 		long result = Math.round(gamma);
 		if (!(0 < result && result <= Integer.MAX_VALUE))
