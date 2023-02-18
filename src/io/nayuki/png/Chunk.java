@@ -81,9 +81,9 @@ public interface Chunk {
 	
 	/**
 	 * Returns a byte array representing this chunk's data field, which excludes
-	 * the type and CRC-32. The default implementation relies on {@link
-	 * #writeData(DataOutput)}. This method must not throw an exception because of
-	 * invalid data values or the data being too long; these conditions must be checked
+	 * the type and CRC-32. The default implementation relies on {@link #writeData(
+	 * DataOutput)}. This method must not throw an exception because of invalid
+	 * data values or the data being too long; these conditions must be checked
 	 * beforehand when the chunk object is constructed or when setters are called.
 	 * @return the data bytes (not {@code null})
 	 */
