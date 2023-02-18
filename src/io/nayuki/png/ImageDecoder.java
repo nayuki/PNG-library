@@ -493,7 +493,7 @@ public abstract sealed class ImageDecoder permits
 			byte[] trnsBytes = trns.map(trns -> trns.data()).orElse(new byte[0]);
 			if (trnsBytes.length > palette.length)
 				throw new IllegalArgumentException("Transparency has more entries than palette");
-			int outABits = trnsBytes.length > 0 ? 8 : 0;
+			int outABits = trns.isPresent() ? 8 : 0;
 			for (int i = 0; i < palette.length; i++) {
 				int r = (paletteBytes[i * 3 + 0] & 0xFF) >>> (8 - outRBits);
 				int g = (paletteBytes[i * 3 + 1] & 0xFF) >>> (8 - outGBits);
