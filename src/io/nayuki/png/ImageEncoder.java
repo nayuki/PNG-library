@@ -291,7 +291,7 @@ public final class ImageEncoder {
 				result.afterIhdr.add(new Sbit(new byte[]{(byte)bitDepths[0], (byte)bitDepths[1], (byte)bitDepths[2]}));
 		}
 		result.plte = Optional.of(new Plte(paletteBytes));
-		if (transpLen > 0) {
+		if (img.getBitDepths()[3] > 0) {
 			var transpBytes = new byte[transpLen];
 			for (int i = 0; i < transpBytes.length; i++)
 				transpBytes[i] = (byte)palette[i];
