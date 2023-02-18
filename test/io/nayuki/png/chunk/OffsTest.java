@@ -10,7 +10,6 @@ package io.nayuki.png.chunk;
 
 import static io.nayuki.png.chunk.TestUtil.hexToBytes;
 import static org.junit.Assert.assertArrayEquals;
-import org.junit.Assert;
 import org.junit.Test;
 import io.nayuki.png.chunk.Offs.UnitSpecifier;
 
@@ -25,10 +24,8 @@ public final class OffsTest {
 		};
 		
 		for (int[] cs : CASES) {
-			try {
-				new Offs(cs[0], cs[1], UnitSpecifier.MICROMETRE);
-				Assert.fail("Expected exception");
-			} catch (IllegalArgumentException e) {}  // Pass
+			TestUtil.runExpect(IllegalArgumentException.class,
+				() -> new Offs(cs[0], cs[1], UnitSpecifier.MICROMETRE));
 		}
 	}
 	

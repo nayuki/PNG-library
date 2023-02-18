@@ -13,6 +13,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.Random;
 import org.junit.Assert;
 import org.junit.Test;
+import io.nayuki.png.chunk.TestUtil;
 
 
 public final class BufferedRgbaImageTest {
@@ -56,10 +57,9 @@ public final class BufferedRgbaImageTest {
 				height = Integer.MIN_VALUE;
 			assert width < 0 || height < 0;
 			
-			try {
-				new BufferedRgbaImage(width, height, DEFAULT_BIT_DEPTHS);
-				Assert.fail("Expected exception");
-			} catch (IllegalArgumentException e) {}  // Pass
+			int w = width, h = height;
+			TestUtil.runExpect(IllegalArgumentException.class,
+				() -> new BufferedRgbaImage(w, h, DEFAULT_BIT_DEPTHS));
 		}
 	}
 	
@@ -105,10 +105,8 @@ public final class BufferedRgbaImageTest {
 		};
 		
 		for (int[] cs : CASES) {
-			try {
-				new BufferedRgbaImage(1, 1, cs);
-				Assert.fail("Expected exception");
-			} catch (IllegalArgumentException e) {}  // Pass
+			TestUtil.runExpect(IllegalArgumentException.class,
+				() -> new BufferedRgbaImage(1, 1, cs));
 		}
 	}
 	
@@ -146,11 +144,10 @@ public final class BufferedRgbaImageTest {
 		};
 		
 		for (int[] cs : CASES) {
-			try {
+			TestUtil.runExpect(IndexOutOfBoundsException.class, () -> {
 				var img = new BufferedRgbaImage(cs[0], cs[1], DEFAULT_BIT_DEPTHS);
 				img.setPixel(cs[2], cs[3], 0);
-				Assert.fail("Expected exception");
-			} catch (IndexOutOfBoundsException e) {}  // Pass
+			});
 		}
 	}
 	
@@ -218,12 +215,11 @@ public final class BufferedRgbaImageTest {
 		};
 		
 		for (Case cs : CASES) {
-			try {
+			TestUtil.runExpect(IllegalArgumentException.class, () -> {
 				var img = new BufferedRgbaImage(1, 1, cs.bitDepths);
 				assertArrayEquals(cs.bitDepths, img.getBitDepths());
 				img.setPixel(0, 0, cs.pixelValue);
-				Assert.fail("Expected exception");
-			} catch (IllegalArgumentException e) {}  // Pass
+			});
 		}
 	}
 	

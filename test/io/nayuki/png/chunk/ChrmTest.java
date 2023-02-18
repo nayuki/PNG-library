@@ -12,7 +12,6 @@ import static io.nayuki.png.chunk.TestUtil.hexToBytes;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import java.util.Arrays;
-import org.junit.Assert;
 import org.junit.Test;
 
 
@@ -31,10 +30,8 @@ public final class ChrmTest {
 				var a = new int[8];
 				Arrays.fill(a, 50000);
 				a[i] = cs;
-				try {
-					new Chrm(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7]);
-					Assert.fail("Expected exception");
-				} catch (IllegalArgumentException e) {}  // Pass
+				TestUtil.runExpect(IllegalArgumentException.class,
+					() -> new Chrm(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7]));
 			}
 		}
 	}
@@ -64,10 +61,8 @@ public final class ChrmTest {
 				var a = new double[8];
 				Arrays.fill(a, 0.5);
 				a[i] = cs;
-				try {
-					new Chrm(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7]);
-					Assert.fail("Expected exception");
-				} catch (IllegalArgumentException e) {}  // Pass
+				TestUtil.runExpect(IllegalArgumentException.class,
+					() -> new Chrm(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7]));
 			}
 		}
 	}

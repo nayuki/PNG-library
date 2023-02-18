@@ -9,9 +9,10 @@
 package io.nayuki.png.chunk;
 
 import java.util.Random;
+import org.junit.Assert;
 
 
-final class TestUtil {
+public final class TestUtil {
 	
 	public static byte[] hexToBytes(String s) {
 		s = s.replace(" ", "");
@@ -19,6 +20,17 @@ final class TestUtil {
 		for (int i = 0; i < result.length; i++)
 			result[i] = (byte)Integer.parseInt(s.substring(i * 2, i * 2 + 2), 16);
 		return result;
+	}
+	
+	
+	public static void runExpect(Class<? extends Throwable> exception, Runnable func) {
+		try {
+			func.run();
+			Assert.fail("Expected exception");
+		} catch (Throwable e) {
+			if (exception.isInstance(e));  // Pass
+			else  throw e;
+		}
 	}
 	
 	

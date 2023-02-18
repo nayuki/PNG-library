@@ -54,10 +54,8 @@ public final class UtilTest {
 		};
 		
 		for (Object[] cs : CASES) {
-			try {
-				Util.splitByNul(TestUtil.hexToBytes((String)cs[0]), (int)cs[1]);
-				Assert.fail("Expected exception");
-			} catch (IllegalArgumentException e) {}  // Pass
+			TestUtil.runExpect(IllegalArgumentException.class,
+				() -> Util.splitByNul(TestUtil.hexToBytes((String)cs[0]), (int)cs[1]));
 		}
 	}
 	
@@ -92,10 +90,8 @@ public final class UtilTest {
 		};
 		
 		for (String cs : CASES) {
-			try {
-				Util.checkKeyword(cs, true);
-				Assert.fail("Expected exception");
-			} catch (IllegalArgumentException e) {}  // Pass
+			TestUtil.runExpect(IllegalArgumentException.class,
+				() -> Util.checkKeyword(cs, true));
 		}
 	}
 	
@@ -124,10 +120,8 @@ public final class UtilTest {
 		};
 		
 		for (Object[] cs : CASES) {
-			try {
-				Util.checkedLengthSum(cs);
-				Assert.fail("Expected exception");
-			} catch (IllegalArgumentException e) {}  // Pass
+			TestUtil.runExpect(IllegalArgumentException.class,
+				() -> Util.checkedLengthSum(cs));
 		}
 	}
 	

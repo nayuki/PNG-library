@@ -10,7 +10,6 @@ package io.nayuki.png.chunk;
 
 import static io.nayuki.png.chunk.TestUtil.hexToBytes;
 import static org.junit.Assert.assertArrayEquals;
-import org.junit.Assert;
 import org.junit.Test;
 
 
@@ -68,10 +67,8 @@ public final class TimeTest {
 		};
 		
 		for (int[] cs : CASES) {
-			try {
-				new Time(cs[0], cs[1], cs[2], cs[3], cs[4], cs[5]);
-				Assert.fail("Expected exception");
-			} catch (IllegalArgumentException e) {}  // Pass
+			TestUtil.runExpect(IllegalArgumentException.class,
+				() -> new Time(cs[0], cs[1], cs[2], cs[3], cs[4], cs[5]));
 		}
 	}
 	

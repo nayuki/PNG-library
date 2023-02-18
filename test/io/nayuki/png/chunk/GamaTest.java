@@ -11,7 +11,6 @@ package io.nayuki.png.chunk;
 import static io.nayuki.png.chunk.TestUtil.hexToBytes;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import org.junit.Assert;
 import org.junit.Test;
 
 
@@ -27,10 +26,8 @@ public final class GamaTest {
 		};
 		
 		for (int cs : CASES) {
-			try {
-				new Gama(cs);
-				Assert.fail("Expected exception");
-			} catch (IllegalArgumentException e) {}  // Pass
+			TestUtil.runExpect(IllegalArgumentException.class,
+				() -> new Gama(cs));
 		}
 	}
 	
@@ -57,10 +54,8 @@ public final class GamaTest {
 		};
 		
 		for (double cs : CASES) {
-			try {
-				new Gama(cs);
-				Assert.fail("Expected exception");
-			} catch (IllegalArgumentException e) {}  // Pass
+			TestUtil.runExpect(IllegalArgumentException.class,
+				() -> new Gama(cs));
 		}
 	}
 	

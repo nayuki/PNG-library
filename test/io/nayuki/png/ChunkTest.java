@@ -8,8 +8,8 @@
 
 package io.nayuki.png;
 
-import org.junit.Assert;
 import org.junit.Test;
+import io.nayuki.png.chunk.TestUtil;
 
 
 public final class ChunkTest {
@@ -72,10 +72,8 @@ public final class ChunkTest {
 		};
 		
 		for (String cs : CASES) {
-			try {
-				Chunk.checkType(cs);
-				Assert.fail("Expected exception");
-			} catch (IllegalArgumentException e) {}  // Pass
+			TestUtil.runExpect(IllegalArgumentException.class,
+				() -> Chunk.checkType(cs));
 		}
 	}
 	

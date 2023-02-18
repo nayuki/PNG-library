@@ -9,7 +9,6 @@
 package io.nayuki.png.chunk;
 
 import static org.junit.Assert.assertArrayEquals;
-import org.junit.Assert;
 import org.junit.Test;
 
 
@@ -24,10 +23,8 @@ public final class HistTest {
 		};
 		
 		for (int cs : CASES) {
-			try {
-				new Hist(new short[cs]);
-				Assert.fail("Expected exception");
-			} catch (IllegalArgumentException e) {}  // Pass
+			TestUtil.runExpect(IllegalArgumentException.class,
+				() -> new Hist(new short[cs]));
 		}
 	}
 	

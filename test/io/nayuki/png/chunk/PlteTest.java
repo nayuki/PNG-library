@@ -10,7 +10,6 @@ package io.nayuki.png.chunk;
 
 import static io.nayuki.png.chunk.TestUtil.hexToBytes;
 import static org.junit.Assert.assertArrayEquals;
-import org.junit.Assert;
 import org.junit.Test;
 
 
@@ -57,10 +56,8 @@ public final class PlteTest {
 		};
 		
 		for (int cs : CASES) {
-			try {
-				new Plte(new byte[cs]);
-				Assert.fail("Expected exception");
-			} catch (IllegalArgumentException e) {}  // Pass
+			TestUtil.runExpect(IllegalArgumentException.class,
+				() -> new Plte(new byte[cs]));
 		}
 	}
 	

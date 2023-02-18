@@ -13,6 +13,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.Random;
 import org.junit.Assert;
 import org.junit.Test;
+import io.nayuki.png.chunk.TestUtil;
 
 
 public final class BufferedPaletteImageTest {
@@ -57,10 +58,9 @@ public final class BufferedPaletteImageTest {
 				height = Integer.MIN_VALUE;
 			assert width < 0 || height < 0;
 			
-			try {
-				new BufferedPaletteImage(width, height, DEFAULT_BIT_DEPTHS, new long[1]);
-				Assert.fail("Expected exception");
-			} catch (IllegalArgumentException e) {}  // Pass
+			int w = width, h = height;
+			TestUtil.runExpect(IllegalArgumentException.class,
+				() -> new BufferedPaletteImage(w, h, DEFAULT_BIT_DEPTHS, new long[1]));
 		}
 	}
 	
@@ -107,10 +107,8 @@ public final class BufferedPaletteImageTest {
 		};
 		
 		for (int[] cs : CASES) {
-			try {
-				new BufferedPaletteImage(1, 1, cs, new long[1]);
-				Assert.fail("Expected exception");
-			} catch (IllegalArgumentException e) {}  // Pass
+			TestUtil.runExpect(IllegalArgumentException.class,
+				() -> new BufferedPaletteImage(1, 1, cs, new long[1]));
 		}
 	}
 	
@@ -161,10 +159,8 @@ public final class BufferedPaletteImageTest {
 		};
 		
 		for (int cs : CASES) {
-			try {
-				new BufferedPaletteImage(1, 1, new int[]{8, 8, 8, 8}, new long[cs]);
-				Assert.fail("Expected exception");
-			} catch (IllegalArgumentException e) {}  // Pass
+			TestUtil.runExpect(IllegalArgumentException.class,
+				() -> new BufferedPaletteImage(1, 1, new int[]{8, 8, 8, 8}, new long[cs]));
 		}
 	}
 	
@@ -244,11 +240,10 @@ public final class BufferedPaletteImageTest {
 		};
 		
 		for (int[] cs : CASES) {
-			try {
+			TestUtil.runExpect(IndexOutOfBoundsException.class, () -> {
 				var img = new BufferedPaletteImage(cs[0], cs[1], DEFAULT_BIT_DEPTHS, new long[1]);
 				img.setPixel(cs[2], cs[3], 0);
-				Assert.fail("Expected exception");
-			} catch (IndexOutOfBoundsException e) {}  // Pass
+			});
 		}
 	}
 	
@@ -317,12 +312,11 @@ public final class BufferedPaletteImageTest {
 		};
 		
 		for (Case cs : CASES) {
-			try {
+			TestUtil.runExpect(IllegalArgumentException.class, () -> {
 				var img = new BufferedPaletteImage(1, 1, cs.bitDepths, new long[1]);
 				assertArrayEquals(cs.bitDepths, img.getBitDepths());
 				img.setPalette(new long[]{cs.paletteEntry});
-				Assert.fail("Expected exception");
-			} catch (IllegalArgumentException e) {}  // Pass
+			});
 		}
 	}
 	
@@ -377,10 +371,8 @@ public final class BufferedPaletteImageTest {
 		img.setPalette(new long[2]);
 		img.setPixel(0, 0, 0);
 		img.setPixel(1, 0, 1);
-		try {
-			img.setPalette(new long[1]);
-			Assert.fail("Expected exception");
-		} catch (IllegalArgumentException e) {}  // Pass
+		TestUtil.runExpect(IllegalArgumentException.class,
+			() -> img.setPalette(new long[1]));
 	}
 	
 	

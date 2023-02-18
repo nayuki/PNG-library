@@ -10,7 +10,6 @@ package io.nayuki.png.chunk;
 
 import static io.nayuki.png.chunk.TestUtil.hexToBytes;
 import static org.junit.Assert.assertArrayEquals;
-import org.junit.Assert;
 import org.junit.Test;
 
 
@@ -30,10 +29,8 @@ public final class BkgdTest {
 		};
 		
 		for (int cs : CASES) {
-			try {
-				new Bkgd(new byte[cs]);
-				Assert.fail("Expected exception");
-			} catch (IllegalArgumentException e) {}  // Pass
+			TestUtil.runExpect(IllegalArgumentException.class,
+				() -> new Bkgd(new byte[cs]));
 		}
 	}
 	
@@ -50,10 +47,8 @@ public final class BkgdTest {
 		};
 		
 		for (int cs : CASES) {
-			try {
-				new Bkgd(new short[cs]);
-				Assert.fail("Expected exception");
-			} catch (IllegalArgumentException e) {}  // Pass
+			TestUtil.runExpect(IllegalArgumentException.class,
+				() -> new Bkgd(new short[cs]));
 		}
 	}
 	

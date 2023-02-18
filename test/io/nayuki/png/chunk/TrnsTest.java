@@ -10,7 +10,6 @@ package io.nayuki.png.chunk;
 
 import static io.nayuki.png.chunk.TestUtil.hexToBytes;
 import static org.junit.Assert.assertArrayEquals;
-import org.junit.Assert;
 import org.junit.Test;
 
 
@@ -24,10 +23,8 @@ public final class TrnsTest {
 		};
 		
 		for (int cs : CASES) {
-			try {
-				new Trns(new byte[cs]);
-				Assert.fail("Expected exception");
-			} catch (IllegalArgumentException e) {}  // Pass
+			TestUtil.runExpect(IllegalArgumentException.class,
+				() -> new Trns(new byte[cs]));
 		}
 	}
 	
@@ -44,10 +41,8 @@ public final class TrnsTest {
 		};
 		
 		for (int cs : CASES) {
-			try {
-				new Trns(new short[cs]);
-				Assert.fail("Expected exception");
-			} catch (IllegalArgumentException e) {}  // Pass
+			TestUtil.runExpect(IllegalArgumentException.class,
+				() -> new Trns(new short[cs]));
 		}
 	}
 	

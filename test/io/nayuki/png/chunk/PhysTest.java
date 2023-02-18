@@ -10,7 +10,6 @@ package io.nayuki.png.chunk;
 
 import static io.nayuki.png.chunk.TestUtil.hexToBytes;
 import static org.junit.Assert.assertArrayEquals;
-import org.junit.Assert;
 import org.junit.Test;
 import io.nayuki.png.chunk.Phys.UnitSpecifier;
 
@@ -28,10 +27,8 @@ public final class PhysTest {
 		};
 		
 		for (int[] cs : CASES) {
-			try {
-				new Phys(cs[0], cs[1], UnitSpecifier.METRE);
-				Assert.fail("Expected exception");
-			} catch (IllegalArgumentException e) {}  // Pass
+			TestUtil.runExpect(IllegalArgumentException.class,
+				() -> new Phys(cs[0], cs[1], UnitSpecifier.METRE));
 		}
 	}
 	

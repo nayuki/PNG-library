@@ -14,7 +14,6 @@ import static io.nayuki.png.chunk.Ihdr.InterlaceMethod.ADAM7;
 import static io.nayuki.png.chunk.Ihdr.InterlaceMethod.NONE;
 import static io.nayuki.png.chunk.TestUtil.hexToBytes;
 import static org.junit.Assert.assertArrayEquals;
-import org.junit.Assert;
 import org.junit.Test;
 import io.nayuki.png.chunk.Ihdr.ColorType;
 
@@ -35,10 +34,8 @@ public final class IhdrTest {
 		};
 		
 		for (int[] cs : CASES) {
-			try {
-				new Ihdr(cs[0], cs[1], 8, ColorType.TRUE_COLOR, ZLIB_DEFLATE, ADAPTIVE, NONE);
-				Assert.fail("Expected exception");
-			} catch (IllegalArgumentException e) {}  // Pass
+			TestUtil.runExpect(IllegalArgumentException.class,
+				() -> new Ihdr(cs[0], cs[1], 8, ColorType.TRUE_COLOR, ZLIB_DEFLATE, ADAPTIVE, NONE));
 		}
 	}
 	
@@ -101,10 +98,8 @@ public final class IhdrTest {
 		};
 		
 		for (Case cs : CASES) {
-			try {
-				new Ihdr(1, 1, cs.bitDepth, cs.colorType, ZLIB_DEFLATE, ADAPTIVE, NONE);
-				Assert.fail("Expected exception");
-			} catch (IllegalArgumentException e) {}  // Pass
+			TestUtil.runExpect(IllegalArgumentException.class,
+				() -> new Ihdr(1, 1, cs.bitDepth, cs.colorType, ZLIB_DEFLATE, ADAPTIVE, NONE));
 		}
 	}
 	
