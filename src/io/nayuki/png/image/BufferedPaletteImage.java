@@ -98,8 +98,9 @@ public final class BufferedPaletteImage implements PaletteImage, Cloneable {
 	 * Sets this image's palette to the specified array. Each entry equals {@code (red << 48 | green
 	 * << 32 | blue << 16 | alpha << 0)}, where {@code red} is in the range [0, 2<sup>bitDepths[0]</sup>),
 	 * etc. The color indexes of existing pixels will not be changed, so the effective colors of pixels
-	 * will change according to the new palette. If the new palette is shorter than the existing
-	 * one and any pixel has an out-of-bounds index for the new palette, an exception is thrown.
+	 * will change according to the new palette. Duplicate values in the palette are allowed and preserved.
+	 * If the new palette is shorter than the existing one and any pixel has an out-of-bounds index for
+	 * the new palette, an exception is thrown.
 	 * @param pal the new palette to set to (not {@code null})
 	 * @throws NullPointerException if the new palette is {@code null}
 	 * @throws IllegalArgumentException if {@code pal.length} is not in the range
