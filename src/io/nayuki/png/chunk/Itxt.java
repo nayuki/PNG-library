@@ -42,9 +42,7 @@ public record Itxt(
 	public Itxt {
 		Util.checkKeyword(keyword, true);
 		
-		Objects.requireNonNull(languageTag);
-		if (!languageTag.matches("(?:[A-Za-z0-9]{1,8}(?:-[A-Za-z0-9]{1,8})*)?"))
-			throw new IllegalArgumentException("Invalid language tag syntax");
+		checkLanguageTag(languageTag);
 		
 		Objects.requireNonNull(translatedKeyword);
 		for (int i = 0; i < translatedKeyword.length(); i++) {
@@ -63,6 +61,13 @@ public record Itxt(
 		
 		Util.checkedLengthSum(keyword, languageTag, text,
 			translatedKeyword.getBytes(StandardCharsets.UTF_8), 5);
+	}
+	
+	
+	static void checkLanguageTag(String s) {
+		Objects.requireNonNull(s);
+		if (!s.matches("(?:[A-Za-z0-9]{1,8}(?:-[A-Za-z0-9]{1,8})*)?"))
+			throw new IllegalArgumentException("Invalid language tag syntax");
 	}
 	
 	
