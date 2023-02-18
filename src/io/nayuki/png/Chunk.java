@@ -125,7 +125,7 @@ public interface Chunk {
 		DataOutput dout = new DataOutputStream(out);
 		int dataLen = getDataLength();
 		if (dataLen < 0)
-			throw new IllegalArgumentException("Chunk data length out of range");
+			throw new AssertionError("Non-positive chunk data length");
 		dout.writeInt(dataLen);
 		
 		String type = getType();
