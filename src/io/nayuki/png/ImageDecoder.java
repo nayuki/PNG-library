@@ -60,8 +60,8 @@ public abstract sealed class ImageDecoder permits
 		
 		// Decode image by color type
 		return (switch (ihdr.colorType()) {
-			case TRUE_COLOR, TRUE_COLOR_WITH_ALPHA -> new RgbaImageDecoder(png);
-			case GRAYSCALE , GRAYSCALE_WITH_ALPHA  -> new GrayImageDecoder(png);
+			case TRUE_COLOR, TRUE_COLOR_WITH_ALPHA -> new RgbaImageDecoder   (png);
+			case GRAYSCALE , GRAYSCALE_WITH_ALPHA  -> new GrayImageDecoder   (png);
 			case INDEXED_COLOR                     -> new PaletteImageDecoder(png);
 		}).decode();
 	}
