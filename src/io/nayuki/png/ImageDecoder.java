@@ -52,10 +52,14 @@ public abstract sealed class ImageDecoder permits
 		// Check header chunk
 		Objects.requireNonNull(png);
 		Ihdr ihdr = png.ihdr.orElseThrow(() -> new IllegalArgumentException("Missing IHDR chunk"));
-		if (ihdr.compressionMethod() != Ihdr.CompressionMethod.ZLIB_DEFLATE)
-			throw new IllegalArgumentException("Unsupported compression method");
-		if (ihdr.filterMethod() != Ihdr.FilterMethod.ADAPTIVE)
-			throw new IllegalArgumentException("Unsupported filter method");
+		// Force exhaustive matches at compile time
+		int discard0 = switch (ihdr.compressionMethod()) {
+			case ZLIB_DEFLATE -> 0;
+		};
+		int discard1 = switch (ihdr.filterMethod()) {
+			case ADAPTIVE -> 0;
+		};
+		assert discard0 + discard1 == 0;
 		
 		// Decode image by color type
 		return (switch (ihdr.colorType()) {
