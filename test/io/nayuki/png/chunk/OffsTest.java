@@ -8,8 +8,6 @@
 
 package io.nayuki.png.chunk;
 
-import static io.nayuki.png.TestUtil.hexToBytes;
-import static org.junit.Assert.assertArrayEquals;
 import org.junit.Test;
 import io.nayuki.png.TestUtil;
 import io.nayuki.png.chunk.Offs.UnitSpecifier;
@@ -41,7 +39,7 @@ public final class OffsTest {
 	
 	
 	@Test public void testWriteChunk() {
-		assertArrayEquals(hexToBytes("00000009 6F464673 B404CBCE 2E884CC4 00 2E1AF44F"), TestUtil.writeChunkToBytes(new Offs(-1274754098, 780684484, UnitSpecifier.PIXEL)));
+		TestUtil.assertChunkBytesEqual("00000009 6F464673 B404CBCE 2E884CC4 00 2E1AF44F", new Offs(-1274754098, 780684484, UnitSpecifier.PIXEL));
 	}
 	
 }

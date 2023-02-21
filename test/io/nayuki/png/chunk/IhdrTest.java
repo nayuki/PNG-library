@@ -9,11 +9,9 @@
 package io.nayuki.png.chunk;
 
 import static io.nayuki.png.Chunk.CompressionMethod.ZLIB_DEFLATE;
-import static io.nayuki.png.TestUtil.hexToBytes;
 import static io.nayuki.png.chunk.Ihdr.FilterMethod.ADAPTIVE;
 import static io.nayuki.png.chunk.Ihdr.InterlaceMethod.ADAM7;
 import static io.nayuki.png.chunk.Ihdr.InterlaceMethod.NONE;
-import static org.junit.Assert.assertArrayEquals;
 import org.junit.Test;
 import io.nayuki.png.TestUtil;
 import io.nayuki.png.chunk.Ihdr.ColorType;
@@ -125,8 +123,8 @@ public final class IhdrTest {
 	
 	
 	@Test public void testWriteChunk() {
-		assertArrayEquals(hexToBytes("0000000D 49484452 001A4646 00000057 08 03 00 00 01 21AF252F"),
-			TestUtil.writeChunkToBytes(new Ihdr(1721926, 87, 8, ColorType.INDEXED_COLOR, ZLIB_DEFLATE, ADAPTIVE, ADAM7)));
+		TestUtil.assertChunkBytesEqual("0000000D 49484452 001A4646 00000057 08 03 00 00 01 21AF252F",
+			new Ihdr(1721926, 87, 8, ColorType.INDEXED_COLOR, ZLIB_DEFLATE, ADAPTIVE, ADAM7));
 	}
 	
 }

@@ -78,8 +78,8 @@ public final class PlteTest {
 	
 	
 	@Test public void testWriteChunk() {
-		assertArrayEquals(hexToBytes("0000000C 504C5445 DDBC3884973CB4C47C499964 81402C90"),
-			TestUtil.writeChunkToBytes(new Plte(new byte[]{(byte)0xDD, (byte)0xBC, (byte)0x38, (byte)0x84, (byte)0x97, (byte)0x3C, (byte)0xB4, (byte)0xC4, (byte)0x7C, (byte)0x49, (byte)0x99, (byte)0x64})));
+		TestUtil.assertChunkBytesEqual("0000000C 504C5445 DDBC3884973CB4C47C499964 81402C90",
+			new Plte(new byte[]{(byte)0xDD, (byte)0xBC, (byte)0x38, (byte)0x84, (byte)0x97, (byte)0x3C, (byte)0xB4, (byte)0xC4, (byte)0x7C, (byte)0x49, (byte)0x99, (byte)0x64}));
 	}
 	
 }

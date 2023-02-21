@@ -8,8 +8,6 @@
 
 package io.nayuki.png.chunk;
 
-import static io.nayuki.png.TestUtil.hexToBytes;
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import io.nayuki.png.TestUtil;
@@ -87,7 +85,7 @@ public final class GamaTest {
 	
 	
 	@Test public void testWriteChunk() {
-		assertArrayEquals(hexToBytes("00000004 67414D41 000004E8 4198CF03"), TestUtil.writeChunkToBytes(new Gama(1256)));
+		TestUtil.assertChunkBytesEqual("00000004 67414D41 000004E8 4198CF03", new Gama(1256));
 	}
 	
 }

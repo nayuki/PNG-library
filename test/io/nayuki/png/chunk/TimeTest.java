@@ -8,8 +8,6 @@
 
 package io.nayuki.png.chunk;
 
-import static io.nayuki.png.TestUtil.hexToBytes;
-import static org.junit.Assert.assertArrayEquals;
 import org.junit.Test;
 import io.nayuki.png.TestUtil;
 
@@ -82,7 +80,7 @@ public final class TimeTest {
 	
 	
 	@Test public void testWriteChunk() {
-		assertArrayEquals(hexToBytes("00000007 74494D45 07D4 07 0F 10 04 1D B4743272"), TestUtil.writeChunkToBytes(new Time(2004, 7, 15, 16, 4, 29)));
+		TestUtil.assertChunkBytesEqual("00000007 74494D45 07D4 07 0F 10 04 1D B4743272", new Time(2004, 7, 15, 16, 4, 29));
 	}
 	
 }

@@ -41,14 +41,14 @@ public final class TestUtil {
 	}
 	
 	
-	public static byte[] writeChunkToBytes(Chunk chk) {
+	public static void assertChunkBytesEqual(String expectHex, Chunk chk) {
 		var out = new ByteArrayOutputStream();
 		try {
 			chk.writeChunk(out);
 		} catch (IOException e) {
 			throw new AssertionError("Unreachable exception", e);
 		}
-		return out.toByteArray();
+		Assert.assertArrayEquals(hexToBytes(expectHex), out.toByteArray());
 	}
 	
 	

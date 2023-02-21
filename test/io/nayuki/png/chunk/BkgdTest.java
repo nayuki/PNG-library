@@ -75,8 +75,8 @@ public final class BkgdTest {
 	
 	
 	@Test public void testWriteChunk() {
-		assertArrayEquals(hexToBytes("00000001 624B4744 85 15D76AE7"), TestUtil.writeChunkToBytes(new Bkgd(new byte[]{(byte)0x85})));
-		assertArrayEquals(hexToBytes("00000002 624B4744 049D 405F09CF"), TestUtil.writeChunkToBytes(new Bkgd(new short[]{(short)0x049D})));
+		TestUtil.assertChunkBytesEqual("00000001 624B4744 85 15D76AE7", new Bkgd(new byte[]{(byte)0x85}));
+		TestUtil.assertChunkBytesEqual("00000002 624B4744 049D 405F09CF", new Bkgd(new short[]{(short)0x049D}));
 	}
 	
 }

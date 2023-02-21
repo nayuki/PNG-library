@@ -8,8 +8,6 @@
 
 package io.nayuki.png.chunk;
 
-import static io.nayuki.png.TestUtil.hexToBytes;
-import static org.junit.Assert.assertArrayEquals;
 import org.junit.Test;
 import io.nayuki.png.TestUtil;
 import io.nayuki.png.chunk.Phys.UnitSpecifier;
@@ -43,7 +41,7 @@ public final class PhysTest {
 	
 	
 	@Test public void testWriteChunk() {
-		assertArrayEquals(hexToBytes("00000009 70485973 638F0B6D 3B5446BD 01 041F4428"), TestUtil.writeChunkToBytes(new Phys(1670318957, 995378877, UnitSpecifier.METRE)));
+		TestUtil.assertChunkBytesEqual("00000009 70485973 638F0B6D 3B5446BD 01 041F4428", new Phys(1670318957, 995378877, UnitSpecifier.METRE));
 	}
 	
 }

@@ -88,7 +88,7 @@ public final class SbitTest {
 	
 	
 	@Test public void testWriteChunk() {
-		assertArrayEquals(hexToBytes("00000004 73424954 0C 06 0D 01 FD5F9234"), TestUtil.writeChunkToBytes(new Sbit(new byte[]{12, 6, 13, 1})));
+		TestUtil.assertChunkBytesEqual("00000004 73424954 0C 06 0D 01 FD5F9234", new Sbit(new byte[]{12, 6, 13, 1}));
 	}
 	
 }

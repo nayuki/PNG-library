@@ -8,8 +8,6 @@
 
 package io.nayuki.png.chunk;
 
-import static io.nayuki.png.TestUtil.hexToBytes;
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import java.util.Arrays;
 import org.junit.Test;
@@ -97,8 +95,8 @@ public final class ChrmTest {
 	
 	
 	@Test public void testWriteChunk() {
-		assertArrayEquals(hexToBytes("00000020 6348524D 00000009 0000001B 0000276D 0EB9EA98 0006ED4D 7608BC41 0000000F 0000000E 5B866230"),
-			TestUtil.writeChunkToBytes(new Chrm(9, 27, 10093, 247065240, 453965, 1980283969, 15, 14)));
+		TestUtil.assertChunkBytesEqual("00000020 6348524D 00000009 0000001B 0000276D 0EB9EA98 0006ED4D 7608BC41 0000000F 0000000E 5B866230",
+			new Chrm(9, 27, 10093, 247065240, 453965, 1980283969, 15, 14));
 	}
 	
 }

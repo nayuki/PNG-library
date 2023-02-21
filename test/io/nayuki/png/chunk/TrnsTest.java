@@ -8,7 +8,6 @@
 
 package io.nayuki.png.chunk;
 
-import static io.nayuki.png.TestUtil.hexToBytes;
 import static org.junit.Assert.assertArrayEquals;
 import org.junit.Test;
 import io.nayuki.png.TestUtil;
@@ -64,8 +63,8 @@ public final class TrnsTest {
 	
 	
 	@Test public void testWriteChunk() {
-		assertArrayEquals(hexToBytes("00000008 74524E53 01 47 CC 0E 3A 23 A1 7E 86C74889"),
-			TestUtil.writeChunkToBytes(new Trns(new byte[]{(byte)0x01, (byte)0x47, (byte)0xCC, (byte)0x0E, (byte)0x3A, (byte)0x23, (byte)0xA1, (byte)0x7E})));
+		TestUtil.assertChunkBytesEqual("00000008 74524E53 01 47 CC 0E 3A 23 A1 7E 86C74889",
+			new Trns(new byte[]{(byte)0x01, (byte)0x47, (byte)0xCC, (byte)0x0E, (byte)0x3A, (byte)0x23, (byte)0xA1, (byte)0x7E}));
 	}
 	
 }
