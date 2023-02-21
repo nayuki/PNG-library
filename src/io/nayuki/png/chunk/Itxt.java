@@ -111,6 +111,12 @@ public record Itxt(
 	
 	/*---- Methods ----*/
 	
+	public String getText() {
+		byte[] decompText = compressionMethod.map(cm -> cm.decompress(text)).orElse(text);
+		return new String(decompText, StandardCharsets.UTF_8);
+	}
+	
+	
 	@Override public String getType() {
 		return TYPE;
 	}

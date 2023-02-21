@@ -76,6 +76,12 @@ public record Ztxt(
 	
 	/*---- Methods ----*/
 	
+	public String getText() {
+		byte[] decompText = compressionMethod.decompress(compressedText);
+		return new String(decompText, StandardCharsets.ISO_8859_1);
+	}
+	
+	
 	@Override public String getType() {
 		return TYPE;
 	}
