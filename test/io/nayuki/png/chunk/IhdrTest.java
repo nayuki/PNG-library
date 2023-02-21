@@ -123,4 +123,10 @@ public final class IhdrTest {
 		assertArrayEquals(hexToBytes("00000007 7FFFFFFF 08 03 00 00 00"),  new Ihdr(         7, 2147483647,  8, ColorType.INDEXED_COLOR        , ZLIB_DEFLATE, ADAPTIVE, NONE ).getData());
 	}
 	
+	
+	@Test public void testWriteChunk() {
+		assertArrayEquals(hexToBytes("0000000D 49484452 001A4646 00000057 08 03 00 00 01 21AF252F"),
+			TestUtil.writeChunkToBytes(new Ihdr(1721926, 87, 8, ColorType.INDEXED_COLOR, ZLIB_DEFLATE, ADAPTIVE, ADAM7)));
+	}
+	
 }

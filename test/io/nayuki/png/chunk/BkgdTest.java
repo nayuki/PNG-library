@@ -73,4 +73,10 @@ public final class BkgdTest {
 		assertArrayEquals(hexToBytes("4321 FACE B00C"), new Bkgd(new short[]{(short)0x4321, (short)0xFACE, (short)0xB00C}).getData());
 	}
 	
+	
+	@Test public void testWriteChunk() {
+		assertArrayEquals(hexToBytes("00000001 624B4744 85 15D76AE7"), TestUtil.writeChunkToBytes(new Bkgd(new byte[]{(byte)0x85})));
+		assertArrayEquals(hexToBytes("00000002 624B4744 049D 405F09CF"), TestUtil.writeChunkToBytes(new Bkgd(new short[]{(short)0x049D})));
+	}
+	
 }

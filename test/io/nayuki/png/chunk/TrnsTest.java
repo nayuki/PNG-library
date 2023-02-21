@@ -62,4 +62,10 @@ public final class TrnsTest {
 		assertArrayEquals(hexToBytes("4321 FACE B00C"), new Trns(new short[]{(short)0x4321, (short)0xFACE, (short)0xB00C}).getData());
 	}
 	
+	
+	@Test public void testWriteChunk() {
+		assertArrayEquals(hexToBytes("00000008 74524E53 01 47 CC 0E 3A 23 A1 7E 86C74889"),
+			TestUtil.writeChunkToBytes(new Trns(new byte[]{(byte)0x01, (byte)0x47, (byte)0xCC, (byte)0x0E, (byte)0x3A, (byte)0x23, (byte)0xA1, (byte)0x7E})));
+	}
+	
 }

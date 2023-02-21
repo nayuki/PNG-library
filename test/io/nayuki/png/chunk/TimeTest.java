@@ -80,4 +80,9 @@ public final class TimeTest {
 		assertArrayEquals(hexToBytes("07F6 01 13 03 0E 07"), new Time(2038,  1, 19,  3, 14,  7).getData());
 	}
 	
+	
+	@Test public void testWriteChunk() {
+		assertArrayEquals(hexToBytes("00000007 74494D45 07D4 07 0F 10 04 1D B4743272"), TestUtil.writeChunkToBytes(new Time(2004, 7, 15, 16, 4, 29)));
+	}
+	
 }

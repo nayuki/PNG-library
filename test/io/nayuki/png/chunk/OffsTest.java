@@ -39,4 +39,9 @@ public final class OffsTest {
 		assertArrayEquals(hexToBytes("80000001 80000001 00"), new Offs(-2147483647, -2147483647, UnitSpecifier.PIXEL     ).getData());
 	}
 	
+	
+	@Test public void testWriteChunk() {
+		assertArrayEquals(hexToBytes("00000009 6F464673 B404CBCE 2E884CC4 00 2E1AF44F"), TestUtil.writeChunkToBytes(new Offs(-1274754098, 780684484, UnitSpecifier.PIXEL)));
+	}
+	
 }

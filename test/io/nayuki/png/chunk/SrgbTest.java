@@ -11,6 +11,7 @@ package io.nayuki.png.chunk;
 import static io.nayuki.png.TestUtil.hexToBytes;
 import static org.junit.Assert.assertArrayEquals;
 import org.junit.Test;
+import io.nayuki.png.TestUtil;
 import io.nayuki.png.chunk.Srgb.RenderingIntent;
 
 
@@ -21,6 +22,11 @@ public final class SrgbTest {
 		assertArrayEquals(hexToBytes("01"), new Srgb(RenderingIntent.RELITAVIE_COLORIMETRIC).getData());
 		assertArrayEquals(hexToBytes("02"), new Srgb(RenderingIntent.SATURATION            ).getData());
 		assertArrayEquals(hexToBytes("03"), new Srgb(RenderingIntent.ABSOLUTE_COLORIMETRIC ).getData());
+	}
+	
+	
+	@Test public void testWriteChunk() {
+		assertArrayEquals(hexToBytes("00000001 73524742 03 37C74D53"), TestUtil.writeChunkToBytes(new Srgb(RenderingIntent.ABSOLUTE_COLORIMETRIC)));
 	}
 	
 }

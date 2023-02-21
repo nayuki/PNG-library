@@ -85,4 +85,9 @@ public final class GamaTest {
 		assertArrayEquals(hexToBytes("7FFFFFFF"), new Gama(2147483647).getData());
 	}
 	
+	
+	@Test public void testWriteChunk() {
+		assertArrayEquals(hexToBytes("00000004 67414D41 000004E8 4198CF03"), TestUtil.writeChunkToBytes(new Gama(1256)));
+	}
+	
 }

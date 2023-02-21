@@ -63,4 +63,10 @@ public final class ItxtTest {
 			new Itxt("author", "EN", "AutHoR", Optional.empty(), "Nayuki".getBytes(StandardCharsets.UTF_8)).getData());
 	}
 	
+	
+	@Test public void testWriteChunk() {
+		assertArrayEquals(hexToBytes("00000040 69545874 5768617427732061206B6579776F72643F 00 00 00 66722D4652414E43452D30 00 5175276573742D636520717527756E206D6F742D636CC3A9203F 00 4E6FC3AB6C 1B3F8554"),
+			TestUtil.writeChunkToBytes(new Itxt("What's a keyword?", "fr-FRANCE-0", "Qu'est-ce qu'un mot-clé ?", Optional.empty(), "Noël".getBytes(StandardCharsets.UTF_8))));
+	}
+	
 }

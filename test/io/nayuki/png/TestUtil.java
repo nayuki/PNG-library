@@ -8,6 +8,8 @@
 
 package io.nayuki.png;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Random;
 import org.junit.Assert;
 
@@ -31,6 +33,17 @@ public final class TestUtil {
 			if (exception.isInstance(e));  // Pass
 			else  throw e;
 		}
+	}
+	
+	
+	public static byte[] writeChunkToBytes(Chunk chk) {
+		var out = new ByteArrayOutputStream();
+		try {
+			chk.writeChunk(out);
+		} catch (IOException e) {
+			throw new AssertionError("Unreachable exception", e);
+		}
+		return out.toByteArray();
 	}
 	
 	

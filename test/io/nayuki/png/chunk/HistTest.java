@@ -8,6 +8,7 @@
 
 package io.nayuki.png.chunk;
 
+import static io.nayuki.png.TestUtil.hexToBytes;
 import static org.junit.Assert.assertArrayEquals;
 import org.junit.Test;
 import io.nayuki.png.TestUtil;
@@ -42,6 +43,12 @@ public final class HistTest {
 			}
 			assertArrayEquals(bytes, new Hist(shorts).getData());
 		}
+	}
+	
+	
+	@Test public void testWriteChunk() {
+		assertArrayEquals(hexToBytes("0000000A 68495354 016A 2821 01EF 5E0B 0001 832B5A43"),
+			TestUtil.writeChunkToBytes(new Hist(new short[]{(short)0x016A, (short)0x2821, (short)0x01EF, (short)0x5E0B, (short)0x0001})));
 	}
 	
 }

@@ -41,4 +41,9 @@ public final class PhysTest {
 		assertArrayEquals(hexToBytes("7FFFFFFF 7FFFFFFF 01"), new Phys(2147483647, 2147483647, UnitSpecifier.METRE  ).getData());
 	}
 	
+	
+	@Test public void testWriteChunk() {
+		assertArrayEquals(hexToBytes("00000009 70485973 638F0B6D 3B5446BD 01 041F4428"), TestUtil.writeChunkToBytes(new Phys(1670318957, 995378877, UnitSpecifier.METRE)));
+	}
+	
 }

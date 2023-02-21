@@ -95,4 +95,10 @@ public final class ChrmTest {
 			new Chrm(1, 45455, 100000, 2147483647, 3141592, 27183, 0, 220000).getData());
 	}
 	
+	
+	@Test public void testWriteChunk() {
+		assertArrayEquals(hexToBytes("00000020 6348524D 00000009 0000001B 0000276D 0EB9EA98 0006ED4D 7608BC41 0000000F 0000000E 5B866230"),
+			TestUtil.writeChunkToBytes(new Chrm(9, 27, 10093, 247065240, 453965, 1980283969, 15, 14)));
+	}
+	
 }
