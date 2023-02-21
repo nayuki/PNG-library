@@ -40,7 +40,7 @@ public record Iccp(
 		Objects.requireNonNull(compressionMethod);
 		Objects.requireNonNull(compressedProfile);
 		compressionMethod.decompress(compressedProfile);
-		Util.checkedLengthSum(profileName, compressedProfile, 2);
+		Util.checkedLengthSum(profileName, 2 * Byte.BYTES, compressedProfile);
 	}
 	
 	
@@ -78,7 +78,7 @@ public record Iccp(
 	
 	
 	@Override public int getDataLength() {
-		return Util.checkedLengthSum(profileName, compressedProfile, 2);
+		return Util.checkedLengthSum(profileName, 2 * Byte.BYTES, compressedProfile);
 	}
 	
 	

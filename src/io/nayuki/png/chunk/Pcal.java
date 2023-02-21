@@ -58,8 +58,8 @@ public record Pcal(
 		
 		var params = new Object[parameters.length];
 		System.arraycopy(parameters, 0, params, 0, params.length);
-		Util.checkedLengthSum(calibrationName, 1, Integer.BYTES, Integer.BYTES,
-			Byte.BYTES, Byte.BYTES, unitName, params.length, Util.checkedLengthSum(params));
+		Util.checkedLengthSum(calibrationName, 1, 2 * Integer.BYTES,
+			2 * Byte.BYTES, unitName, params.length, Util.checkedLengthSum(params));
 	}
 	
 	
@@ -111,8 +111,8 @@ public record Pcal(
 	@Override public int getDataLength() {
 		var params = new Object[parameters.length];
 		System.arraycopy(parameters, 0, params, 0, params.length);
-		return Util.checkedLengthSum(calibrationName, 1, Integer.BYTES, Integer.BYTES,
-			Byte.BYTES, Byte.BYTES, unitName, params.length, Util.checkedLengthSum(params));
+		return Util.checkedLengthSum(calibrationName, 1, 2 * Integer.BYTES,
+			2 * Byte.BYTES, unitName, params.length, Util.checkedLengthSum(params));
 	}
 	
 	

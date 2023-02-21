@@ -46,7 +46,7 @@ public record Splt(
 		if (data.length % bytesPerEntry != 0)
 			throw new IllegalArgumentException("Invalid data length");
 		
-		Util.checkedLengthSum(paletteName, data, 2);
+		Util.checkedLengthSum(paletteName, 2 * Byte.BYTES, data);
 	}
 	
 	
@@ -84,7 +84,7 @@ public record Splt(
 	
 	
 	@Override public int getDataLength() {
-		return Util.checkedLengthSum(paletteName, data, 2);
+		return Util.checkedLengthSum(paletteName, 2 * Byte.BYTES, data);
 	}
 	
 	

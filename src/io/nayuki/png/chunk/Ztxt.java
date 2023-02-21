@@ -44,7 +44,7 @@ public record Ztxt(
 		
 		var text = new String(decompText, StandardCharsets.ISO_8859_1);
 		Util.checkIso8859_1(text, true);
-		Util.checkedLengthSum(keyword, compressedText, 2);
+		Util.checkedLengthSum(keyword, 2 * Byte.BYTES, compressedText);
 	}
 	
 	
@@ -82,7 +82,7 @@ public record Ztxt(
 	
 	
 	@Override public int getDataLength() {
-		return Util.checkedLengthSum(keyword, compressedText, 2);
+		return Util.checkedLengthSum(keyword, 2 * Byte.BYTES, compressedText);
 	}
 	
 	

@@ -31,7 +31,7 @@ public record Text(String keyword, String text) implements Chunk {
 	public Text {
 		Util.checkKeyword(keyword, true);
 		Util.checkIso8859_1(text, true);
-		Util.checkedLengthSum(keyword, text, 1);
+		Util.checkedLengthSum(keyword, Byte.BYTES, text);
 	}
 	
 	
@@ -65,7 +65,7 @@ public record Text(String keyword, String text) implements Chunk {
 	
 	
 	@Override public int getDataLength() {
-		return Util.checkedLengthSum(keyword, text, 1);
+		return Util.checkedLengthSum(keyword, Byte.BYTES, text);
 	}
 	
 	

@@ -47,7 +47,7 @@ public record Gift(
 			throw new IllegalArgumentException("Character cell dimension out of range");
 		if (textForegroundColor >>> 24 != 0 || textBackgroundColor >>> 24 != 0)
 			throw new IllegalArgumentException("Invalid color");
-		Util.checkedLengthSum(text, 24);
+		Util.checkedLengthSum(4 * Integer.BYTES, 2 * Byte.BYTES, 2 * 3 * Byte.BYTES, text);
 	}
 	
 	
@@ -96,7 +96,7 @@ public record Gift(
 	
 	
 	@Override public int getDataLength() {
-		return Util.checkedLengthSum(text, 24);
+		return Util.checkedLengthSum(4 * Integer.BYTES, 2 * Byte.BYTES, 2 * 3 * Byte.BYTES, text);
 	}
 	
 	

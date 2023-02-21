@@ -38,7 +38,7 @@ public record Scal(
 		Objects.requireNonNull(unitSpecifier);
 		if (Util.testAsciiFloat(pixelWidth) != 1 || Util.testAsciiFloat(pixelHeight) != 1)
 			throw new IllegalArgumentException("Invalid number string");
-		Util.checkedLengthSum(pixelWidth, pixelHeight, 2);
+		Util.checkedLengthSum(Byte.BYTES, pixelWidth, Byte.BYTES, pixelHeight);
 	}
 	
 	
@@ -75,7 +75,7 @@ public record Scal(
 	
 	
 	@Override public int getDataLength() {
-		return Util.checkedLengthSum(pixelWidth, pixelHeight, 2);
+		return Util.checkedLengthSum(Byte.BYTES, pixelWidth, Byte.BYTES, pixelHeight);
 	}
 	
 	

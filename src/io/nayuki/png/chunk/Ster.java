@@ -56,7 +56,7 @@ public record Ster(Mode mode) implements Chunk {
 	
 	
 	@Override public int getDataLength() {
-		return 1;
+		return Byte.BYTES;
 	}
 	
 	

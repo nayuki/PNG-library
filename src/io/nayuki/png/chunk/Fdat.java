@@ -35,7 +35,7 @@ public record Fdat(
 		if (sequence < 0)
 			throw new IllegalArgumentException("Invalid sequence number");
 		Objects.requireNonNull(data);
-		Util.checkedLengthSum(data, Integer.BYTES);
+		Util.checkedLengthSum(Integer.BYTES, data);
 	}
 	
 	
@@ -68,7 +68,7 @@ public record Fdat(
 	
 	
 	@Override public int getDataLength() {
-		return Util.checkedLengthSum(data, Integer.BYTES);
+		return Util.checkedLengthSum(Integer.BYTES, data);
 	}
 	
 	
