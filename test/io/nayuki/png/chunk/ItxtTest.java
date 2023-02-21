@@ -59,8 +59,8 @@ public final class ItxtTest {
 	
 	
 	@Test public void testGetData() {
-		assertArrayEquals(hexToBytes("617574686F72 00 00 00 454E 00 417574486F52 00 4E6179756B69"),
-			new Itxt("author", "EN", "AutHoR", Optional.empty(), "Nayuki".getBytes(StandardCharsets.UTF_8)).getData());
+		TestUtil.assertDataEquals("617574686F72 00 00 00 454E 00 417574486F52 00 4E6179756B69",
+			new Itxt("author", "EN", "AutHoR", Optional.empty(), "Nayuki".getBytes(StandardCharsets.UTF_8)));
 	}
 	
 	

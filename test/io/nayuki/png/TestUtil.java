@@ -36,6 +36,11 @@ public final class TestUtil {
 	}
 	
 	
+	public static void assertDataEquals(String expectHex, Chunk chk) {
+		Assert.assertArrayEquals(hexToBytes(expectHex), chk.getData());
+	}
+	
+	
 	public static byte[] writeChunkToBytes(Chunk chk) {
 		var out = new ByteArrayOutputStream();
 		try {

@@ -32,11 +32,11 @@ public final class OffsTest {
 	
 	
 	@Test public void testGetData() {
-		assertArrayEquals(hexToBytes("00000000 00000000 00"), new Offs(          0,           0, UnitSpecifier.PIXEL     ).getData());
-		assertArrayEquals(hexToBytes("00000002 FFFFFFFF 01"), new Offs(          2,          -1, UnitSpecifier.MICROMETRE).getData());
-		assertArrayEquals(hexToBytes("FFFB34D1 00287D95 00"), new Offs(    -314159,     2653589, UnitSpecifier.PIXEL     ).getData());
-		assertArrayEquals(hexToBytes("7FFFFFFF 7FFFFFFF 01"), new Offs( 2147483647,  2147483647, UnitSpecifier.MICROMETRE).getData());
-		assertArrayEquals(hexToBytes("80000001 80000001 00"), new Offs(-2147483647, -2147483647, UnitSpecifier.PIXEL     ).getData());
+		TestUtil.assertDataEquals("00000000 00000000 00", new Offs(          0,           0, UnitSpecifier.PIXEL     ));
+		TestUtil.assertDataEquals("00000002 FFFFFFFF 01", new Offs(          2,          -1, UnitSpecifier.MICROMETRE));
+		TestUtil.assertDataEquals("FFFB34D1 00287D95 00", new Offs(    -314159,     2653589, UnitSpecifier.PIXEL     ));
+		TestUtil.assertDataEquals("7FFFFFFF 7FFFFFFF 01", new Offs( 2147483647,  2147483647, UnitSpecifier.MICROMETRE));
+		TestUtil.assertDataEquals("80000001 80000001 00", new Offs(-2147483647, -2147483647, UnitSpecifier.PIXEL     ));
 	}
 	
 	

@@ -106,21 +106,21 @@ public final class IhdrTest {
 	
 	
 	@Test public void testGetData() {
-		assertArrayEquals(hexToBytes("00000001 00000001 08 02 00 00 00"),  new Ihdr(         1,          1,  8, ColorType.TRUE_COLOR           , ZLIB_DEFLATE, ADAPTIVE, NONE ).getData());
-		assertArrayEquals(hexToBytes("00010000 00001000 10 02 00 00 01"),  new Ihdr(     65536,       4096, 16, ColorType.TRUE_COLOR           , ZLIB_DEFLATE, ADAPTIVE, ADAM7).getData());
-		assertArrayEquals(hexToBytes("00000003 00000002 08 06 00 00 01"),  new Ihdr(         3,          2,  8, ColorType.TRUE_COLOR_WITH_ALPHA, ZLIB_DEFLATE, ADAPTIVE, ADAM7).getData());
-		assertArrayEquals(hexToBytes("0000010F 00000300 10 06 00 00 00"),  new Ihdr(       271,        768, 16, ColorType.TRUE_COLOR_WITH_ALPHA, ZLIB_DEFLATE, ADAPTIVE, NONE ).getData());
-		assertArrayEquals(hexToBytes("00000009 00000004 01 00 00 00 00"),  new Ihdr(         9,          4,  1, ColorType.GRAYSCALE            , ZLIB_DEFLATE, ADAPTIVE, NONE ).getData());
-		assertArrayEquals(hexToBytes("00000009 00000004 02 00 00 00 01"),  new Ihdr(         9,          4,  2, ColorType.GRAYSCALE            , ZLIB_DEFLATE, ADAPTIVE, ADAM7).getData());
-		assertArrayEquals(hexToBytes("00000009 00000004 04 00 00 00 00"),  new Ihdr(         9,          4,  4, ColorType.GRAYSCALE            , ZLIB_DEFLATE, ADAPTIVE, NONE ).getData());
-		assertArrayEquals(hexToBytes("00000009 00000004 08 00 00 00 00"),  new Ihdr(         9,          4,  8, ColorType.GRAYSCALE            , ZLIB_DEFLATE, ADAPTIVE, NONE ).getData());
-		assertArrayEquals(hexToBytes("00000009 00000004 10 00 00 00 00"),  new Ihdr(         9,          4, 16, ColorType.GRAYSCALE            , ZLIB_DEFLATE, ADAPTIVE, NONE ).getData());
-		assertArrayEquals(hexToBytes("7FFFFFFF 7FFFFFFF 08 04 00 00 00"),  new Ihdr(2147483647, 2147483647,  8, ColorType.GRAYSCALE_WITH_ALPHA , ZLIB_DEFLATE, ADAPTIVE, NONE ).getData());
-		assertArrayEquals(hexToBytes("7FFFFFFE 00000007 10 04 00 00 01"),  new Ihdr(2147483646,          7, 16, ColorType.GRAYSCALE_WITH_ALPHA , ZLIB_DEFLATE, ADAPTIVE, ADAM7).getData());
-		assertArrayEquals(hexToBytes("00000005 00000005 01 03 00 00 01"),  new Ihdr(         5,          5,  1, ColorType.INDEXED_COLOR        , ZLIB_DEFLATE, ADAPTIVE, ADAM7).getData());
-		assertArrayEquals(hexToBytes("00000002 00000008 02 03 00 00 00"),  new Ihdr(         2,          8,  2, ColorType.INDEXED_COLOR        , ZLIB_DEFLATE, ADAPTIVE, NONE ).getData());
-		assertArrayEquals(hexToBytes("40000000 01000000 04 03 00 00 01"),  new Ihdr(1073741824,   16777216,  4, ColorType.INDEXED_COLOR        , ZLIB_DEFLATE, ADAPTIVE, ADAM7).getData());
-		assertArrayEquals(hexToBytes("00000007 7FFFFFFF 08 03 00 00 00"),  new Ihdr(         7, 2147483647,  8, ColorType.INDEXED_COLOR        , ZLIB_DEFLATE, ADAPTIVE, NONE ).getData());
+		TestUtil.assertDataEquals("00000001 00000001 08 02 00 00 00",  new Ihdr(         1,          1,  8, ColorType.TRUE_COLOR           , ZLIB_DEFLATE, ADAPTIVE, NONE ));
+		TestUtil.assertDataEquals("00010000 00001000 10 02 00 00 01",  new Ihdr(     65536,       4096, 16, ColorType.TRUE_COLOR           , ZLIB_DEFLATE, ADAPTIVE, ADAM7));
+		TestUtil.assertDataEquals("00000003 00000002 08 06 00 00 01",  new Ihdr(         3,          2,  8, ColorType.TRUE_COLOR_WITH_ALPHA, ZLIB_DEFLATE, ADAPTIVE, ADAM7));
+		TestUtil.assertDataEquals("0000010F 00000300 10 06 00 00 00",  new Ihdr(       271,        768, 16, ColorType.TRUE_COLOR_WITH_ALPHA, ZLIB_DEFLATE, ADAPTIVE, NONE ));
+		TestUtil.assertDataEquals("00000009 00000004 01 00 00 00 00",  new Ihdr(         9,          4,  1, ColorType.GRAYSCALE            , ZLIB_DEFLATE, ADAPTIVE, NONE ));
+		TestUtil.assertDataEquals("00000009 00000004 02 00 00 00 01",  new Ihdr(         9,          4,  2, ColorType.GRAYSCALE            , ZLIB_DEFLATE, ADAPTIVE, ADAM7));
+		TestUtil.assertDataEquals("00000009 00000004 04 00 00 00 00",  new Ihdr(         9,          4,  4, ColorType.GRAYSCALE            , ZLIB_DEFLATE, ADAPTIVE, NONE ));
+		TestUtil.assertDataEquals("00000009 00000004 08 00 00 00 00",  new Ihdr(         9,          4,  8, ColorType.GRAYSCALE            , ZLIB_DEFLATE, ADAPTIVE, NONE ));
+		TestUtil.assertDataEquals("00000009 00000004 10 00 00 00 00",  new Ihdr(         9,          4, 16, ColorType.GRAYSCALE            , ZLIB_DEFLATE, ADAPTIVE, NONE ));
+		TestUtil.assertDataEquals("7FFFFFFF 7FFFFFFF 08 04 00 00 00",  new Ihdr(2147483647, 2147483647,  8, ColorType.GRAYSCALE_WITH_ALPHA , ZLIB_DEFLATE, ADAPTIVE, NONE ));
+		TestUtil.assertDataEquals("7FFFFFFE 00000007 10 04 00 00 01",  new Ihdr(2147483646,          7, 16, ColorType.GRAYSCALE_WITH_ALPHA , ZLIB_DEFLATE, ADAPTIVE, ADAM7));
+		TestUtil.assertDataEquals("00000005 00000005 01 03 00 00 01",  new Ihdr(         5,          5,  1, ColorType.INDEXED_COLOR        , ZLIB_DEFLATE, ADAPTIVE, ADAM7));
+		TestUtil.assertDataEquals("00000002 00000008 02 03 00 00 00",  new Ihdr(         2,          8,  2, ColorType.INDEXED_COLOR        , ZLIB_DEFLATE, ADAPTIVE, NONE ));
+		TestUtil.assertDataEquals("40000000 01000000 04 03 00 00 01",  new Ihdr(1073741824,   16777216,  4, ColorType.INDEXED_COLOR        , ZLIB_DEFLATE, ADAPTIVE, ADAM7));
+		TestUtil.assertDataEquals("00000007 7FFFFFFF 08 03 00 00 00",  new Ihdr(         7, 2147483647,  8, ColorType.INDEXED_COLOR        , ZLIB_DEFLATE, ADAPTIVE, NONE ));
 	}
 	
 	

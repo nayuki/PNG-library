@@ -79,10 +79,10 @@ public final class GamaTest {
 	
 	
 	@Test public void testGetData() {
-		assertArrayEquals(hexToBytes("00000001"), new Gama(         1).getData());
-		assertArrayEquals(hexToBytes("0000B18F"), new Gama(     45455).getData());
-		assertArrayEquals(hexToBytes("000186A0"), new Gama(    100000).getData());
-		assertArrayEquals(hexToBytes("7FFFFFFF"), new Gama(2147483647).getData());
+		TestUtil.assertDataEquals("00000001", new Gama(         1));
+		TestUtil.assertDataEquals("0000B18F", new Gama(     45455));
+		TestUtil.assertDataEquals("000186A0", new Gama(    100000));
+		TestUtil.assertDataEquals("7FFFFFFF", new Gama(2147483647));
 	}
 	
 	

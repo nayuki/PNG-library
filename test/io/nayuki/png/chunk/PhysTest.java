@@ -35,10 +35,10 @@ public final class PhysTest {
 	
 	
 	@Test public void testGetData() {
-		assertArrayEquals(hexToBytes("00000002 00000001 00"), new Phys(         2,          1, UnitSpecifier.UNKNOWN).getData());
-		assertArrayEquals(hexToBytes("40000000 000FFFFF 01"), new Phys(1073741824,    1048575, UnitSpecifier.METRE  ).getData());
-		assertArrayEquals(hexToBytes("0004CB2F 00287D95 00"), new Phys(    314159,    2653589, UnitSpecifier.UNKNOWN).getData());
-		assertArrayEquals(hexToBytes("7FFFFFFF 7FFFFFFF 01"), new Phys(2147483647, 2147483647, UnitSpecifier.METRE  ).getData());
+		TestUtil.assertDataEquals("00000002 00000001 00", new Phys(         2,          1, UnitSpecifier.UNKNOWN));
+		TestUtil.assertDataEquals("40000000 000FFFFF 01", new Phys(1073741824,    1048575, UnitSpecifier.METRE  ));
+		TestUtil.assertDataEquals("0004CB2F 00287D95 00", new Phys(    314159,    2653589, UnitSpecifier.UNKNOWN));
+		TestUtil.assertDataEquals("7FFFFFFF 7FFFFFFF 01", new Phys(2147483647, 2147483647, UnitSpecifier.METRE  ));
 	}
 	
 	

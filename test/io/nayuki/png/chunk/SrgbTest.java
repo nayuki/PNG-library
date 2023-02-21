@@ -18,10 +18,10 @@ import io.nayuki.png.chunk.Srgb.RenderingIntent;
 public final class SrgbTest {
 	
 	@Test public void testGetData() {
-		assertArrayEquals(hexToBytes("00"), new Srgb(RenderingIntent.PERCEPTUAL            ).getData());
-		assertArrayEquals(hexToBytes("01"), new Srgb(RenderingIntent.RELITAVIE_COLORIMETRIC).getData());
-		assertArrayEquals(hexToBytes("02"), new Srgb(RenderingIntent.SATURATION            ).getData());
-		assertArrayEquals(hexToBytes("03"), new Srgb(RenderingIntent.ABSOLUTE_COLORIMETRIC ).getData());
+		TestUtil.assertDataEquals("00", new Srgb(RenderingIntent.PERCEPTUAL            ));
+		TestUtil.assertDataEquals("01", new Srgb(RenderingIntent.RELITAVIE_COLORIMETRIC));
+		TestUtil.assertDataEquals("02", new Srgb(RenderingIntent.SATURATION            ));
+		TestUtil.assertDataEquals("03", new Srgb(RenderingIntent.ABSOLUTE_COLORIMETRIC ));
 	}
 	
 	

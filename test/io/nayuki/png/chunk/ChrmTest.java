@@ -91,8 +91,8 @@ public final class ChrmTest {
 	
 	
 	@Test public void testGetData() {
-		assertArrayEquals(hexToBytes("00000001 0000B18F 000186A0 7FFFFFFF 002FEFD8 00006A2F 00000000 00035B60"),
-			new Chrm(1, 45455, 100000, 2147483647, 3141592, 27183, 0, 220000).getData());
+		TestUtil.assertDataEquals("00000001 0000B18F 000186A0 7FFFFFFF 002FEFD8 00006A2F 00000000 00035B60",
+			new Chrm(1, 45455, 100000, 2147483647, 3141592, 27183, 0, 220000));
 	}
 	
 	

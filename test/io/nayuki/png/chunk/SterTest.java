@@ -18,8 +18,8 @@ import io.nayuki.png.chunk.Ster.Mode;
 public final class SterTest {
 	
 	@Test public void testGetData() {
-		assertArrayEquals(hexToBytes("00"), new Ster(Mode.CROSS_FUSE_LAYOUT    ).getData());
-		assertArrayEquals(hexToBytes("01"), new Ster(Mode.DIVERGING_FUSE_LAYOUT).getData());
+		TestUtil.assertDataEquals("00", new Ster(Mode.CROSS_FUSE_LAYOUT    ));
+		TestUtil.assertDataEquals("01", new Ster(Mode.DIVERGING_FUSE_LAYOUT));
 	}
 	
 	

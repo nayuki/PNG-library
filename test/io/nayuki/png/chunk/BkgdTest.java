@@ -69,8 +69,8 @@ public final class BkgdTest {
 	
 	
 	@Test public void testShortsGetData() {
-		assertArrayEquals(hexToBytes("FEED"), new Bkgd(new short[]{(short)0xFEED}).getData());
-		assertArrayEquals(hexToBytes("4321 FACE B00C"), new Bkgd(new short[]{(short)0x4321, (short)0xFACE, (short)0xB00C}).getData());
+		TestUtil.assertDataEquals("FEED", new Bkgd(new short[]{(short)0xFEED}));
+		TestUtil.assertDataEquals("4321 FACE B00C", new Bkgd(new short[]{(short)0x4321, (short)0xFACE, (short)0xB00C}));
 	}
 	
 	
