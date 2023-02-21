@@ -17,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedOutputStream;
+import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterOutputStream;
 
 
@@ -183,6 +184,16 @@ public interface Chunk {
 		
 		/** The DEFLATE compressed format (specified in RFC 1951) wrapped in a ZLIB container (RFC 1950). */
 		ZLIB_DEFLATE {
+			public byte[] compress(byte[] data) {
+				var bout = new ByteArrayOutputStream();
+				try (var dout = new DeflaterOutputStream(bout)) {
+					dout.write(data);
+				} catch (IOException e) {
+					throw new AssertionError("Unreachable exception", e);
+				}
+				return bout.toByteArray();
+			}
+			
 			public byte[] decompress(byte[] data) {
 				var bout = new ByteArrayOutputStream();
 				try (var iout = new InflaterOutputStream(bout)) {
@@ -194,6 +205,8 @@ public interface Chunk {
 			}
 		};
 		
+		
+		public abstract byte[] compress(byte[] data);
 		
 		public abstract byte[] decompress(byte[] data);
 		
