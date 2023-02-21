@@ -180,32 +180,23 @@ public interface Chunk {
 	 * The list of defined compression methods. This is used in several chunk types.
 	 */
 	public enum CompressionMethod {
+		
 		/** The DEFLATE compressed format (specified in RFC 1951) wrapped in a ZLIB container (RFC 1950). */
-		ZLIB_DEFLATE(data -> {
-			var bout = new ByteArrayOutputStream();
-			try (var iout = new InflaterOutputStream(bout)) {
-				iout.write(data);
-			} catch (IOException e) {
-				throw new IllegalArgumentException("Invalid compressed data", e);
+		ZLIB_DEFLATE {
+			public byte[] decompress(byte[] data) {
+				var bout = new ByteArrayOutputStream();
+				try (var iout = new InflaterOutputStream(bout)) {
+					iout.write(data);
+				} catch (IOException e) {
+					throw new IllegalArgumentException("Invalid compressed data", e);
+				}
+				return bout.toByteArray();
 			}
-			return bout.toByteArray();
-		});
-		
-		private Function decompressor;
-		
-		private CompressionMethod(Function decomp) {
-			decompressor = decomp;
-		}
-		
-		public byte[] decompress(byte[] data) {
-			Objects.requireNonNull(data);
-			return decompressor.apply(data);
-		}
+		};
 		
 		
-		private interface Function {
-			public byte[] apply(byte[] data);
-		}
+		public abstract byte[] decompress(byte[] data);
+		
 	}
 	
 }
