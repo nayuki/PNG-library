@@ -52,6 +52,17 @@ public final class TestUtil {
 	}
 	
 	
+	public static String repeatString(String s, int n) {
+		var sb = new StringBuilder(Math.multiplyExact(s.length(), n));
+		for (int i = 0; i < n; i++)
+			sb.append(s);
+		return sb.toString();
+	}
+	
+	
+	public static final boolean ENABLE_LARGE_MEMORY_TEST_CASES = true;
+	
+	
 	public static Random rand = new Random();
 	
 	
