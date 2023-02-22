@@ -195,7 +195,7 @@ public interface Chunk {
 			}
 			
 			public byte[] decompress(byte[] data) {
-				var bout = new ByteArrayOutputStream();
+				var bout = new ByteArrayOutputStream(data.length);
 				try (var iout = new InflaterOutputStream(bout)) {
 					iout.write(data);
 				} catch (IOException e) {

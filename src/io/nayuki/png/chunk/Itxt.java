@@ -66,7 +66,7 @@ public record Itxt(
 	
 	static void checkLanguageTag(String s) {
 		Objects.requireNonNull(s);
-		if (!s.matches("(?:[A-Za-z0-9]{1,8}(?:-[A-Za-z0-9]{1,8})*)?"))
+		if (!s.matches("(?:[A-Za-z0-9]{1,8}(?:-[A-Za-z0-9]{1,8})*+)?"))
 			throw new IllegalArgumentException("Invalid language tag syntax");
 	}
 	
