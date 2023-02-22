@@ -136,7 +136,7 @@ public record Pcal(
 	
 	public enum EquationType {
 		LINEAR(2),
-		BASE_E_EXPONENTIAL(2),
+		BASE_E_EXPONENTIAL(3),
 		ARBITRARY_BASE_EXPONENTIAL(3),
 		HYPERBOLIC(4);
 		
