@@ -8,13 +8,35 @@
 
 package io.nayuki.png.chunk;
 
+import static io.nayuki.png.TestUtil.hexToBytes;
+import static org.junit.Assert.assertEquals;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import org.junit.Test;
+import io.nayuki.png.Chunk;
 import io.nayuki.png.TestUtil;
 
 
 public final class ItxtTest {
+	
+	@Test public void testCreateKeywordBad() {
+		String[] CASES = {
+			"",
+			" ",
+			" a",
+			"b ",
+			" c ",
+			"d  e",
+			"今",
+		};
+		
+		for (String cs : CASES) {
+			TestUtil.runExpect(IllegalArgumentException.class,
+				() -> new Itxt(cs, "", "", Optional.empty(), new byte[0]));
+		}
+	}
+	
 	
 	@Test public void testCheckLanguageTag() {
 		String[] CASES = {
@@ -53,6 +75,43 @@ public final class ItxtTest {
 			TestUtil.runExpect(IllegalArgumentException.class,
 				() -> Itxt.checkLanguageTag(cs));
 		}
+	}
+	
+	
+	@Test public void testCreateDecompressBad() {
+		String[] CASES = {
+			"0123456789ABCDEF",
+			"789C010100FEFF7800790078",
+			"789C0600000000",
+		};
+		
+		for (String cs : CASES) {
+			TestUtil.runExpect(IllegalArgumentException.class,
+				() -> new Itxt("kw", "", "", Optional.of(Chunk.CompressionMethod.ZLIB_DEFLATE), hexToBytes(cs)));
+		}
+	}
+	
+	
+	@Test public void testCreateHuge() throws IOException {
+		if (!TestUtil.ENABLE_LARGE_MEMORY_TEST_CASES)
+			return;
+		new Itxt(TestUtil.repeatString("a", 79), "bbbbbbbb" + TestUtil.repeatString("-bbbbbbbb", 79_536_427), TestUtil.repeatString("c", 715_827_856),
+			Optional.empty(), TestUtil.repeatString("d", 715_827_856).getBytes(StandardCharsets.US_ASCII));
+	}
+	
+	
+	@Test public void testCreateHugeBad() throws IOException {
+		if (!TestUtil.ENABLE_LARGE_MEMORY_TEST_CASES)
+			return;
+		TestUtil.runExpect(IllegalArgumentException.class, () ->
+			new Itxt(TestUtil.repeatString("a", 79), "bbbbbbbb" + TestUtil.repeatString("-bbbbbbbb", 79_536_427), TestUtil.repeatString("c", 715_827_856),
+				Optional.empty(), TestUtil.repeatString("d", 715_827_857).getBytes(StandardCharsets.US_ASCII)));
+	}
+	
+	
+	@Test public void testGetText() {
+		assertEquals("t3St!ng", new Itxt("a", "", "", Optional.empty(), hexToBytes("74335374216E67")).getText());
+		assertEquals("ça뉭", new Itxt("a", "", "", Optional.of(Chunk.CompressionMethod.ZLIB_DEFLATE), hexToBytes("789C010600F9FFC3A761EB89AD0DDF03ED")).getText());
 	}
 	
 	
