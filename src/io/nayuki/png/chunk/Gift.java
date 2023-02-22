@@ -47,6 +47,10 @@ public record Gift(
 			throw new IllegalArgumentException("Character cell dimension out of range");
 		if (textForegroundColor >>> 24 != 0 || textBackgroundColor >>> 24 != 0)
 			throw new IllegalArgumentException("Invalid color");
+		for (int i = 0; i < text.length(); i++) {
+			if (text.charAt(i) >= 0x80)
+				throw new IllegalArgumentException("Invalid byte in ASCII text");
+		}
 		Util.checkedLengthSum(4 * Integer.BYTES, 2 * Byte.BYTES, 2 * 3 * Byte.BYTES, text);
 	}
 	
