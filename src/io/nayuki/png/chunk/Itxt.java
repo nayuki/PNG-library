@@ -111,6 +111,10 @@ public record Itxt(
 	
 	/*---- Methods ----*/
 	
+	/**
+	 * Decompresses the text field, interprets the bytes as UTF-8, and returns the data as a string object.
+	 * @return a string representing the text conveyed by the text field (not {@code null})
+	 */
 	public String getText() {
 		byte[] decompText = compressionMethod.map(cm -> cm.decompress(text)).orElse(text);
 		return new String(decompText, StandardCharsets.UTF_8);

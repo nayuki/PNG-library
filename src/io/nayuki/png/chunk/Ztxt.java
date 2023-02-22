@@ -76,6 +76,10 @@ public record Ztxt(
 	
 	/*---- Methods ----*/
 	
+	/**
+	 * Decompresses the text field, interprets the bytes as ISO 8859-1, and returns the data as a string object.
+	 * @return a string representing the text conveyed by the text field (not {@code null})
+	 */
 	public String getText() {
 		byte[] decompText = compressionMethod.decompress(compressedText);
 		return new String(decompText, StandardCharsets.ISO_8859_1);
