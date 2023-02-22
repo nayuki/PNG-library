@@ -23,6 +23,7 @@ public final class TextTest {
 			{" c ", "x"},
 			{"d  e", "x"},
 			{"今", "x"},
+			{TestUtil.repeatString("a", 80), "x"},
 			{"x", "楜"},
 		};
 		

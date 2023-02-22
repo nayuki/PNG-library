@@ -29,6 +29,7 @@ public final class ZtxtTest {
 			" c ",
 			"d  e",
 			"今",
+			TestUtil.repeatString("a", 80),
 		};
 		
 		for (String cs : CASES) {
