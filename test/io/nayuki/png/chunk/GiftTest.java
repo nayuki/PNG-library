@@ -59,6 +59,21 @@ public final class GiftTest {
 	}
 	
 	
+	@Test public void testCreateHuge() {
+		if (!TestUtil.ENABLE_LARGE_MEMORY_TEST_CASES)
+			return;
+		new Gift(0, 0, 0, 0, 0, 0, 0, 0, "-".repeat(2_147_483_623));
+	}
+	
+	
+	@Test public void testCreateHugeBad() {
+		if (!TestUtil.ENABLE_LARGE_MEMORY_TEST_CASES)
+			return;
+		TestUtil.runExpect(IllegalArgumentException.class, () ->
+			new Gift(0, 0, 0, 0, 0, 0, 0, 0, "-".repeat(2_147_483_624)));
+	}
+	
+	
 	@Test public void testGetData() {
 		TestUtil.assertDataEquals("00000000 00000003 00000002 00000004 01 05 000006 000007", new Gift(0, 3, 2, 4, 1, 5, 6, 7, ""));
 		TestUtil.assertDataEquals("0000004F 0000002A 00000035 00000044 FF FE 000300 000035 616263", new Gift(79, 42, 53, 68, 0xFF, 0xFE, 768, 53, "abc"));

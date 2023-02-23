@@ -30,6 +30,21 @@ public final class PcalTest {
 	}
 	
 	
+	@Test public void testCreateHuge() {
+		if (!TestUtil.ENABLE_LARGE_MEMORY_TEST_CASES)
+			return;
+		new Pcal("X", "Y", 0, 1, EquationType.LINEAR, "2".repeat(1_073_741_816), "3".repeat(1_073_741_816));
+	}
+	
+	
+	@Test public void testCreateHugeBad() {
+		if (!TestUtil.ENABLE_LARGE_MEMORY_TEST_CASES)
+			return;
+		TestUtil.runExpect(IllegalArgumentException.class, () ->
+		new Pcal("X", "Y", 0, 1, EquationType.LINEAR, "2".repeat(1_073_741_816), "3".repeat(1_073_741_817)));
+	}
+	
+	
 	@Test public void testGetData() {
 		TestUtil.assertDataEquals("616C6566 00 00000000 0000FFFF 00 02 6D65747265 00 31 00 32",
 			new Pcal("alef", "metre", 0, 65535, EquationType.LINEAR, "1", "2"));
