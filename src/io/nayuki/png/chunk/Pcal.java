@@ -58,8 +58,8 @@ public record Pcal(
 		
 		var params = new Object[parameters.length];
 		System.arraycopy(parameters, 0, params, 0, params.length);
-		Util.checkedLengthSum(calibrationName, 1, 2 * Integer.BYTES,
-			2 * Byte.BYTES, unitName, params.length, Util.checkedLengthSum(params));
+		Util.checkedLengthSum(calibrationName, Byte.BYTES, 2 * Integer.BYTES,
+			2 * Byte.BYTES, unitName, params.length * Byte.BYTES, Util.checkedLengthSum(params));
 	}
 	
 	
