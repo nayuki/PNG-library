@@ -31,6 +31,23 @@ public final class GamaTest {
 	}
 	
 	
+	@Test public void testCreateDouble() {
+		Object[][] CASES = {
+			{    0.000006,          1},
+			{    0.00001 ,          1},
+			{    0.000023,          2},
+			{    0.000027,          3},
+			{    0.45455 ,      45455},
+			{    1.00000 ,     100000},
+			{21474.83647 , 2147483647},
+			{21474.836474, 2147483647},
+		};
+		
+		for (Object[] cs : CASES)
+			assertEquals((int)cs[1], new Gama((double)cs[0]).gamma());
+	}
+	
+	
 	@Test public void testCreateDoubleBad() {
 		double[] CASES = {
 			Double.NaN,
@@ -56,23 +73,6 @@ public final class GamaTest {
 			TestUtil.runExpect(IllegalArgumentException.class,
 				() -> new Gama(cs));
 		}
-	}
-	
-	
-	@Test public void testCreateDouble() {
-		Object[][] CASES = {
-			{    0.000006,          1},
-			{    0.00001 ,          1},
-			{    0.000023,          2},
-			{    0.000027,          3},
-			{    0.45455 ,      45455},
-			{    1.00000 ,     100000},
-			{21474.83647 , 2147483647},
-			{21474.836474, 2147483647},
-		};
-		
-		for (Object[] cs : CASES)
-			assertEquals((int)cs[1], new Gama((double)cs[0]).gamma());
 	}
 	
 	
