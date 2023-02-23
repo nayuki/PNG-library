@@ -11,6 +11,9 @@ package io.nayuki.png.chunk;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Objects;
 import io.nayuki.png.Chunk;
 
@@ -46,6 +49,30 @@ public record Time(
 	
 	
 	/**
+	 * Constructs a {@code Time} object containing the date and time in UTC representing the specified instant.
+	 * @param inst the instant to represent
+	 */
+	public Time(Instant inst) {
+		this(OffsetDateTime.ofInstant(inst, ZoneOffset.UTC));
+	}
+	
+	
+	private Time(OffsetDateTime dt) {  // Must be in UTC
+		this(dt.getYear(), dt.getMonthValue(), dt.getDayOfMonth(),
+			dt.getHour(), dt.getMinute(), dt.getSecond());
+	}
+	
+	
+	/**
+	 * Returns a {@code Time} object containing the current date and time in UTC.
+	 * @return the current date and time (not {@code null})
+	 */
+	public static Time now() {
+		return new Time(Instant.now());
+	}
+	
+	
+	/**
 	 * Reads a constant number of bytes from the specified input stream,
 	 * parses the fields, and returns a new chunk object of this type.
 	 * @param in the input stream to read from (not {@code null})
@@ -67,6 +94,16 @@ public record Time(
 	
 	
 	/*---- Methods ----*/
+	
+	/**
+	 * Returns an {@code Instant} object representing this date and time in UTC.
+	 * Leap seconds (60) are changed (lossy) to 59 to fit the capabilities of {@code OffsetDateTime}.
+	 * @return this date and time as an {@code Instant} (not {@code null})
+	 */
+	public Instant toInstant() {
+		return OffsetDateTime.of(year, month, day, hour, minute, Math.min(second, 59), 0, ZoneOffset.UTC).toInstant();
+	}
+	
 	
 	@Override public String getType() {
 		return TYPE;

@@ -8,6 +8,9 @@
 
 package io.nayuki.png.chunk;
 
+import static org.junit.Assert.assertEquals;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import org.junit.Test;
 import io.nayuki.png.TestUtil;
 
@@ -68,6 +71,50 @@ public final class TimeTest {
 		for (int[] cs : CASES) {
 			TestUtil.runExpect(IllegalArgumentException.class,
 				() -> new Time(cs[0], cs[1], cs[2], cs[3], cs[4], cs[5]));
+		}
+	}
+	
+	
+	@Test public void testCreateInstant() {
+		{
+			var time = new Time(OffsetDateTime.of(2000, 1, 2, 3, 4, 5, 0, ZoneOffset.UTC).toInstant());
+			assertEquals(2000, time.year());
+			assertEquals(1, time.month());
+			assertEquals(2, time.day());
+			assertEquals(3, time.hour());
+			assertEquals(4, time.minute());
+			assertEquals(5, time.second());
+		}
+		{
+			var time = new Time(OffsetDateTime.of(1999, 12, 31, 23, 59, 59, 0, ZoneOffset.UTC).toInstant());
+			assertEquals(1999, time.year());
+			assertEquals(12, time.month());
+			assertEquals(31, time.day());
+			assertEquals(23, time.hour());
+			assertEquals(59, time.minute());
+			assertEquals(59, time.second());
+		}
+	}
+	
+	
+	@Test public void testToInstant() {
+		{
+			OffsetDateTime dt = new Time(2000, 1, 2, 3, 4, 5).toInstant().atOffset(ZoneOffset.UTC);
+			assertEquals(2000, dt.getYear());
+			assertEquals(1, dt.getMonthValue());
+			assertEquals(2, dt.getDayOfMonth());
+			assertEquals(3, dt.getHour());
+			assertEquals(4, dt.getMinute());
+			assertEquals(5, dt.getSecond());
+		}
+		{
+			OffsetDateTime dt = new Time(1999, 12, 31, 23, 59, 60).toInstant().atOffset(ZoneOffset.UTC);
+			assertEquals(1999, dt.getYear());
+			assertEquals(12, dt.getMonthValue());
+			assertEquals(31, dt.getDayOfMonth());
+			assertEquals(23, dt.getHour());
+			assertEquals(59, dt.getMinute());
+			assertEquals(59, dt.getSecond());
 		}
 	}
 	
