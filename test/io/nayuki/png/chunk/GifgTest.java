@@ -42,7 +42,7 @@ public final class GifgTest {
 	
 	
 	@Test public void testWriteChunk() {
-		TestUtil.assertChunkBytesEqual("00000004 67494667 01 01 0002 CBFC6833", new Gifg(1, true, 2));
+		TestUtil.assertChunkBytesEqual("00000004 67494667 01 00 0002 CA3E0204", new Gifg(1, false, 2));
 	}
 	
 }

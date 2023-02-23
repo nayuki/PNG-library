@@ -56,6 +56,7 @@ public final class ChunkTest {
 			"u--v",
 			"_G_F",
 			"(!*)",
+			"一二三四",
 			// Reserved type
 			"abcd",
 			"hgfE",
