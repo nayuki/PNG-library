@@ -42,7 +42,8 @@ public final class GiftTest {
 		};
 		
 		for (int[] cs : CASES) {
-			TestUtil.runExpect(IllegalArgumentException.class, () -> new Gift(cs[0], cs[1], cs[2], cs[3], cs[4], cs[5], cs[6], cs[7], ""));
+			TestUtil.runExpect(IllegalArgumentException.class, () ->
+				new Gift(cs[0], cs[1], cs[2], cs[3], cs[4], cs[5], cs[6], cs[7], ""));
 		}
 	}
 	
@@ -54,8 +55,10 @@ public final class GiftTest {
 			"Aめ",
 		};
 		
-		for (String cs : CASES)
-			TestUtil.runExpect(IllegalArgumentException.class, () -> new Gift(0, 0, 0, 0, 0, 0, 0, 0, cs));
+		for (String cs : CASES) {
+			TestUtil.runExpect(IllegalArgumentException.class,
+				() -> new Gift(0, 0, 0, 0, 0, 0, 0, 0, cs));
+		}
 	}
 	
 	
@@ -75,8 +78,11 @@ public final class GiftTest {
 	
 	
 	@Test public void testGetData() {
-		TestUtil.assertDataEquals("00000000 00000003 00000002 00000004 01 05 000006 000007", new Gift(0, 3, 2, 4, 1, 5, 6, 7, ""));
-		TestUtil.assertDataEquals("0000004F 0000002A 00000035 00000044 FF FE 000300 000035 616263", new Gift(79, 42, 53, 68, 0xFF, 0xFE, 768, 53, "abc"));
+		TestUtil.assertDataEquals("00000000 00000003 00000002 00000004 01 05 000006 000007",
+			new Gift(0, 3, 2, 4, 1, 5, 6, 7, ""));
+		
+		TestUtil.assertDataEquals("0000004F 0000002A 00000035 00000044 FF FE 000300 000035 616263",
+			new Gift(79, 42, 53, 68, 0xFF, 0xFE, 768, 53, "abc"));
 	}
 	
 	

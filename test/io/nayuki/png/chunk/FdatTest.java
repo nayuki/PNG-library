@@ -28,7 +28,8 @@ public final class FdatTest {
 	
 	
 	@Test public void testWriteChunk() {
-		TestUtil.assertChunkBytesEqual("00000011 66644154 00000141 789C010200FDFF010000040002 4D82D736", new Fdat(321, TestUtil.hexToBytes("789C010200FDFF010000040002")));
+		TestUtil.assertChunkBytesEqual("00000011 66644154 00000141 789C010200FDFF010000040002 4D82D736",
+			new Fdat(321, TestUtil.hexToBytes("789C010200FDFF010000040002")));
 	}
 	
 }
