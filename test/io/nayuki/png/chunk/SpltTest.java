@@ -23,7 +23,7 @@ public final class SpltTest {
 			" c ",
 			"d  e",
 			"今",
-			TestUtil.repeatString("a", 80),
+			"a".repeat(80),
 		};
 		
 		for (String cs : CASES) {
@@ -77,7 +77,7 @@ public final class SpltTest {
 	@Test public void testCreateHuge() {
 		if (!TestUtil.ENABLE_LARGE_MEMORY_TEST_CASES)
 			return;
-		new Splt(TestUtil.repeatString("a", 77), 8, new byte[357_913_928 * 6]);
+		new Splt("a".repeat(77), 8, new byte[357_913_928 * 6]);
 	}
 	
 	
@@ -85,7 +85,7 @@ public final class SpltTest {
 		if (!TestUtil.ENABLE_LARGE_MEMORY_TEST_CASES)
 			return;
 		TestUtil.runExpect(IllegalArgumentException.class, () ->
-			new Splt(TestUtil.repeatString("a", 78), 8, new byte[357_913_928 * 6]));
+			new Splt("a".repeat(78), 8, new byte[357_913_928 * 6]));
 	}
 	
 	

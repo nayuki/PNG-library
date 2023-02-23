@@ -29,7 +29,7 @@ public final class ItxtTest {
 			" c ",
 			"d  e",
 			"今",
-			TestUtil.repeatString("a", 80),
+			"a".repeat(80),
 		};
 		
 		for (String cs : CASES) {
@@ -96,8 +96,8 @@ public final class ItxtTest {
 	@Test public void testCreateHuge() throws IOException {
 		if (!TestUtil.ENABLE_LARGE_MEMORY_TEST_CASES)
 			return;
-		new Itxt(TestUtil.repeatString("a", 79), "bbbbbbbb" + TestUtil.repeatString("-bbbbbbbb", 79_536_427), TestUtil.repeatString("c", 715_827_856),
-			Optional.empty(), TestUtil.repeatString("d", 715_827_856).getBytes(StandardCharsets.US_ASCII));
+		new Itxt("a".repeat(79), "bbbbbbbb" + "-bbbbbbbb".repeat(79_536_427), "c".repeat(715_827_856),
+			Optional.empty(), "d".repeat(715_827_856).getBytes(StandardCharsets.US_ASCII));
 	}
 	
 	
@@ -105,8 +105,8 @@ public final class ItxtTest {
 		if (!TestUtil.ENABLE_LARGE_MEMORY_TEST_CASES)
 			return;
 		TestUtil.runExpect(IllegalArgumentException.class, () ->
-			new Itxt(TestUtil.repeatString("a", 79), "bbbbbbbb" + TestUtil.repeatString("-bbbbbbbb", 79_536_427), TestUtil.repeatString("c", 715_827_856),
-				Optional.empty(), TestUtil.repeatString("d", 715_827_857).getBytes(StandardCharsets.US_ASCII)));
+			new Itxt("a".repeat(79), "bbbbbbbb" + "-bbbbbbbb".repeat(79_536_427), "c".repeat(715_827_856),
+				Optional.empty(), "d".repeat(715_827_857).getBytes(StandardCharsets.US_ASCII)));
 	}
 	
 	

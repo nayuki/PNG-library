@@ -29,7 +29,7 @@ public final class ZtxtTest {
 			" c ",
 			"d  e",
 			"今",
-			TestUtil.repeatString("a", 80),
+			"a".repeat(80),
 		};
 		
 		for (String cs : CASES) {
@@ -67,7 +67,7 @@ public final class ZtxtTest {
 			}
 			bout.write(hexToBytes("010000FFFF"));
 			bout.write(hexToBytes("4C67F824"));
-			new Ztxt(TestUtil.repeatString("01", 25), ZLIB_DEFLATE, bout.toByteArray());
+			new Ztxt("01".repeat(25), ZLIB_DEFLATE, bout.toByteArray());
 		}
 		{
 			var bout = new ByteArrayOutputStream(2_147_483_566);
@@ -81,7 +81,7 @@ public final class ZtxtTest {
 			bout.write(hexToBytes("01AFFF5000"));
 			bout.write(blockData, 0, 0xFFAF);
 			bout.write(hexToBytes("0105FEEA"));
-			new Ztxt(TestUtil.repeatString("x", 79), ZLIB_DEFLATE, bout.toByteArray());
+			new Ztxt("x".repeat(79), ZLIB_DEFLATE, bout.toByteArray());
 		}
 	}
 	
@@ -104,7 +104,7 @@ public final class ZtxtTest {
 				bout.write(blockData, 0, 0xFFB0);
 				bout.write(hexToBytes("0056FF42"));
 				System.out.println(bout.toByteArray().length);
-				new Ztxt(TestUtil.repeatString("x", 79), ZLIB_DEFLATE, bout.toByteArray());
+				new Ztxt("x".repeat(79), ZLIB_DEFLATE, bout.toByteArray());
 			} catch (IOException e) {
 				throw new AssertionError("Unreachable exception", e);
 			}

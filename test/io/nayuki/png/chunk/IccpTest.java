@@ -19,7 +19,7 @@ public final class IccpTest {
 		String[] CASES = {
 			"",
 			"今",
-			TestUtil.repeatString("a", 80),
+			"a".repeat(80),
 		};
 		
 		for (String cs : CASES) {

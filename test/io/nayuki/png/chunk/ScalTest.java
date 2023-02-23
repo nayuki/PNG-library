@@ -39,7 +39,7 @@ public final class ScalTest {
 	@Test public void testCreateHuge() {
 		if (!TestUtil.ENABLE_LARGE_MEMORY_TEST_CASES)
 			return;
-		new Scal(UnitSpecifier.RADIAN, TestUtil.repeatString("1", 1_146_741_823), TestUtil.repeatString("2", 1_000_741_822));
+		new Scal(UnitSpecifier.RADIAN, "1".repeat(1_146_741_823), "2".repeat(1_000_741_822));
 	}
 	
 	
@@ -47,7 +47,7 @@ public final class ScalTest {
 		if (!TestUtil.ENABLE_LARGE_MEMORY_TEST_CASES)
 			return;
 		TestUtil.runExpect(IllegalArgumentException.class, () ->
-			new Scal(UnitSpecifier.RADIAN, TestUtil.repeatString("1", 1_146_741_823), TestUtil.repeatString("2", 1_000_741_823)));
+			new Scal(UnitSpecifier.RADIAN, "1".repeat(1_146_741_823), "2".repeat(1_000_741_823)));
 	}
 	
 	

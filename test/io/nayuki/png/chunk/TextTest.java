@@ -23,7 +23,7 @@ public final class TextTest {
 			{" c ", "x"},
 			{"d  e", "x"},
 			{"今", "x"},
-			{TestUtil.repeatString("a", 80), "x"},
+			{"a".repeat(80), "x"},
 			{"x", "楜"},
 		};
 		
@@ -37,8 +37,8 @@ public final class TextTest {
 	@Test public void testCreateHuge() {
 		if (!TestUtil.ENABLE_LARGE_MEMORY_TEST_CASES)
 			return;
-		new Text(TestUtil.repeatString("01", 25), TestUtil.repeatString(".", 1_000_000_000));
-		new Text(TestUtil.repeatString("x", 79), TestUtil.repeatString("X", 2_147_483_567));
+		new Text("01".repeat(25), ".".repeat(1_000_000_000));
+		new Text("x".repeat(79), "X".repeat(2_147_483_567));
 	}
 	
 	
@@ -46,7 +46,7 @@ public final class TextTest {
 		if (!TestUtil.ENABLE_LARGE_MEMORY_TEST_CASES)
 			return;
 		TestUtil.runExpect(IllegalArgumentException.class,
-			() -> new Text(TestUtil.repeatString("x", 79), TestUtil.repeatString("X", 2_147_483_568)));
+			() -> new Text("x".repeat(79), "X".repeat(2_147_483_568)));
 	}
 	
 	

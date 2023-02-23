@@ -18,7 +18,7 @@ public final class PcalTest {
 	@Test public void testCreateBad() {
 		TestUtil.runExpect(IllegalArgumentException.class, () -> new Pcal("", "b", 0, 1, EquationType.LINEAR, "0", "1"));
 		TestUtil.runExpect(IllegalArgumentException.class, () -> new Pcal(" a", "b", 0, 1, EquationType.LINEAR, "0", "1"));
-		TestUtil.runExpect(IllegalArgumentException.class, () -> new Pcal(TestUtil.repeatString("a", 80), "b", 0, 1, EquationType.LINEAR, "0", "1"));
+		TestUtil.runExpect(IllegalArgumentException.class, () -> new Pcal("a".repeat(80), "b", 0, 1, EquationType.LINEAR, "0", "1"));
 		TestUtil.runExpect(IllegalArgumentException.class, () -> new Pcal("a", "米", 0, 1, EquationType.LINEAR, "0", "1"));
 		TestUtil.runExpect(IllegalArgumentException.class, () -> new Pcal("a", "b", 0, 0, EquationType.LINEAR, "0", "1"));
 		TestUtil.runExpect(IllegalArgumentException.class, () -> new Pcal("a", "b", Integer.MIN_VALUE, 0, EquationType.LINEAR, "0", "1"));
