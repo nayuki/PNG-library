@@ -4,7 +4,7 @@ PNG library
 Introduction
 ------------
 
-This is a modern Java library for decoding and encoding PNG image files. All chunk types and most color modes are supported. Example usage:
+This is a modern Java library for decoding and encoding PNG image files. All chunk types and color modes are supported. Example usage:
 
 ```java
 // Encoding
@@ -39,15 +39,17 @@ What makes this library modern? It:
 Features
 --------
 
-* Decode RGB and grayscale images, without or without alpha channel, of all bit depths, with all filter types, with or without interlacing
-* Encode RGB and grayscale images, without or without alpha channel, of all bit depths, with filter type 0, without interlacing
+* Decode RGB, grayscale, and paletted images, without or without alpha channel, of all bit depths, with all filter types, with or without interlacing
+* Encode RGB, grayscale, and paletted images, without or without alpha channel, of all bit depths, with filter type 0, without interlacing
 * Up-convert images with bit depths that are not 1/2/4/8/16 (e.g. RGBA 5.6.5.4 to 8.8.8.8)
-* Represent, interpret, and parse all the known standard PNG chunk types
+* Parse, represent, interpret, and serialize all the known chunk types for the PNG standard, extension, and APNG
+* Handle huge chunks up to the standard's size limit (2^31 − 1 bytes)
 * Store and convey all unknown chunk types
 * Treat MNG and JNG files as entirely composed of custom chunks
-* Compact, modular, auditable implementation at ~4000 lines of code
 * Concise and relatively safe API where most objects are immutable
-* Strictly check out-of-range values, checksum mismatches, reading/writing more/less than the expected data length, arithmetic overflow
+* Compact, modular, auditable implementation at ~5400 lines of code
+* Strictly check out-of-range values, checksum mismatches, reading/writing more/less than the expected data length, arithmetic overflow, length overflow
+* Have an extensive test suite for image encode-decode round trip and every chunk type
 
 Outside of scope:
 * Drawing, filtering, resampling, color space conversion, and other image effects
@@ -90,7 +92,7 @@ These objects are mutable: `PngImage`, `BufferedRgbaImage`, `BufferedGrayImage`.
 Every class, interface, enumeration, record, method, and field is marked with the proper access modifier such as public or private. This is the standard practice in Java programming, and is hardly special if it wasn’t for other libraries making mistakes in this aspect.
 
 ### Lossless chunks
-All the included chunk types support lossless round-tripping, where reading bytes into chunk objects and writing them out will produce exactly the same bytes. This means, for example, that any compressed data must be stored in memory because decompressing and recompressing can produce different results.
+All the included chunk types support lossless round-tripping, where reading bytes into chunk objects and writing them out will produce exactly the same bytes. This means, for example, that any compressed data must be stored in memory because decompressing and recompressing can produce different results. Furthermore, `XngFile` and `PngFile` preserve the order of chunks without forcing a canonical representation.
 
 ### Assuming abundant memory
 For the sake of reducing conceptual complexity and improving reliability, this library makes design trade-offs that increase memory usage. This is possible because memory is much cheaper now than when the PNG format was first released, but correctness and security vulnerabilities became bigger concerns.
