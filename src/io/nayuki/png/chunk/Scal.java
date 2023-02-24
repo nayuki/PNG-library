@@ -32,7 +32,7 @@ public record Scal(
 	static final String TYPE = "sCAL";
 	
 	
-	/*---- Constructor ----*/
+	/*---- Constructor and factory ----*/
 	
 	public Scal {
 		Objects.requireNonNull(unitSpecifier);

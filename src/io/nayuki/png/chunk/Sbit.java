@@ -24,7 +24,7 @@ public record Sbit(byte[] data) implements BytesDataChunk {
 	static final String TYPE = "sBIT";
 	
 	
-	/*---- Constructor ----*/
+	/*---- Constructor and factory ----*/
 	
 	public Sbit {
 		Objects.requireNonNull(data);

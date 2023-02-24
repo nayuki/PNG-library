@@ -24,7 +24,7 @@ public record Exif(byte[] data) implements BytesDataChunk {
 	static final String TYPE = "eXIf";
 	
 	
-	/*---- Constructor ----*/
+	/*---- Constructor and factory ----*/
 	
 	public Exif {
 		Objects.requireNonNull(data);

@@ -33,7 +33,7 @@ public record Splt(
 	static final String TYPE = "sPLT";
 	
 	
-	/*---- Constructor ----*/
+	/*---- Constructor and factory ----*/
 	
 	public Splt {
 		Util.checkKeyword(paletteName, true);

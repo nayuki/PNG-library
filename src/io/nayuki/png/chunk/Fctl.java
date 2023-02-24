@@ -36,7 +36,7 @@ public record Fctl(
 	static final String TYPE = "fcTL";
 	
 	
-	/*---- Constructor ----*/
+	/*---- Constructor and factory ----*/
 	
 	public Fctl {
 		if (sequence < 0)

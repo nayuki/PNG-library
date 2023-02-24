@@ -29,7 +29,7 @@ public record Actl(
 	static final String TYPE = "acTL";
 	
 	
-	/*---- Constructor ----*/
+	/*---- Constructor and factory ----*/
 	
 	public Actl {
 		if (numFrames <= 0)

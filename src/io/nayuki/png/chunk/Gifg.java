@@ -30,7 +30,7 @@ public record Gifg(
 	static final String TYPE = "gIFg";
 	
 	
-	/*---- Constructor ----*/
+	/*---- Constructor and factory ----*/
 	
 	public Gifg {
 		if (disposalMethod >>> 3 != 0)

@@ -32,7 +32,7 @@ public record Chrm(
 	static final String TYPE = "cHRM";
 	
 	
-	/*---- Constructors ----*/
+	/*---- Constructors and factory ----*/
 	
 	public Chrm {
 		if (whitePointX < 0 || whitePointY < 0 ||

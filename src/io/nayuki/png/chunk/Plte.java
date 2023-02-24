@@ -24,7 +24,7 @@ public record Plte(byte[] data) implements BytesDataChunk {
 	static final String TYPE = "PLTE";
 	
 	
-	/*---- Constructor ----*/
+	/*---- Constructor and factory ----*/
 	
 	public Plte {
 		Objects.requireNonNull(data);

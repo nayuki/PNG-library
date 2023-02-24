@@ -30,7 +30,7 @@ public record Phys(
 	static final String TYPE = "pHYs";
 	
 	
-	/*---- Constructor ----*/
+	/*---- Constructor and factory ----*/
 	
 	public Phys {
 		if (pixelsPerUnitX <= 0 || pixelsPerUnitY <= 0)

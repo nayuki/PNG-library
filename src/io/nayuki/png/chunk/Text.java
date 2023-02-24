@@ -26,7 +26,7 @@ public record Text(String keyword, String text) implements Chunk {
 	static final String TYPE = "tEXt";
 	
 	
-	/*---- Constructor ----*/
+	/*---- Constructor and factory ----*/
 	
 	public Text {
 		Util.checkKeyword(keyword, true);

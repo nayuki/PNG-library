@@ -26,7 +26,7 @@ public record Hist(short[] frequencies) implements Chunk {
 	static final String TYPE = "hIST";
 	
 	
-	/*---- Constructor ----*/
+	/*---- Constructor and factory ----*/
 	
 	public Hist {
 		Objects.requireNonNull(frequencies);

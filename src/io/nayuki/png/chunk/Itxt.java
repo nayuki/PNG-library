@@ -37,7 +37,7 @@ public record Itxt(
 	static final String TYPE = "iTXt";
 	
 	
-	/*---- Constructor ----*/
+	/*---- Constructor and factory ----*/
 	
 	public Itxt {
 		Util.checkKeyword(keyword, true);

@@ -25,7 +25,7 @@ public record Gama(int gamma) implements Chunk {
 	static final String TYPE = "gAMA";
 	
 	
-	/*---- Constructors ----*/
+	/*---- Constructors and factory ----*/
 	
 	public Gama {
 		if (gamma <= 0)

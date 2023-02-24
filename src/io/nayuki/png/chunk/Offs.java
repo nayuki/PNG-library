@@ -31,7 +31,7 @@ public record Offs(
 	static final String TYPE = "oFFs";
 	
 	
-	/*---- Constructor ----*/
+	/*---- Constructor and factory ----*/
 	
 	public Offs {
 		if (xPosition == Integer.MIN_VALUE || yPosition == Integer.MIN_VALUE)

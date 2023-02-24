@@ -37,7 +37,7 @@ public record Gift(
 	static final String TYPE = "gIFt";
 	
 	
-	/*---- Constructor ----*/
+	/*---- Constructor and factory ----*/
 	
 	public Gift {
 		if (textGridLeft == Integer.MIN_VALUE || textGridTop == Integer.MIN_VALUE ||

@@ -26,7 +26,7 @@ public record Trns(byte[] data) implements BytesDataChunk {
 	static final String TYPE = "tRNS";
 	
 	
-	/*---- Constructors ----*/
+	/*---- Constructors and factory ----*/
 	
 	public Trns {
 		Objects.requireNonNull(data);

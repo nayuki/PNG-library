@@ -25,7 +25,7 @@ public record Bkgd(byte[] data) implements BytesDataChunk {
 	static final String TYPE = "bKGD";
 	
 	
-	/*---- Constructors ----*/
+	/*---- Constructors and factory ----*/
 	
 	public Bkgd {
 		Objects.requireNonNull(data);

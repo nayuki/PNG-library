@@ -38,7 +38,7 @@ public record Pcal(
 	static final String TYPE = "pCAL";
 	
 	
-	/*---- Constructor ----*/
+	/*---- Constructor and factory ----*/
 	
 	public Pcal {
 		Util.checkKeyword(calibrationName, true);

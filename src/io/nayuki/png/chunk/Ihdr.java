@@ -34,7 +34,7 @@ public record Ihdr(
 	static final String TYPE = "IHDR";
 	
 	
-	/*---- Constructor ----*/
+	/*---- Constructor and factory ----*/
 	
 	public Ihdr {
 		if (width <= 0)

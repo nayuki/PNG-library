@@ -29,7 +29,7 @@ public record Fdat(
 	static final String TYPE = "fdAT";
 	
 	
-	/*---- Constructor ----*/
+	/*---- Constructor and factory ----*/
 	
 	public Fdat {
 		if (sequence < 0)

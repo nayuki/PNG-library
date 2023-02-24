@@ -24,7 +24,7 @@ public record Dsig(byte[] data) implements BytesDataChunk {
 	static final String TYPE = "dSIG";
 	
 	
-	/*---- Constructor ----*/
+	/*---- Constructor and factory ----*/
 	
 	public Dsig {
 		Objects.requireNonNull(data);

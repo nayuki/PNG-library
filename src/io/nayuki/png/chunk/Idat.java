@@ -24,7 +24,7 @@ public record Idat(byte[] data) implements BytesDataChunk {
 	static final String TYPE = "IDAT";
 	
 	
-	/*---- Constructor ----*/
+	/*---- Constructor and factory ----*/
 	
 	public Idat {
 		Objects.requireNonNull(data);

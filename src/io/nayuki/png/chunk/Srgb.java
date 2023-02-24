@@ -26,7 +26,7 @@ public record Srgb(RenderingIntent renderingIntent) implements Chunk {
 	static final String TYPE = "sRGB";
 	
 	
-	/*---- Constructor ----*/
+	/*---- Constructor and factory ----*/
 	
 	public Srgb {
 		Objects.requireNonNull(renderingIntent);

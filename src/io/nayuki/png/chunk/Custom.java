@@ -23,7 +23,7 @@ import io.nayuki.png.Chunk;
  */
 public record Custom(String type, byte[] data) implements BytesDataChunk {
 	
-	/*---- Constructor ----*/
+	/*---- Constructor and factory ----*/
 	
 	public Custom {
 		Chunk.checkType(type);

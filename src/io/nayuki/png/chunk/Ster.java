@@ -25,7 +25,7 @@ public record Ster(Mode mode) implements Chunk {
 	static final String TYPE = "sTER";
 	
 	
-	/*---- Constructor ----*/
+	/*---- Constructor and factory ----*/
 	
 	public Ster {
 		Objects.requireNonNull(mode);

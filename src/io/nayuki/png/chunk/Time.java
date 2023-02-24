@@ -36,7 +36,7 @@ public record Time(
 	static final String TYPE = "tIME";
 	
 	
-	/*---- Constructors ----*/
+	/*---- Constructors and factory ----*/
 	
 	public Time {
 		if (!(0 <= year   && year   <= Short.MAX_VALUE)) throw new IllegalArgumentException("Year out of range"  );

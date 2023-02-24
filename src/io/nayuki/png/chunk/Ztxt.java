@@ -33,7 +33,7 @@ public record Ztxt(
 	static final String TYPE = "zTXt";
 	
 	
-	/*---- Constructor ----*/
+	/*---- Constructor and factory ----*/
 	
 	public Ztxt {
 		Util.checkKeyword(keyword, true);

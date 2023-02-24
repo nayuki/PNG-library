@@ -30,7 +30,7 @@ public record Gifx(
 	static final String TYPE = "gIFx";
 	
 	
-	/*---- Constructor ----*/
+	/*---- Constructor and factory ----*/
 	
 	public Gifx {
 		Objects.requireNonNull(applicationIdentifier);

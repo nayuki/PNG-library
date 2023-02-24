@@ -33,7 +33,7 @@ public record Iccp(
 	static final String TYPE = "iCCP";
 	
 	
-	/*---- Constructor ----*/
+	/*---- Constructor and factory ----*/
 	
 	public Iccp {
 		Util.checkKeyword(profileName, false);
