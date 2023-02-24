@@ -10,7 +10,6 @@ package io.nayuki.png.chunk;
 
 import java.io.DataOutput;
 import java.io.IOException;
-import io.nayuki.png.Chunk;
 
 
 /**
@@ -18,7 +17,7 @@ import io.nayuki.png.Chunk;
  * There is a singleton immutable instance because this chunk type has no data.
  * @see https://www.w3.org/TR/2003/REC-PNG-20031110/#11IEND
  */
-public enum Iend implements Chunk {
+public enum Iend implements BytesDataChunk {
 	
 	/*---- Constants ----*/
 	
@@ -26,18 +25,16 @@ public enum Iend implements Chunk {
 	
 	static final String TYPE = "IEND";
 	
-	private static final byte[] DATA = {};
-	
 	
 	/*---- Methods ----*/
 	
-	@Override public String getType() {
-		return TYPE;
+	@Override public byte[] data() {
+		return new byte[]{};
 	}
 	
 	
-	@Override public byte[] getData() {
-		return DATA;
+	@Override public String getType() {
+		return TYPE;
 	}
 	
 	
