@@ -71,11 +71,6 @@ public record Gama(int gamma) implements Chunk {
 	}
 	
 	
-	@Override public int getDataLength() {
-		return Integer.BYTES;
-	}
-	
-	
 	@Override public void writeData(DataOutput out) throws IOException {
 		out.writeInt(gamma);
 	}

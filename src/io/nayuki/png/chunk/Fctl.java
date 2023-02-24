@@ -90,11 +90,6 @@ public record Fctl(
 	}
 	
 	
-	@Override public int getDataLength() {
-		return 5 * Integer.BYTES + 2 * Short.BYTES + 2 * Byte.BYTES;
-	}
-	
-	
 	@Override public void writeData(DataOutput out) throws IOException {
 		out.writeInt(sequence);
 		out.writeInt(width   );

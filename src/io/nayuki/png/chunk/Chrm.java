@@ -101,11 +101,6 @@ public record Chrm(
 	}
 	
 	
-	@Override public int getDataLength() {
-		return 8 * Integer.BYTES;
-	}
-	
-	
 	@Override public void writeData(DataOutput out) throws IOException {
 		out.writeInt(whitePointX);
 		out.writeInt(whitePointY);

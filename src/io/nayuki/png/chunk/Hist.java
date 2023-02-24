@@ -65,11 +65,6 @@ public record Hist(short[] frequencies) implements Chunk {
 	}
 	
 	
-	@Override public int getDataLength() {
-		return Math.multiplyExact(frequencies.length, Short.BYTES);
-	}
-	
-	
 	@Override public void writeData(DataOutput out) throws IOException {
 		for (short freq : frequencies)
 			out.writeShort(freq);

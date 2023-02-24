@@ -110,11 +110,6 @@ public record Time(
 	}
 	
 	
-	@Override public int getDataLength() {
-		return 1 * Short.BYTES + 5 * Byte.BYTES;
-	}
-	
-	
 	@Override public void writeData(DataOutput out) throws IOException {
 		out.writeShort(year  );
 		out.writeByte (month );

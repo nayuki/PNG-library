@@ -67,11 +67,6 @@ public record Gifg(
 	}
 	
 	
-	@Override public int getDataLength() {
-		return 2 * Byte.BYTES + 1 * Short.BYTES;
-	}
-	
-	
 	@Override public void writeData(DataOutput out) throws IOException {
 		out.writeByte(disposalMethod);
 		out.writeByte(userInputFlag ? 1 : 0);

@@ -63,11 +63,6 @@ public record Actl(
 	}
 	
 	
-	@Override public int getDataLength() {
-		return 2 * Integer.BYTES;
-	}
-	
-	
 	@Override public void writeData(DataOutput out) throws IOException {
 		out.writeInt(numFrames);
 		out.writeInt(numPlays );

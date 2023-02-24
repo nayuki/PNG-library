@@ -56,11 +56,6 @@ public record Srgb(RenderingIntent renderingIntent) implements Chunk {
 	}
 	
 	
-	@Override public int getDataLength() {
-		return Byte.BYTES;
-	}
-	
-	
 	@Override public void writeData(DataOutput out) throws IOException {
 		out.writeByte(renderingIntent.ordinal());
 	}

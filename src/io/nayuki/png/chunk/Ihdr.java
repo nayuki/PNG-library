@@ -89,11 +89,6 @@ public record Ihdr(
 	}
 	
 	
-	@Override public int getDataLength() {
-		return 2 * Integer.BYTES + 5 * Byte.BYTES;
-	}
-	
-	
 	@Override public void writeData(DataOutput out) throws IOException {
 		out.writeInt(width);
 		out.writeInt(height);

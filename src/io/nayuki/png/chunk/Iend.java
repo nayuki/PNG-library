@@ -36,11 +36,6 @@ public enum Iend implements Chunk {
 	}
 	
 	
-	@Override public int getDataLength() {
-		return 0;
-	}
-	
-	
 	@Override public byte[] getData() {
 		return DATA;
 	}

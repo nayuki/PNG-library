@@ -65,11 +65,6 @@ public record Offs(
 	}
 	
 	
-	@Override public int getDataLength() {
-		return 2 * Integer.BYTES + 1 * Byte.BYTES;
-	}
-	
-	
 	@Override public void writeData(DataOutput out) throws IOException {
 		out.writeInt(xPosition);
 		out.writeInt(yPosition);
