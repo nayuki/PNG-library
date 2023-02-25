@@ -20,6 +20,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.zip.InflaterInputStream;
 import io.nayuki.png.chunk.Ihdr;
+import io.nayuki.png.chunk.Plte;
 import io.nayuki.png.chunk.Sbit;
 import io.nayuki.png.chunk.Trns;
 import io.nayuki.png.image.BufferedGrayImage;
@@ -84,7 +85,7 @@ public abstract sealed class ImageDecoder permits
 		ihdr = png.ihdr.orElseThrow(() -> new IllegalArgumentException("Missing IHDR chunk"));
 		inBitDepth = ihdr.bitDepth();
 		sbit = PngImage.getChunk(Sbit.class, png.afterIhdr);
-		trns = PngImage.getChunk(Trns.class, png.afterPlte);
+		trns = PngImage.getChunk(Trns.class, png.afterIhdr);
 	}
 	
 	
@@ -471,7 +472,8 @@ public abstract sealed class ImageDecoder permits
 			}
 			
 			// Handle palette and transparency
-			byte[] paletteBytes = png.plte.orElseThrow(() -> new IllegalArgumentException("Missing PLTE chunk")).data();
+			byte[] paletteBytes = PngImage.getChunk(Plte.class, png.afterIhdr)
+				.orElseThrow(() -> new IllegalArgumentException("Missing PLTE chunk")).data();
 			var palette = new long[paletteBytes.length / 3];
 			if (palette.length > (1 << inBitDepth))
 				throw new IllegalArgumentException("Palette length exceeds bit depth");

@@ -290,12 +290,12 @@ public final class ImageEncoder {
 			if (bitDepths[0] != 8 || bitDepths[1] != 8 || bitDepths[2] != 8)
 				result.afterIhdr.add(new Sbit(new byte[]{(byte)bitDepths[0], (byte)bitDepths[1], (byte)bitDepths[2]}));
 		}
-		result.plte = Optional.of(new Plte(paletteBytes));
+		result.afterIhdr.add(new Plte(paletteBytes));
 		if (img.getBitDepths()[3] > 0) {
 			var transpBytes = new byte[transpLen];
 			for (int i = 0; i < transpBytes.length; i++)
 				transpBytes[i] = (byte)palette[i];
-			result.afterPlte.add(new Trns(transpBytes));
+			result.afterIhdr.add(new Trns(transpBytes));
 		}
 		
 		int bytesPerRow = Math.toIntExact(Math.ceilDiv((long)width * bitDepth, 8) + 1);

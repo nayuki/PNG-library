@@ -38,8 +38,6 @@ import io.nayuki.png.chunk.Plte;
  * <ol>
  *   <li>Field {@code ihdr} (must be present)</li>
  *   <li>Field {@code afterIhdr} (zero or more chunks)</li>
- *   <li>Field {@code plte} (optional)</li>
- *   <li>Field {@code afterPlte} (zero or more chunks)</li>
  *   <li>Field {@code idats} (one or more chunks)</li>
  *   <li>Field {@code afterIdats} (zero or more chunks)</li>
  *   <li>Constant {@code Iend.SINGLETON}</li>
@@ -133,14 +131,8 @@ public final class PngImage {
 	/** The single IHDR chunk, if present. */
 	public Optional<Ihdr> ihdr = Optional.empty();
 	
-	/** The chunks positioned after IHDR and before PLTE. */
+	/** The chunks positioned after IHDR. */
 	public List<Chunk> afterIhdr = new ArrayList<>();
-	
-	/** The single PLTE chunk, if present. */
-	public Optional<Plte> plte = Optional.empty();
-	
-	/** The chunks positioned after PLTE and before IDAT. */
-	public List<Chunk> afterPlte = new ArrayList<>();
 	
 	/** The consecutive IDAT chunks. */
 	public List<Idat> idats = new ArrayList<>();
@@ -159,7 +151,6 @@ public final class PngImage {
 		enum State {
 			BEFORE_IHDR,
 			AFTER_IHDR,
-			AFTER_PLTE,
 			DURING_IDATS,
 			AFTER_IDATS,
 			AFTER_IEND,
@@ -181,10 +172,7 @@ public final class PngImage {
 				}
 				
 				case AFTER_IHDR -> {
-					if (chunk instanceof Plte chk0) {
-						plte = Optional.of(chk0);
-						yield State.AFTER_PLTE;
-					} else if (chunk instanceof Idat chk1) {
+					if (chunk instanceof Idat chk1) {
 						idats.add(chk1);
 						yield State.DURING_IDATS;
 					} else if (chunk instanceof Iend)
@@ -192,20 +180,6 @@ public final class PngImage {
 					else {
 						afterIhdr.add(chunk);
 						yield State.AFTER_IHDR;
-					}
-				}
-				
-				case AFTER_PLTE -> {
-					if (chunk instanceof Idat chk) {
-						idats.add(chk);
-						yield State.DURING_IDATS;
-					} else if (chunk instanceof Iend)
-						throw new IllegalArgumentException("Unexpected IEND chunk");
-					else if (BEFORE_PLTE_CHUNK_TYPES.contains(chunk.getType()))
-						throw new IllegalArgumentException("Unexpected " + chunk.getType() + " chunk");
-					else {
-						afterPlte.add(chunk);
-						yield State.AFTER_PLTE;
 					}
 				}
 				
@@ -300,8 +274,6 @@ public final class PngImage {
 		List<Chunk> chunks = new ArrayList<>();
 		chunks.add(ihdr.orElseThrow(() -> new IllegalStateException("Missing IHDR chunk")));
 		chunks.addAll(afterIhdr);
-		plte.ifPresent(chunks::add);
-		chunks.addAll(afterPlte);
 		if (idats.isEmpty())
 			throw new IllegalStateException("Missing IDAT chunks");
 		chunks.addAll(idats);
