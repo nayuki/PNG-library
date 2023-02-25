@@ -216,6 +216,18 @@ public final class PngImage {
 		}
 		if (state != State.AFTER_IEND)
 			throw new IllegalArgumentException("Missing some required chunks");
+		
+		if (PngImage.getChunk(Plte.class, afterIhdr).isPresent()) {
+			boolean seenPlte = false;
+			for (Chunk chk : afterIhdr) {
+				if (chk instanceof Plte)
+					seenPlte = true;
+				else if (!seenPlte && AFTER_PLTE_CHUNK_TYPES.contains(chk.getType()))
+					throw new IllegalArgumentException("Unexpected " + chk.getType() + " chunk before PLTE");
+				else if (seenPlte && BEFORE_PLTE_CHUNK_TYPES.contains(chk.getType()))
+					throw new IllegalArgumentException("Unexpected " + chk.getType() + " chunk after PLTE");
+			}
+		}
 	}
 	
 	
@@ -242,6 +254,12 @@ public final class PngImage {
 		"iCCP",
 		"sBIT",
 		"sRGB"));
+	
+	
+	private static final Set<String> AFTER_PLTE_CHUNK_TYPES = new HashSet<>(Arrays.asList(
+		"bKGD",
+		"hIST",
+		"tRNS"));
 	
 	
 	/**
