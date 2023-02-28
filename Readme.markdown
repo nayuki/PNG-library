@@ -58,6 +58,12 @@ Outside of scope:
 * Streaming chunks, rows, and pixels instead of buffering everything in memory
 
 
+Examples
+--------
+
+Sample program code and output images can be found on the project home page: https://www.nayuki.io/page/png-library#examples
+
+
 Code overview
 -------------
 
