@@ -34,7 +34,7 @@ import io.nayuki.png.image.BufferedRgbaImage;
  * @see ImageEncoder
  */
 public abstract sealed class ImageDecoder permits
-		ImageDecoder.RgbaImageDecoder, ImageDecoder.GrayImageDecoder, ImageDecoder.PaletteImageDecoder {
+		ImageDecoder.RgbaDecoder, ImageDecoder.GrayDecoder, ImageDecoder.PaletteDecoder {
 	
 	/*---- Public function ----*/
 	
@@ -64,9 +64,9 @@ public abstract sealed class ImageDecoder permits
 		
 		// Decode image by color type
 		return (switch (ihdr.colorType()) {
-			case TRUE_COLOR, TRUE_COLOR_WITH_ALPHA -> new RgbaImageDecoder   (png);
-			case GRAYSCALE , GRAYSCALE_WITH_ALPHA  -> new GrayImageDecoder   (png);
-			case INDEXED_COLOR                     -> new PaletteImageDecoder(png);
+			case TRUE_COLOR, TRUE_COLOR_WITH_ALPHA -> new RgbaDecoder   (png);
+			case GRAYSCALE , GRAYSCALE_WITH_ALPHA  -> new GrayDecoder   (png);
+			case INDEXED_COLOR                     -> new PaletteDecoder(png);
 		}).decode();
 	}
 	
@@ -207,13 +207,13 @@ public abstract sealed class ImageDecoder permits
 	
 	/*---- A decoder subclass ----*/
 	
-	static final class RgbaImageDecoder extends ImageDecoder {
+	static final class RgbaDecoder extends ImageDecoder {
 		
 		private final long transparentColor;  // Either -1 or 0xRRRRGGGGBBBB0000
 		private BufferedRgbaImage result;
 		
 		
-		public RgbaImageDecoder(PngImage png) {
+		public RgbaDecoder(PngImage png) {
 			super(png);
 			
 			// Handle significant bits
@@ -328,13 +328,13 @@ public abstract sealed class ImageDecoder permits
 	
 	/*---- A decoder subclass ----*/
 	
-	static final class GrayImageDecoder extends ImageDecoder {
+	static final class GrayDecoder extends ImageDecoder {
 		
 		private final int transparentColor;  // Either -1 or 0xWWWW0000
 		private BufferedGrayImage result;
 		
 		
-		public GrayImageDecoder(PngImage png) {
+		public GrayDecoder(PngImage png) {
 			super(png);
 			
 			// Handle significant bits
@@ -450,12 +450,12 @@ public abstract sealed class ImageDecoder permits
 	
 	/*---- A decoder subclass ----*/
 	
-	static final class PaletteImageDecoder extends ImageDecoder {
+	static final class PaletteDecoder extends ImageDecoder {
 		
 		private BufferedPaletteImage result;
 		
 		
-		public PaletteImageDecoder(PngImage png) {
+		public PaletteDecoder(PngImage png) {
 			super(png);
 			
 			// Handle significant bits
