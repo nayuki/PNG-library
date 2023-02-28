@@ -33,7 +33,7 @@ import io.nayuki.png.image.BufferedRgbaImage;
  * where pixels can be directly read. Not instantiable.
  * @see ImageEncoder
  */
-public abstract sealed class ImageDecoder {
+public final class ImageDecoder {
 	
 	/*---- Public function ----*/
 	
@@ -70,64 +70,68 @@ public abstract sealed class ImageDecoder {
 	}
 	
 	
-	/*---- ImageDecoder instance members ----*/
+	/*---- Decoder instance members ----*/
 	
-	protected final PngImage png;
-	protected final Ihdr ihdr;
-	protected final int inBitDepth;
-	protected final Optional<Sbit> sbit;
-	protected final Optional<Trns> trns;
-	
-	
-	ImageDecoder(PngImage png) {
-		this.png = png;
-		ihdr = png.ihdr.orElseThrow(() -> new IllegalArgumentException("Missing IHDR chunk"));
-		inBitDepth = ihdr.bitDepth();
-		sbit = PngImage.getChunk(Sbit.class, png.afterIhdr);
-		trns = PngImage.getChunk(Trns.class, png.afterIhdr);
-	}
-	
-	
-	public final Object decode() {
-		// Virtually concatenate bytes from all data chunks, then decompress
-		List<InputStream> ins = png.idats.stream()
-			.map(idat -> (InputStream)new ByteArrayInputStream(idat.data()))
-			.toList();
-		var in0 = new SequenceInputStream(Collections.enumeration(ins));
-		var in1 = new InflaterInputStream(in0);
-		try (var in2 = new DataInputStream(in1)) {
-			
-			// Handle progressive and interlaced images
-			int xStep = switch (ihdr.interlaceMethod()) {
-				case NONE  -> 1;
-				case ADAM7 -> 8;
-			};
-			int yStep = xStep;
-			decodeSubimage(in2, 0, 0, xStep, yStep);
-			while (yStep > 1) {
-				if (xStep == yStep) {
-					decodeSubimage(in2, xStep / 2, 0, xStep, yStep);
-					xStep /= 2;
-				} else {
-					assert xStep == yStep / 2;
-					decodeSubimage(in2, 0, xStep, xStep, yStep);
-					yStep = xStep;
-				}
-			}
-			
-			if (in2.read() != -1)
-				throw new IllegalArgumentException("Extra decompressed data after all pixels");
-		} catch (IOException e) {
-			throw new IllegalArgumentException(e);
+	private static abstract class Decoder {
+		
+		protected final PngImage png;
+		protected final Ihdr ihdr;
+		protected final int inBitDepth;
+		protected final Optional<Sbit> sbit;
+		protected final Optional<Trns> trns;
+		
+		
+		protected Decoder(PngImage png) {
+			this.png = png;
+			ihdr = png.ihdr.orElseThrow(() -> new IllegalArgumentException("Missing IHDR chunk"));
+			inBitDepth = ihdr.bitDepth();
+			sbit = PngImage.getChunk(Sbit.class, png.afterIhdr);
+			trns = PngImage.getChunk(Trns.class, png.afterIhdr);
 		}
-		return getResult();
+		
+		
+		public final Object decode() {
+			// Virtually concatenate bytes from all data chunks, then decompress
+			List<InputStream> ins = png.idats.stream()
+				.map(idat -> (InputStream)new ByteArrayInputStream(idat.data()))
+				.toList();
+			var in0 = new SequenceInputStream(Collections.enumeration(ins));
+			var in1 = new InflaterInputStream(in0);
+			try (var in2 = new DataInputStream(in1)) {
+				
+				// Handle progressive and interlaced images
+				int xStep = switch (ihdr.interlaceMethod()) {
+					case NONE  -> 1;
+					case ADAM7 -> 8;
+				};
+				int yStep = xStep;
+				decodeSubimage(in2, 0, 0, xStep, yStep);
+				while (yStep > 1) {
+					if (xStep == yStep) {
+						decodeSubimage(in2, xStep / 2, 0, xStep, yStep);
+						xStep /= 2;
+					} else {
+						assert xStep == yStep / 2;
+						decodeSubimage(in2, 0, xStep, xStep, yStep);
+						yStep = xStep;
+					}
+				}
+				
+				if (in2.read() != -1)
+					throw new IllegalArgumentException("Extra decompressed data after all pixels");
+			} catch (IOException e) {
+				throw new IllegalArgumentException(e);
+			}
+			return getResult();
+		}
+		
+		
+		public abstract void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep) throws IOException;
+		
+		
+		public abstract Object getResult();
+		
 	}
-	
-	
-	public abstract void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep) throws IOException;
-	
-	
-	public abstract Object getResult();
 	
 	
 	
@@ -206,7 +210,7 @@ public abstract sealed class ImageDecoder {
 	
 	/*---- A decoder subclass ----*/
 	
-	private static final class RgbaDecoder extends ImageDecoder {
+	private static final class RgbaDecoder extends Decoder {
 		
 		private final long transparentColor;  // Either -1 or 0xRRRRGGGGBBBB0000
 		private BufferedRgbaImage result;
@@ -327,7 +331,7 @@ public abstract sealed class ImageDecoder {
 	
 	/*---- A decoder subclass ----*/
 	
-	private static final class GrayDecoder extends ImageDecoder {
+	private static final class GrayDecoder extends Decoder {
 		
 		private final int transparentColor;  // Either -1 or 0xWWWW0000
 		private BufferedGrayImage result;
@@ -449,7 +453,7 @@ public abstract sealed class ImageDecoder {
 	
 	/*---- A decoder subclass ----*/
 	
-	private static final class PaletteDecoder extends ImageDecoder {
+	private static final class PaletteDecoder extends Decoder {
 		
 		private BufferedPaletteImage result;
 		
