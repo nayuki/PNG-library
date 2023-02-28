@@ -73,11 +73,11 @@ public abstract sealed class ImageDecoder permits
 	
 	/*---- ImageDecoder instance members ----*/
 	
-	final PngImage png;
-	final Ihdr ihdr;
-	final int inBitDepth;
-	final Optional<Sbit> sbit;
-	final Optional<Trns> trns;
+	protected final PngImage png;
+	protected final Ihdr ihdr;
+	protected final int inBitDepth;
+	protected final Optional<Sbit> sbit;
+	protected final Optional<Trns> trns;
 	
 	
 	ImageDecoder(PngImage png) {
@@ -89,7 +89,7 @@ public abstract sealed class ImageDecoder permits
 	}
 	
 	
-	final Object decode() {
+	public final Object decode() {
 		// Virtually concatenate bytes from all data chunks, then decompress
 		List<InputStream> ins = png.idats.stream()
 			.map(idat -> (InputStream)new ByteArrayInputStream(idat.data()))
@@ -125,10 +125,10 @@ public abstract sealed class ImageDecoder permits
 	}
 	
 	
-	abstract void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep) throws IOException;
+	public abstract void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep) throws IOException;
 	
 	
-	abstract Object getResult();
+	public abstract Object getResult();
 	
 	
 	
@@ -255,7 +255,7 @@ public abstract sealed class ImageDecoder permits
 		}
 		
 		
-		@Override void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep) throws IOException {
+		@Override public void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep) throws IOException {
 			int width  = Math.ceilDiv(result.getWidth () - xOffset, xStep);
 			int height = Math.ceilDiv(result.getHeight() - yOffset, yStep);
 			if (width == 0 || height == 0)
@@ -318,7 +318,7 @@ public abstract sealed class ImageDecoder permits
 		}
 		
 		
-		@Override BufferedRgbaImage getResult() {
+		@Override public BufferedRgbaImage getResult() {
 			return result;
 		}
 		
@@ -373,7 +373,7 @@ public abstract sealed class ImageDecoder permits
 		}
 		
 		
-		@Override void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep) throws IOException {
+		@Override public void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep) throws IOException {
 			int width  = Math.ceilDiv(result.getWidth () - xOffset, xStep);
 			int height = Math.ceilDiv(result.getHeight() - yOffset, yStep);
 			if (width == 0 || height == 0)
@@ -440,7 +440,7 @@ public abstract sealed class ImageDecoder permits
 		}
 		
 		
-		@Override BufferedGrayImage getResult() {
+		@Override public BufferedGrayImage getResult() {
 			return result;
 		}
 		
@@ -495,7 +495,7 @@ public abstract sealed class ImageDecoder permits
 		}
 		
 		
-		@Override void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep) throws IOException {
+		@Override public void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep) throws IOException {
 			int width  = Math.ceilDiv(result.getWidth () - xOffset, xStep);
 			int height = Math.ceilDiv(result.getHeight() - yOffset, yStep);
 			if (width == 0 || height == 0)
@@ -529,7 +529,7 @@ public abstract sealed class ImageDecoder permits
 		}
 		
 		
-		@Override BufferedPaletteImage getResult() {
+		@Override public BufferedPaletteImage getResult() {
 			return result;
 		}
 		
