@@ -33,8 +33,7 @@ import io.nayuki.png.image.BufferedRgbaImage;
  * where pixels can be directly read. Not instantiable.
  * @see ImageEncoder
  */
-public abstract sealed class ImageDecoder permits
-		ImageDecoder.RgbaDecoder, ImageDecoder.GrayDecoder, ImageDecoder.PaletteDecoder {
+public abstract sealed class ImageDecoder {
 	
 	/*---- Public function ----*/
 	
@@ -207,7 +206,7 @@ public abstract sealed class ImageDecoder permits
 	
 	/*---- A decoder subclass ----*/
 	
-	static final class RgbaDecoder extends ImageDecoder {
+	private static final class RgbaDecoder extends ImageDecoder {
 		
 		private final long transparentColor;  // Either -1 or 0xRRRRGGGGBBBB0000
 		private BufferedRgbaImage result;
@@ -328,7 +327,7 @@ public abstract sealed class ImageDecoder permits
 	
 	/*---- A decoder subclass ----*/
 	
-	static final class GrayDecoder extends ImageDecoder {
+	private static final class GrayDecoder extends ImageDecoder {
 		
 		private final int transparentColor;  // Either -1 or 0xWWWW0000
 		private BufferedGrayImage result;
@@ -450,7 +449,7 @@ public abstract sealed class ImageDecoder permits
 	
 	/*---- A decoder subclass ----*/
 	
-	static final class PaletteDecoder extends ImageDecoder {
+	private static final class PaletteDecoder extends ImageDecoder {
 		
 		private BufferedPaletteImage result;
 		
