@@ -259,9 +259,9 @@ public final class ImageDecoder {
 		
 		
 		@Override public void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep) throws IOException {
-			int width  = Math.ceilDiv(result.getWidth () - xOffset, xStep);
-			int height = Math.ceilDiv(result.getHeight() - yOffset, yStep);
-			if (width == 0 || height == 0)
+			int subwidth  = Math.ceilDiv(result.getWidth () - xOffset, xStep);
+			int subheight = Math.ceilDiv(result.getHeight() - yOffset, yStep);
+			if (subwidth == 0 || subheight == 0)
 				return;
 			
 			int[] outBitDepths = result.getBitDepths();
@@ -274,11 +274,11 @@ public final class ImageDecoder {
 			
 			int filterStride = Math.ceilDiv(inBitDepth * (hasAlpha ? 4 : 3), 8);
 			var dec = new RowDecoder(din, filterStride,
-				Math.toIntExact(Math.ceilDiv((long)width * inBitDepth * (hasAlpha ? 4 : 3), 8)));
-			for (int y = 0; y < height; y++) {
+				Math.toIntExact(Math.ceilDiv((long)subwidth * inBitDepth * (hasAlpha ? 4 : 3), 8)));
+			for (int y = 0; y < subheight; y++) {
 				byte[] row = dec.readRow();
 				
-				for (int x = 0, i = filterStride; x < width; x++, i += filterStride) {
+				for (int x = 0, i = filterStride; x < subwidth; x++, i += filterStride) {
 					int r, g, b, a;
 					long temp;
 					switch (mode) {
@@ -377,9 +377,9 @@ public final class ImageDecoder {
 		
 		
 		@Override public void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep) throws IOException {
-			int width  = Math.ceilDiv(result.getWidth () - xOffset, xStep);
-			int height = Math.ceilDiv(result.getHeight() - yOffset, yStep);
-			if (width == 0 || height == 0)
+			int subwidth  = Math.ceilDiv(result.getWidth () - xOffset, xStep);
+			int subheight = Math.ceilDiv(result.getHeight() - yOffset, yStep);
+			if (subwidth == 0 || subheight == 0)
 				return;
 			
 			int[] outBitDepths = result.getBitDepths();
@@ -390,12 +390,12 @@ public final class ImageDecoder {
 			
 			int filterStride = Math.ceilDiv(inBitDepth * (hasAlpha ? 2 : 1), 8);
 			var dec = new RowDecoder(din, filterStride,
-				Math.toIntExact(Math.ceilDiv((long)width * inBitDepth * (hasAlpha ? 2 : 1), 8)));
-			for (int y = 0; y < height; y++) {
+				Math.toIntExact(Math.ceilDiv((long)subwidth * inBitDepth * (hasAlpha ? 2 : 1), 8)));
+			for (int y = 0; y < subheight; y++) {
 				byte[] row = dec.readRow();
 				
 				if (mode < 4) {
-					for (int x = 0, i = filterStride; x < width; x++, i += filterStride) {
+					for (int x = 0, i = filterStride; x < subwidth; x++, i += filterStride) {
 						int w, a, temp;
 						switch (mode) {
 							case 0 -> {
@@ -427,7 +427,7 @@ public final class ImageDecoder {
 					int xMask = 8 / inBitDepth - 1;
 					int shift = 8 - inBitDepth;
 					int opaque = (1 << inBitDepth) - 1;
-					for (int x = 0, i = filterStride, b = 0; x < width; x++, b = (b << inBitDepth) & 0xFF) {
+					for (int x = 0, i = filterStride, b = 0; x < subwidth; x++, b = (b << inBitDepth) & 0xFF) {
 						if ((x & xMask) == 0) {
 							b = row[i] & 0xFF;
 							i++;
@@ -499,22 +499,22 @@ public final class ImageDecoder {
 		
 		
 		@Override public void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep) throws IOException {
-			int width  = Math.ceilDiv(result.getWidth () - xOffset, xStep);
-			int height = Math.ceilDiv(result.getHeight() - yOffset, yStep);
-			if (width == 0 || height == 0)
+			int subwidth  = Math.ceilDiv(result.getWidth () - xOffset, xStep);
+			int subheight = Math.ceilDiv(result.getHeight() - yOffset, yStep);
+			if (subwidth == 0 || subheight == 0)
 				return;
 			
 			int filterStride = 1;  // Equal to ceil(inBitDepth / 8)
 			var dec = new RowDecoder(din, filterStride,
-				Math.toIntExact(Math.ceilDiv((long)width * inBitDepth, 8)));
-			for (int y = 0; y < height; y++) {
+				Math.toIntExact(Math.ceilDiv((long)subwidth * inBitDepth, 8)));
+			for (int y = 0; y < subheight; y++) {
 				byte[] row = dec.readRow();
 				
 				switch (inBitDepth) {
 					case 1, 2, 4 -> {
 						int xMask = 8 / inBitDepth - 1;
 						int shift = 8 - inBitDepth;
-						for (int x = 0, i = filterStride, b = 0; x < width; x++, b = (b << inBitDepth) & 0xFF) {
+						for (int x = 0, i = filterStride, b = 0; x < subwidth; x++, b = (b << inBitDepth) & 0xFF) {
 							if ((x & xMask) == 0) {
 								b = row[i] & 0xFF;
 								i++;
@@ -523,7 +523,7 @@ public final class ImageDecoder {
 						}
 					}
 					case 8 -> {
-						for (int x = 0, i = filterStride; x < width; x++, i += filterStride)
+						for (int x = 0, i = filterStride; x < subwidth; x++, i += filterStride)
 							result.setPixel(xOffset + x * xStep, yOffset + y * yStep, row[i] & 0xFF);
 					}
 					default -> throw new AssertionError("Unreachable value");
