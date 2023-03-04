@@ -14,6 +14,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
+import io.nayuki.png.chunk.Ihdr.InterlaceMethod;
 import io.nayuki.png.image.BufferedGrayImage;
 import io.nayuki.png.image.BufferedPaletteImage;
 import io.nayuki.png.image.BufferedRgbaImage;
@@ -50,7 +51,7 @@ public final class ImageCodecTest {
 					img0.setPixel(x, y, val);
 				}
 			}
-			PngImage png0 = ImageEncoder.toPng(img0);
+			PngImage png0 = ImageEncoder.toPng(img0, InterlaceMethod.NONE);
 			var bout = new ByteArrayOutputStream();
 			png0.write(bout);
 			
@@ -98,7 +99,7 @@ public final class ImageCodecTest {
 					img0.setPixel(x, y, val);
 				}
 			}
-			PngImage png0 = ImageEncoder.toPng(img0);
+			PngImage png0 = ImageEncoder.toPng(img0, InterlaceMethod.NONE);
 			var bout = new ByteArrayOutputStream();
 			png0.write(bout);
 			
@@ -141,7 +142,7 @@ public final class ImageCodecTest {
 				for (int x = 0; x < width; x++)
 					img0.setPixel(x, y, rand.nextInt(palette.length));
 			}
-			PngImage png0 = ImageEncoder.toPng(img0);
+			PngImage png0 = ImageEncoder.toPng(img0, InterlaceMethod.NONE);
 			var bout = new ByteArrayOutputStream();
 			png0.write(bout);
 			

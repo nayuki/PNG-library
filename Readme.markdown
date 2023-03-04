@@ -40,7 +40,7 @@ Features
 --------
 
 * Decode RGB, grayscale, and paletted images, without or without alpha channel, of all bit depths, with all filter types, with or without interlacing
-* Encode RGB, grayscale, and paletted images, without or without alpha channel, of all bit depths, with filter type 0, without interlacing
+* Encode RGB, grayscale, and paletted images, without or without alpha channel, of all bit depths, with filter type 0, with or without interlacing
 * Up-convert images with bit depths that are not 1/2/4/8/16 (e.g. RGBA 5.6.5.4 to 8.8.8.8)
 * Parse, represent, interpret, and serialize all the known chunk types for the PNG standard, extension, and APNG
 * Handle huge chunks up to the standard's size limit (2^31 − 1 bytes)

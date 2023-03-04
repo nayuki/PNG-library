@@ -10,6 +10,7 @@ package io.nayuki.png;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -34,98 +35,28 @@ public final class ImageEncoder {
 	 * Encodes the specified image to a new PNG image. The input image
 	 * can have any bit depth allowed by the {@code RgbaImage} contract.
 	 * @param img the image to encode (not {@code null})
+	 * @param interMeth the interlace method (not {@code null})
 	 * @return a new PNG image (not {@code null})
 	 * @throws NullPointerException if {@code img} is {@code null}
 	 */
-	public static PngImage toPng(RgbaImage img) {
+	public static PngImage toPng(RgbaImage img, Ihdr.InterlaceMethod interMeth) {
 		Objects.requireNonNull(img);
 		int[] bitDepths = img.getBitDepths();
 		int bitDepth = bitDepths[0];
 		boolean hasAlpha = bitDepths[3] > 0;
 		// If bitDepths is not in the set {(8,8,8,0), (8,8,8,8), (16,16,16,0), (16,16,16,16)}
 		boolean supported = (bitDepth == 8 || bitDepth == 16) && bitDepths[1] == bitDepth && bitDepths[2] == bitDepth && (!hasAlpha || bitDepths[3] == bitDepth);
+		Optional<Sbit> sbit = Optional.empty();
 		if (!supported) {
-			PngImage result = toPng(new UpBitDepthRgbaImage(img));
+			img = new UpBitDepthRgbaImage(img);
 			byte[] bitDepthsBytes;
 			if (!hasAlpha)
 				bitDepthsBytes = new byte[]{(byte)bitDepths[0], (byte)bitDepths[1], (byte)bitDepths[2]};
 			else
 				bitDepthsBytes = new byte[]{(byte)bitDepths[0], (byte)bitDepths[1], (byte)bitDepths[2], (byte)bitDepths[3]};
-			result.afterIhdr.add(new Sbit(bitDepthsBytes));
-			return result;
+			sbit = Optional.of(new Sbit(bitDepthsBytes));
 		}
-
-		int width = img.getWidth();
-		int height = img.getHeight();
-		var result = new PngImage();
-		result.ihdr = Optional.of(new Ihdr(
-			width, height, bitDepth,
-			hasAlpha ? Ihdr.ColorType.TRUE_COLOR_WITH_ALPHA : Ihdr.ColorType.TRUE_COLOR,
-			Ihdr.CompressionMethod.ZLIB_DEFLATE,
-			Ihdr.FilterMethod.ADAPTIVE,
-			Ihdr.InterlaceMethod.NONE));
-		
-		int bytesPerRow = Math.toIntExact(Math.ceilDiv((long)width * bitDepth * (hasAlpha ? 4 : 3), 8) + 1);
-		var filtersAndSamples = new byte[Math.multiplyExact(bytesPerRow, height)];
-		for (int y = 0, i = 0; y < height; y++) {
-			filtersAndSamples[i] = 0;
-			i++;
-			
-			switch (bitDepth * 10 + (hasAlpha ? 1 : 0)) {
-				case 8_0 -> {
-					for (int x = 0; x < width; x++, i += 3) {
-						long val = img.getPixel(x, y);
-						filtersAndSamples[i + 0] = (byte)(val >>> 48);
-						filtersAndSamples[i + 1] = (byte)(val >>> 32);
-						filtersAndSamples[i + 2] = (byte)(val >>> 16);
-					}
-				}
-				case 8_1 -> {
-					for (int x = 0; x < width; x++, i += 4) {
-						long val = img.getPixel(x, y);
-						filtersAndSamples[i + 0] = (byte)(val >>> 48);
-						filtersAndSamples[i + 1] = (byte)(val >>> 32);
-						filtersAndSamples[i + 2] = (byte)(val >>> 16);
-						filtersAndSamples[i + 3] = (byte)(val >>>  0);
-					}
-				}
-				case 16_0 -> {
-					for (int x = 0; x < width; x++, i += 6) {
-						long val = img.getPixel(x, y);
-						filtersAndSamples[i + 0] = (byte)(val >>> 56);
-						filtersAndSamples[i + 1] = (byte)(val >>> 48);
-						filtersAndSamples[i + 2] = (byte)(val >>> 40);
-						filtersAndSamples[i + 3] = (byte)(val >>> 32);
-						filtersAndSamples[i + 4] = (byte)(val >>> 24);
-						filtersAndSamples[i + 5] = (byte)(val >>> 16);
-					}
-				}
-				case 16_1 -> {
-					for (int x = 0; x < width; x++, i += 8) {
-						long val = img.getPixel(x, y);
-						filtersAndSamples[i + 0] = (byte)(val >>> 56);
-						filtersAndSamples[i + 1] = (byte)(val >>> 48);
-						filtersAndSamples[i + 2] = (byte)(val >>> 40);
-						filtersAndSamples[i + 3] = (byte)(val >>> 32);
-						filtersAndSamples[i + 4] = (byte)(val >>> 24);
-						filtersAndSamples[i + 5] = (byte)(val >>> 16);
-						filtersAndSamples[i + 6] = (byte)(val >>>  8);
-						filtersAndSamples[i + 7] = (byte)(val >>>  0);
-					}
-				}
-				default -> throw new AssertionError("Unreachable value");
-			}
-		}
-		
-		var bout = new ByteArrayOutputStream();
-		try (var dout = new DeflaterOutputStream(bout)) {
-			dout.write(filtersAndSamples);
-		} catch (IOException e) {
-			throw new AssertionError("Unreachable exception", e);
-		}
-		result.idats.add(new Idat(bout.toByteArray()));
-		
-		return result;
+		return new RgbaEncoder(img, sbit, interMeth).encode();
 	}
 	
 	
@@ -133,10 +64,11 @@ public final class ImageEncoder {
 	 * Encodes the specified image to a new PNG image. The input image
 	 * can have any bit depth allowed by the {@code GrayImage} contract.
 	 * @param img the image to encode (not {@code null})
+	 * @param interMeth the interlace method (not {@code null})
 	 * @return a new PNG image (not {@code null})
 	 * @throws NullPointerException if {@code img} is {@code null}
 	 */
-	public static PngImage toPng(GrayImage img) {
+	public static PngImage toPng(GrayImage img, Ihdr.InterlaceMethod interMeth) {
 		Objects.requireNonNull(img);
 		int[] bitDepths = img.getBitDepths();
 		int bitDepth = bitDepths[0];
@@ -144,102 +76,28 @@ public final class ImageEncoder {
 		// If bitDepths is not in the set {(1,0), (2,0), (4,0), (8,0), (8,8), (16,0), (16,16)}
 		boolean supported = (bitDepth == 1 || bitDepth == 2 || bitDepth == 4) && !hasAlpha;
 		supported |= (bitDepth == 8 || bitDepth == 16) && (!hasAlpha || bitDepths[1] == bitDepth);
+		Optional<Sbit> sbit = Optional.empty();
 		if (!supported) {
-			PngImage result = toPng(new UpBitDepthGrayImage(img));
+			img = new UpBitDepthGrayImage(img);
 			byte[] bitDepthsBytes;
 			if (!hasAlpha)
 				bitDepthsBytes = new byte[]{(byte)bitDepths[0]};
 			else
 				bitDepthsBytes = new byte[]{(byte)bitDepths[0], (byte)bitDepths[1]};
-			result.afterIhdr.add(new Sbit(bitDepthsBytes));
-			return result;
+			sbit = Optional.of(new Sbit(bitDepthsBytes));
 		}
-
-		int width = img.getWidth();
-		int height = img.getHeight();
-		var result = new PngImage();
-		result.ihdr = Optional.of(new Ihdr(
-			width, height, bitDepth,
-			hasAlpha ? Ihdr.ColorType.GRAYSCALE_WITH_ALPHA : Ihdr.ColorType.GRAYSCALE,
-			Ihdr.CompressionMethod.ZLIB_DEFLATE,
-			Ihdr.FilterMethod.ADAPTIVE,
-			Ihdr.InterlaceMethod.NONE));
-		
-		int bytesPerRow = Math.toIntExact(Math.ceilDiv((long)width * bitDepth * (hasAlpha ? 2 : 1), 8) + 1);
-		var filtersAndSamples = new byte[Math.multiplyExact(bytesPerRow, height)];
-		for (int y = 0, i = 0; y < height; y++) {
-			filtersAndSamples[i] = 0;
-			i++;
-			
-			switch (bitDepth * 10 + (hasAlpha ? 1 : 0)) {
-				case 1_0, 2_0, 4_0 -> {
-					int xMask = 8 / bitDepth - 1;
-					int b = 0;
-					for (int x = 0; x < width; x++) {
-						int val = img.getPixel(x, y);
-						b = (b << bitDepth) | (val >>> 16);
-						if ((x & xMask) == xMask) {
-							filtersAndSamples[i] = (byte)b;
-							i++;
-						}
-					}
-					if ((width & xMask) != 0) {
-						filtersAndSamples[i] = (byte)(b << (8 - (width & xMask) * bitDepth));
-						i++;
-					}
-				}
-				case 8_0 -> {
-					for (int x = 0; x < width; x++, i += 1) {
-						int val = img.getPixel(x, y);
-						filtersAndSamples[i + 0] = (byte)(val >>> 16);
-					}
-				}
-				case 8_1 -> {
-					for (int x = 0; x < width; x++, i += 2) {
-						int val = img.getPixel(x, y);
-						filtersAndSamples[i + 0] = (byte)(val >>> 16);
-						filtersAndSamples[i + 1] = (byte)(val >>>  0);
-					}
-				}
-				case 16_0 -> {
-					for (int x = 0; x < width; x++, i += 2) {
-						int val = img.getPixel(x, y);
-						filtersAndSamples[i + 0] = (byte)(val >>> 24);
-						filtersAndSamples[i + 1] = (byte)(val >>> 16);
-					}
-				}
-				case 16_1 -> {
-					for (int x = 0; x < width; x++, i += 4) {
-						int val = img.getPixel(x, y);
-						filtersAndSamples[i + 0] = (byte)(val >>> 24);
-						filtersAndSamples[i + 1] = (byte)(val >>> 16);
-						filtersAndSamples[i + 2] = (byte)(val >>>  8);
-						filtersAndSamples[i + 3] = (byte)(val >>>  0);
-					}
-				}
-				default -> throw new AssertionError("Unreachable value");
-			}
-		}
-		
-		var bout = new ByteArrayOutputStream();
-		try (var dout = new DeflaterOutputStream(bout)) {
-			dout.write(filtersAndSamples);
-		} catch (IOException e) {
-			throw new AssertionError("Unreachable exception", e);
-		}
-		result.idats.add(new Idat(bout.toByteArray()));
-		
-		return result;
+		return new GrayEncoder(img, sbit, interMeth).encode();
 	}
 	
 	
 	/**
 	 * Encodes the specified image to a new PNG image.
 	 * @param img the image to encode (not {@code null})
+	 * @param interMeth the interlace method (not {@code null})
 	 * @return a new PNG image (not {@code null})
 	 * @throws NullPointerException if {@code img} is {@code null}
 	 */
-	public static PngImage toPng(PaletteImage img) {
+	public static PngImage toPng(PaletteImage img, Ihdr.InterlaceMethod interMeth) {
 		Objects.requireNonNull(img);
 		long[] palette = img.getPalette();
 		int bitDepth;  // Equal to 2^ceil(log2(ceil(log2(palette.length))))}
@@ -253,94 +111,290 @@ public final class ImageEncoder {
 			bitDepth = 8;
 		else
 			throw new AssertionError("Unreachable value");
-		
-		int width = img.getWidth();
-		int height = img.getHeight();
-		var result = new PngImage();
-		result.ihdr = Optional.of(new Ihdr(
-			width, height, bitDepth,
-			Ihdr.ColorType.INDEXED_COLOR,
-			Ihdr.CompressionMethod.ZLIB_DEFLATE,
-			Ihdr.FilterMethod.ADAPTIVE,
-			Ihdr.InterlaceMethod.NONE));
-		
-		var paletteBytes = new byte[Math.multiplyExact(palette.length, 3)];
-		int transpLen = 0;
-		{  // Up-convert RGB channels to 8 bits
-			long mul = (2 << 8) - 2;
-			int[] bitDepths = img.getBitDepths();
-			long rDiv = (1 << bitDepths[0]) - 1;
-			long gDiv = (1 << bitDepths[1]) - 1;
-			long bDiv = (1 << bitDepths[2]) - 1;
-			for (int i = 0; i < palette.length; i++) {
-				long rgba = palette[i];
-				long r = (rgba >>> 48) & 0xFF;
-				long g = (rgba >>> 32) & 0xFF;
-				long b = (rgba >>> 16) & 0xFF;
-				long a = (rgba >>>  0) & 0xFF;
-				r = (r * mul + rDiv) / rDiv >>> 1;
-				g = (g * mul + gDiv) / gDiv >>> 1;
-				b = (b * mul + bDiv) / bDiv >>> 1;
-				paletteBytes[i * 3 + 0] = (byte)r;
-				paletteBytes[i * 3 + 1] = (byte)g;
-				paletteBytes[i * 3 + 2] = (byte)b;
-				if (bitDepths[3] > 0 && a < 0xFF)
-					transpLen = i + 1;
-			}
-			if (bitDepths[0] != 8 || bitDepths[1] != 8 || bitDepths[2] != 8)
-				result.afterIhdr.add(new Sbit(new byte[]{(byte)bitDepths[0], (byte)bitDepths[1], (byte)bitDepths[2]}));
-		}
-		result.afterIhdr.add(new Plte(paletteBytes));
-		if (img.getBitDepths()[3] > 0) {
-			var transpBytes = new byte[transpLen];
-			for (int i = 0; i < transpBytes.length; i++)
-				transpBytes[i] = (byte)palette[i];
-			result.afterIhdr.add(new Trns(transpBytes));
-		}
-		
-		int bytesPerRow = Math.toIntExact(Math.ceilDiv((long)width * bitDepth, 8) + 1);
-		var filtersAndSamples = new byte[Math.multiplyExact(bytesPerRow, height)];
-		for (int y = 0, i = 0; y < height; y++) {
-			filtersAndSamples[i] = 0;
-			i++;
-			
-			switch (bitDepth) {
-				case 1, 2, 4 -> {
-					int xMask = 8 / bitDepth - 1;
-					int b = 0;
-					for (int x = 0; x < width; x++) {
-						b = (b << bitDepth) | img.getPixel(x, y);
-						if ((x & xMask) == xMask) {
-							filtersAndSamples[i] = (byte)b;
-							i++;
-						}
-					}
-					if ((width & xMask) != 0) {
-						filtersAndSamples[i] = (byte)(b << (8 - (width & xMask) * bitDepth));
-						i++;
-					}
-				}
-				case 8 -> {
-					for (int x = 0; x < width; x++, i++)
-						filtersAndSamples[i] = (byte)img.getPixel(x, y);
-				}
-				default -> throw new AssertionError("Unreachable value");
-			}
-		}
-		
-		var bout = new ByteArrayOutputStream();
-		try (var dout = new DeflaterOutputStream(bout)) {
-			dout.write(filtersAndSamples);
-		} catch (IOException e) {
-			throw new AssertionError("Unreachable exception", e);
-		}
-		result.idats.add(new Idat(bout.toByteArray()));
-		
-		return result;
+		return new PaletteEncoder(img, bitDepth, interMeth).encode();
 	}
 	
 	
 	private ImageEncoder() {}
+	
+	
+	
+	private static abstract class Encoder extends Interlacer {
+		
+		protected PngImage result = new PngImage();
+		protected OutputStream dout;
+		
+		
+		protected Encoder(Ihdr ihdr) {
+			super(ihdr);
+			result.ihdr = Optional.of(ihdr);
+		}
+		
+		
+		public PngImage encode() {
+			var bout = new ByteArrayOutputStream();
+			try (var out = dout = new DeflaterOutputStream(bout)) {
+				doInterlace();
+			} catch (IOException e) {
+				throw new AssertionError("Unreachable exception", e);
+			}
+			result.idats.add(new Idat(bout.toByteArray()));
+			bout = null;
+			return result;
+		}
+		
+	}
+	
+	
+	
+	private static final class RgbaEncoder extends Encoder {
+		
+		private final RgbaImage image;
+		private final int bitDepth;
+		private final boolean hasAlpha;
+		
+		
+		public RgbaEncoder(RgbaImage img, Optional<Sbit> sbit, Ihdr.InterlaceMethod interMeth) {
+			super(new Ihdr(img.getWidth(), img.getHeight(), img.getBitDepths()[0],
+				img.getBitDepths()[3] > 0 ? Ihdr.ColorType.TRUE_COLOR_WITH_ALPHA : Ihdr.ColorType.TRUE_COLOR,
+				Ihdr.CompressionMethod.ZLIB_DEFLATE,
+				Ihdr.FilterMethod.ADAPTIVE,
+				interMeth));
+			image = img;
+			bitDepth = img.getBitDepths()[0];
+			hasAlpha = img.getBitDepths()[3] > 0;
+			sbit.ifPresent(sb -> result.afterIhdr.add(sb));
+		}
+		
+		
+		@Override protected void handleSubimage(int xOffset, int yOffset, int xStep, int yStep, int subwidth, int subheight) throws IOException {
+			int bytesPerRow = Math.toIntExact(Math.ceilDiv((long)subwidth * bitDepth * (hasAlpha ? 4 : 3), 8) + 1);
+			var filtersAndSamples = new byte[Math.multiplyExact(bytesPerRow, subheight)];
+			for (int y = 0, i = 0; y < subheight; y++) {
+				filtersAndSamples[i] = 0;
+				i++;
+				
+				switch (bitDepth * 10 + (hasAlpha ? 1 : 0)) {
+					case 8_0 -> {
+						for (int x = 0; x < subwidth; x++, i += 3) {
+							long val = image.getPixel(xOffset + x * xStep, yOffset + y * yStep);
+							filtersAndSamples[i + 0] = (byte)(val >>> 48);
+							filtersAndSamples[i + 1] = (byte)(val >>> 32);
+							filtersAndSamples[i + 2] = (byte)(val >>> 16);
+						}
+					}
+					case 8_1 -> {
+						for (int x = 0; x < subwidth; x++, i += 4) {
+							long val = image.getPixel(xOffset + x * xStep, yOffset + y * yStep);
+							filtersAndSamples[i + 0] = (byte)(val >>> 48);
+							filtersAndSamples[i + 1] = (byte)(val >>> 32);
+							filtersAndSamples[i + 2] = (byte)(val >>> 16);
+							filtersAndSamples[i + 3] = (byte)(val >>>  0);
+						}
+					}
+					case 16_0 -> {
+						for (int x = 0; x < subwidth; x++, i += 6) {
+							long val = image.getPixel(xOffset + x * xStep, yOffset + y * yStep);
+							filtersAndSamples[i + 0] = (byte)(val >>> 56);
+							filtersAndSamples[i + 1] = (byte)(val >>> 48);
+							filtersAndSamples[i + 2] = (byte)(val >>> 40);
+							filtersAndSamples[i + 3] = (byte)(val >>> 32);
+							filtersAndSamples[i + 4] = (byte)(val >>> 24);
+							filtersAndSamples[i + 5] = (byte)(val >>> 16);
+						}
+					}
+					case 16_1 -> {
+						for (int x = 0; x < subwidth; x++, i += 8) {
+							long val = image.getPixel(xOffset + x * xStep, yOffset + y * yStep);
+							filtersAndSamples[i + 0] = (byte)(val >>> 56);
+							filtersAndSamples[i + 1] = (byte)(val >>> 48);
+							filtersAndSamples[i + 2] = (byte)(val >>> 40);
+							filtersAndSamples[i + 3] = (byte)(val >>> 32);
+							filtersAndSamples[i + 4] = (byte)(val >>> 24);
+							filtersAndSamples[i + 5] = (byte)(val >>> 16);
+							filtersAndSamples[i + 6] = (byte)(val >>>  8);
+							filtersAndSamples[i + 7] = (byte)(val >>>  0);
+						}
+					}
+					default -> throw new AssertionError("Unreachable value");
+				}
+			}
+			dout.write(filtersAndSamples);
+		}
+		
+	}
+	
+	
+	
+	private static final class GrayEncoder extends Encoder {
+		
+		private final GrayImage image;
+		private final int bitDepth;
+		private final boolean hasAlpha;
+		
+		
+		public GrayEncoder(GrayImage img, Optional<Sbit> sbit, Ihdr.InterlaceMethod interMeth) {
+			super(new Ihdr(img.getWidth(), img.getHeight(), img.getBitDepths()[0],
+				img.getBitDepths()[1] > 0 ? Ihdr.ColorType.GRAYSCALE_WITH_ALPHA : Ihdr.ColorType.GRAYSCALE,
+				Ihdr.CompressionMethod.ZLIB_DEFLATE,
+				Ihdr.FilterMethod.ADAPTIVE,
+				interMeth));
+			image = img;
+			bitDepth = img.getBitDepths()[0];
+			hasAlpha = img.getBitDepths()[1] > 0;
+			sbit.ifPresent(sb -> result.afterIhdr.add(sb));
+		}
+		
+		
+		@Override protected void handleSubimage(int xOffset, int yOffset, int xStep, int yStep, int subwidth, int subheight) throws IOException {
+			int bytesPerRow = Math.toIntExact(Math.ceilDiv((long)subwidth * bitDepth * (hasAlpha ? 2 : 1), 8) + 1);
+			var filtersAndSamples = new byte[Math.multiplyExact(bytesPerRow, subheight)];
+			for (int y = 0, i = 0; y < subheight; y++) {
+				filtersAndSamples[i] = 0;
+				i++;
+				
+				switch (bitDepth * 10 + (hasAlpha ? 1 : 0)) {
+					case 1_0, 2_0, 4_0 -> {
+						int xMask = 8 / bitDepth - 1;
+						int b = 0;
+						for (int x = 0; x < subwidth; x++) {
+							int val = image.getPixel(xOffset + x * xStep, yOffset + y * yStep);
+							b = (b << bitDepth) | (val >>> 16);
+							if ((x & xMask) == xMask) {
+								filtersAndSamples[i] = (byte)b;
+								i++;
+							}
+						}
+						if ((subwidth & xMask) != 0) {
+							filtersAndSamples[i] = (byte)(b << (8 - (subwidth & xMask) * bitDepth));
+							i++;
+						}
+					}
+					case 8_0 -> {
+						for (int x = 0; x < subwidth; x++, i += 1) {
+							int val = image.getPixel(xOffset + x * xStep, yOffset + y * yStep);
+							filtersAndSamples[i + 0] = (byte)(val >>> 16);
+						}
+					}
+					case 8_1 -> {
+						for (int x = 0; x < subwidth; x++, i += 2) {
+							int val = image.getPixel(xOffset + x * xStep, yOffset + y * yStep);
+							filtersAndSamples[i + 0] = (byte)(val >>> 16);
+							filtersAndSamples[i + 1] = (byte)(val >>>  0);
+						}
+					}
+					case 16_0 -> {
+						for (int x = 0; x < subwidth; x++, i += 2) {
+							int val = image.getPixel(xOffset + x * xStep, yOffset + y * yStep);
+							filtersAndSamples[i + 0] = (byte)(val >>> 24);
+							filtersAndSamples[i + 1] = (byte)(val >>> 16);
+						}
+					}
+					case 16_1 -> {
+						for (int x = 0; x < subwidth; x++, i += 4) {
+							int val = image.getPixel(xOffset + x * xStep, yOffset + y * yStep);
+							filtersAndSamples[i + 0] = (byte)(val >>> 24);
+							filtersAndSamples[i + 1] = (byte)(val >>> 16);
+							filtersAndSamples[i + 2] = (byte)(val >>>  8);
+							filtersAndSamples[i + 3] = (byte)(val >>>  0);
+						}
+					}
+					default -> throw new AssertionError("Unreachable value");
+				}
+			}
+			dout.write(filtersAndSamples);
+		}
+		
+	}
+	
+	
+	
+	private static final class PaletteEncoder extends Encoder {
+		
+		private final PaletteImage image;
+		private final int bitDepth;
+		
+		
+		public PaletteEncoder(PaletteImage img, int bitDepth, Ihdr.InterlaceMethod interMeth) {
+			super(new Ihdr(img.getWidth(), img.getHeight(), bitDepth,
+				Ihdr.ColorType.INDEXED_COLOR,
+				Ihdr.CompressionMethod.ZLIB_DEFLATE,
+				Ihdr.FilterMethod.ADAPTIVE,
+				interMeth));
+			image = img;
+			this.bitDepth = bitDepth;
+			
+			long[] palette = img.getPalette();
+			var paletteBytes = new byte[Math.multiplyExact(palette.length, 3)];
+			int transpLen = 0;
+			{  // Up-convert RGB channels to 8 bits
+				long mul = (2 << 8) - 2;
+				int[] bitDepths = img.getBitDepths();
+				long rDiv = (1 << bitDepths[0]) - 1;
+				long gDiv = (1 << bitDepths[1]) - 1;
+				long bDiv = (1 << bitDepths[2]) - 1;
+				for (int i = 0; i < palette.length; i++) {
+					long rgba = palette[i];
+					long r = (rgba >>> 48) & 0xFF;
+					long g = (rgba >>> 32) & 0xFF;
+					long b = (rgba >>> 16) & 0xFF;
+					long a = (rgba >>>  0) & 0xFF;
+					r = (r * mul + rDiv) / rDiv >>> 1;
+					g = (g * mul + gDiv) / gDiv >>> 1;
+					b = (b * mul + bDiv) / bDiv >>> 1;
+					paletteBytes[i * 3 + 0] = (byte)r;
+					paletteBytes[i * 3 + 1] = (byte)g;
+					paletteBytes[i * 3 + 2] = (byte)b;
+					if (bitDepths[3] > 0 && a < 0xFF)
+						transpLen = i + 1;
+				}
+				if (bitDepths[0] != 8 || bitDepths[1] != 8 || bitDepths[2] != 8)
+					result.afterIhdr.add(new Sbit(new byte[]{(byte)bitDepths[0], (byte)bitDepths[1], (byte)bitDepths[2]}));
+			}
+			result.afterIhdr.add(new Plte(paletteBytes));
+			if (img.getBitDepths()[3] > 0) {
+				var transpBytes = new byte[transpLen];
+				for (int i = 0; i < transpBytes.length; i++)
+					transpBytes[i] = (byte)palette[i];
+				result.afterIhdr.add(new Trns(transpBytes));
+			}
+		}
+		
+		
+		@Override protected void handleSubimage(int xOffset, int yOffset, int xStep, int yStep, int subwidth, int subheight) throws IOException {
+			int bytesPerRow = Math.toIntExact(Math.ceilDiv((long)subwidth * bitDepth, 8) + 1);
+			var filtersAndSamples = new byte[Math.multiplyExact(bytesPerRow, subheight)];
+			for (int y = 0, i = 0; y < subheight; y++) {
+				filtersAndSamples[i] = 0;
+				i++;
+				
+				switch (bitDepth) {
+					case 1, 2, 4 -> {
+						int xMask = 8 / bitDepth - 1;
+						int b = 0;
+						for (int x = 0; x < subwidth; x++) {
+							b = (b << bitDepth) | image.getPixel(xOffset + x * xStep, yOffset + y * yStep);
+							if ((x & xMask) == xMask) {
+								filtersAndSamples[i] = (byte)b;
+								i++;
+							}
+						}
+						if ((subwidth & xMask) != 0) {
+							filtersAndSamples[i] = (byte)(b << (8 - (subwidth & xMask) * bitDepth));
+							i++;
+						}
+					}
+					case 8 -> {
+						for (int x = 0; x < subwidth; x++, i++)
+							filtersAndSamples[i] = (byte)image.getPixel(xOffset + x * xStep, yOffset + y * yStep);
+					}
+					default -> throw new AssertionError("Unreachable value");
+				}
+			}
+			dout.write(filtersAndSamples);
+		}
+		
+	}
 	
 	
 	
