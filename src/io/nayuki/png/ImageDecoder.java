@@ -72,18 +72,18 @@ public final class ImageDecoder {
 	
 	/*---- Decoder instance members ----*/
 	
-	private static abstract class Decoder {
+	private static abstract class Decoder extends Interlacer {
 		
 		protected final PngImage png;
-		protected final Ihdr ihdr;
 		protected final int inBitDepth;
 		protected final Optional<Sbit> sbit;
 		protected final Optional<Trns> trns;
+		protected DataInputStream din;
 		
 		
 		protected Decoder(PngImage png) {
+			super(png.ihdr.orElseThrow(() -> new IllegalArgumentException("Missing IHDR chunk")));
 			this.png = png;
-			ihdr = png.ihdr.orElseThrow(() -> new IllegalArgumentException("Missing IHDR chunk"));
 			inBitDepth = ihdr.bitDepth();
 			sbit = PngImage.getChunk(Sbit.class, png.afterIhdr);
 			trns = PngImage.getChunk(Trns.class, png.afterIhdr);
@@ -97,25 +97,9 @@ public final class ImageDecoder {
 				.toList();
 			var in0 = new SequenceInputStream(Collections.enumeration(ins));
 			var in1 = new InflaterInputStream(in0);
-			try (var in2 = new DataInputStream(in1)) {
-				
-				// Handle progressive and interlaced images
-				int xStep = switch (ihdr.interlaceMethod()) {
-					case NONE  -> 1;
-					case ADAM7 -> 8;
-				};
-				int yStep = xStep;
-				decodeSubimage(in2, 0, 0, xStep, yStep);
-				while (yStep > 1) {
-					if (xStep == yStep) {
-						decodeSubimage(in2, xStep / 2, 0, xStep, yStep);
-						xStep /= 2;
-					} else {
-						assert xStep == yStep / 2;
-						decodeSubimage(in2, 0, xStep, xStep, yStep);
-						yStep = xStep;
-					}
-				}
+			try (var in2 = din = new DataInputStream(in1)) {
+				doInterlace();
+				din = null;
 				
 				if (in2.read() != -1)
 					throw new IllegalArgumentException("Extra decompressed data after all pixels");
@@ -124,9 +108,6 @@ public final class ImageDecoder {
 			}
 			return getResult();
 		}
-		
-		
-		public abstract void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep) throws IOException;
 		
 		
 		public abstract Object getResult();
@@ -258,12 +239,7 @@ public final class ImageDecoder {
 		}
 		
 		
-		@Override public void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep) throws IOException {
-			int subwidth  = Math.ceilDiv(result.getWidth () - xOffset, xStep);
-			int subheight = Math.ceilDiv(result.getHeight() - yOffset, yStep);
-			if (subwidth == 0 || subheight == 0)
-				return;
-			
+		@Override protected void handleSubimage(int xOffset, int yOffset, int xStep, int yStep, int subwidth, int subheight) throws IOException {
 			int[] outBitDepths = result.getBitDepths();
 			int rShift = inBitDepth - outBitDepths[0];
 			int gShift = inBitDepth - outBitDepths[1];
@@ -376,12 +352,7 @@ public final class ImageDecoder {
 		}
 		
 		
-		@Override public void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep) throws IOException {
-			int subwidth  = Math.ceilDiv(result.getWidth () - xOffset, xStep);
-			int subheight = Math.ceilDiv(result.getHeight() - yOffset, yStep);
-			if (subwidth == 0 || subheight == 0)
-				return;
-			
+		@Override protected void handleSubimage(int xOffset, int yOffset, int xStep, int yStep, int subwidth, int subheight) throws IOException {
 			int[] outBitDepths = result.getBitDepths();
 			int wShift = inBitDepth - outBitDepths[0];
 			int aShift = inBitDepth - outBitDepths[1];
@@ -498,12 +469,7 @@ public final class ImageDecoder {
 		}
 		
 		
-		@Override public void decodeSubimage(DataInput din, int xOffset, int yOffset, int xStep, int yStep) throws IOException {
-			int subwidth  = Math.ceilDiv(result.getWidth () - xOffset, xStep);
-			int subheight = Math.ceilDiv(result.getHeight() - yOffset, yStep);
-			if (subwidth == 0 || subheight == 0)
-				return;
-			
+		@Override protected void handleSubimage(int xOffset, int yOffset, int xStep, int yStep, int subwidth, int subheight) throws IOException {
 			int filterStride = 1;  // Equal to ceil(inBitDepth / 8)
 			var dec = new RowDecoder(din, filterStride,
 				Math.toIntExact(Math.ceilDiv((long)subwidth * inBitDepth, 8)));
