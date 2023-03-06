@@ -65,7 +65,7 @@ public record Hist(short[] frequencies) implements SmallDataChunk {
 	
 	@Override public void writeData(ChunkWriter out) throws IOException {
 		for (short freq : frequencies)
-			out.writeShort(freq);
+			out.writeUint16(freq);
 	}
 	
 }

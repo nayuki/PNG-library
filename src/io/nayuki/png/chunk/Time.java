@@ -109,7 +109,7 @@ public record Time(
 	
 	
 	@Override public void writeData(ChunkWriter out) throws IOException {
-		out.writeShort(year  );
+		out.writeUint16(year  );
 		out.writeUint8 (month );
 		out.writeUint8 (day   );
 		out.writeUint8 (hour  );

@@ -65,7 +65,7 @@ public final class ChunkWriter {
 	}
 	
 	
-	public void writeShort(int val) throws IOException {
+	public void writeUint16(int val) throws IOException {
 		writeInt(val, 2);
 	}
 	

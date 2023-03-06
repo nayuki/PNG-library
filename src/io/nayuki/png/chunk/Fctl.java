@@ -94,8 +94,8 @@ public record Fctl(
 		out.writeInt(height  );
 		out.writeInt(xOffset );
 		out.writeInt(yOffset );
-		out.writeShort(delayNumerator  );
-		out.writeShort(delayDenominator);
+		out.writeUint16(delayNumerator  );
+		out.writeUint16(delayDenominator);
 		out.writeUint8(disposeOp.ordinal());
 		out.writeUint8(blendOp  .ordinal());
 	}
