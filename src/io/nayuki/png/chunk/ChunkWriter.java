@@ -8,7 +8,6 @@
 
 package io.nayuki.png.chunk;
 
-import java.io.DataOutput;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -18,7 +17,7 @@ import java.util.zip.Checksum;
 import io.nayuki.png.Chunk;
 
 
-public final class ChunkWriter implements DataOutput {
+public final class ChunkWriter {
 	
 	/*---- Fields ----*/
 	
@@ -106,43 +105,6 @@ public final class ChunkWriter implements DataOutput {
 		checksum = null;
 		output = null;
 		dataRemaining = -1;
-	}
-	
-	
-	public void write(int b) throws IOException {
-		throw new UnsupportedOperationException();
-	}
-	
-	public void writeBoolean(boolean v) throws IOException {
-		throw new UnsupportedOperationException();
-	}
-	
-	public void writeChar(int v) throws IOException {
-		throw new UnsupportedOperationException();
-	}
-	
-	public void writeLong(long v) throws IOException {
-		throw new UnsupportedOperationException();
-	}
-	
-	public void writeFloat(float v) throws IOException {
-		throw new UnsupportedOperationException();
-	}
-	
-	public void writeDouble(double v) throws IOException {
-		throw new UnsupportedOperationException();
-	}
-	
-	public void writeBytes(String s) throws IOException {
-		throw new UnsupportedOperationException();
-	}
-	
-	public void writeChars(String s) throws IOException {
-		throw new UnsupportedOperationException();
-	}
-	
-	public void writeUTF(String s) throws IOException {
-		throw new UnsupportedOperationException();
 	}
 	
 }
