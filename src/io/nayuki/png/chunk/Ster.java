@@ -11,7 +11,6 @@ package io.nayuki.png.chunk;
 import java.io.DataInput;
 import java.io.IOException;
 import java.util.Objects;
-import io.nayuki.png.Chunk;
 
 
 /**
@@ -19,7 +18,7 @@ import io.nayuki.png.Chunk;
  * contains a stereo pair of subimages. Instances are immutable.
  * @see https://ftp-osl.osuosl.org/pub/libpng/documents/pngext-1.5.0.html#C.sTER
  */
-public record Ster(Mode mode) implements Chunk {
+public record Ster(Mode mode) implements SmallDataChunk {
 	
 	static final String TYPE = "sTER";
 	

@@ -11,7 +11,6 @@ package io.nayuki.png.chunk;
 import java.io.DataInput;
 import java.io.IOException;
 import java.util.Objects;
-import io.nayuki.png.Chunk;
 
 
 /**
@@ -23,7 +22,7 @@ public record Phys(
 		int pixelsPerUnitX,
 		int pixelsPerUnitY,
 		UnitSpecifier unitSpecifier)
-	implements Chunk {
+	implements SmallDataChunk {
 	
 	
 	static final String TYPE = "pHYs";

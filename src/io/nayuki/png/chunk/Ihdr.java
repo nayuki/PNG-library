@@ -11,7 +11,6 @@ package io.nayuki.png.chunk;
 import java.io.DataInput;
 import java.io.IOException;
 import java.util.Objects;
-import io.nayuki.png.Chunk;
 
 
 /**
@@ -27,7 +26,7 @@ public record Ihdr(
 		CompressionMethod compressionMethod,
 		FilterMethod filterMethod,
 		InterlaceMethod interlaceMethod)
-	implements Chunk {
+	implements SmallDataChunk {
 	
 	
 	static final String TYPE = "IHDR";

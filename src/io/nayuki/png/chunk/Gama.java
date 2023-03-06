@@ -11,7 +11,6 @@ package io.nayuki.png.chunk;
 import java.io.DataInput;
 import java.io.IOException;
 import java.util.Objects;
-import io.nayuki.png.Chunk;
 
 
 /**
@@ -19,7 +18,7 @@ import io.nayuki.png.Chunk;
  * samples and the desired display output intensity. Instances are immutable.
  * @see https://www.w3.org/TR/2003/REC-PNG-20031110/#11gAMA
  */
-public record Gama(int gamma) implements Chunk {
+public record Gama(int gamma) implements SmallDataChunk {
 	
 	static final String TYPE = "gAMA";
 	

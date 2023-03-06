@@ -11,7 +11,6 @@ package io.nayuki.png.chunk;
 import java.io.DataInput;
 import java.io.IOException;
 import java.util.Objects;
-import io.nayuki.png.Chunk;
 
 
 /**
@@ -20,7 +19,7 @@ import io.nayuki.png.Chunk;
  * be treated as immutable, but arrays are not copied defensively.
  * @see https://www.w3.org/TR/2003/REC-PNG-20031110/#11hIST
  */
-public record Hist(short[] frequencies) implements Chunk {
+public record Hist(short[] frequencies) implements SmallDataChunk {
 	
 	static final String TYPE = "hIST";
 	

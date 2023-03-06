@@ -11,7 +11,6 @@ package io.nayuki.png.chunk;
 import java.io.DataInput;
 import java.io.IOException;
 import java.util.Objects;
-import io.nayuki.png.Chunk;
 
 
 /**
@@ -25,7 +24,7 @@ public record Chrm(
 		int redX       , int redY       ,
 		int greenX     , int greenY     ,
 		int blueX      , int blueY      )
-	implements Chunk {
+	implements SmallDataChunk {
 	
 	
 	static final String TYPE = "cHRM";

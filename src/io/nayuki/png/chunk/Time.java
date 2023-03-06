@@ -14,7 +14,6 @@ import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Objects;
-import io.nayuki.png.Chunk;
 
 
 /**
@@ -29,7 +28,7 @@ public record Time(
 		int hour,
 		int minute,
 		int second)
-	implements Chunk {
+	implements SmallDataChunk {
 	
 	
 	static final String TYPE = "tIME";
