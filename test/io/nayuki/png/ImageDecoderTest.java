@@ -1,3 +1,11 @@
+/* 
+ * PNG library (Java)
+ * 
+ * Copyright (c) Project Nayuki
+ * MIT License. See readme file.
+ * https://www.nayuki.io/page/png-library
+ */
+
 package io.nayuki.png;
 
 import static org.junit.Assert.assertEquals;
