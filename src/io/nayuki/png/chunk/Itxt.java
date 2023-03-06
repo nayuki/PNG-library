@@ -136,7 +136,7 @@ public record Itxt(
 		out.writeUint8(compressionMethod.map(cm -> cm.ordinal()).orElse(0));
 		out.writeIso8859_1(languageTag);
 		out.writeUint8(0);
-		out.write(translatedKeyword.getBytes(StandardCharsets.UTF_8));
+		out.writeUtf8(translatedKeyword);
 		out.writeUint8(0);
 		out.write(text);
 		out.finish();

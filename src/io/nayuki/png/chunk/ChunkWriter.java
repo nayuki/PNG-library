@@ -98,6 +98,11 @@ public final class ChunkWriter {
 	}
 	
 	
+	public void writeUtf8(String s) throws IOException {
+		write(s.getBytes(StandardCharsets.UTF_8));
+	}
+	
+	
 	public void finish() throws IOException {
 		if (output == null)
 			throw new IllegalStateException("Already finished");
