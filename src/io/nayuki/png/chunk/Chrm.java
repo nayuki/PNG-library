@@ -100,14 +100,14 @@ public record Chrm(
 	
 	
 	@Override public void writeData(ChunkWriter out) throws IOException {
-		out.writeInt(whitePointX);
-		out.writeInt(whitePointY);
-		out.writeInt(redX       );
-		out.writeInt(redY       );
-		out.writeInt(greenX     );
-		out.writeInt(greenY     );
-		out.writeInt(blueX      );
-		out.writeInt(blueY      );
+		out.writeInt32(whitePointX);
+		out.writeInt32(whitePointY);
+		out.writeInt32(redX       );
+		out.writeInt32(redY       );
+		out.writeInt32(greenX     );
+		out.writeInt32(greenY     );
+		out.writeInt32(blueX      );
+		out.writeInt32(blueY      );
 	}
 	
 }

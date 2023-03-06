@@ -117,8 +117,8 @@ public record Pcal(
 		var out = new ChunkWriter(dataLen, getType(), out0);
 		out.write(calibrationName.getBytes(StandardCharsets.ISO_8859_1));
 		out.writeUint8(0);
-		out.writeInt(originalZero);
-		out.writeInt(originalMax);
+		out.writeInt32(originalZero);
+		out.writeInt32(originalMax);
 		out.writeUint8(equationType.ordinal());
 		out.writeUint8(parameters.length);
 		out.write(unitName.getBytes(StandardCharsets.ISO_8859_1));

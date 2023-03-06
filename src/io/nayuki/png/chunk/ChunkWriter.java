@@ -36,7 +36,7 @@ public final class ChunkWriter {
 		output = Objects.requireNonNull(out);
 		
 		dataRemaining = 8;
-		writeInt(dataLen);
+		writeInt32(dataLen);
 		checksum.reset();
 		writeAscii(type);
 		dataRemaining = dataLen;
@@ -70,7 +70,7 @@ public final class ChunkWriter {
 	}
 	
 	
-	public void writeInt(int val) throws IOException {
+	public void writeInt32(int val) throws IOException {
 		writeInt(val, 4);
 	}
 	
@@ -100,7 +100,7 @@ public final class ChunkWriter {
 		if (crc >>> 32 != 0)
 			throw new AssertionError("Unreachable value");
 		dataRemaining = 4;
-		writeInt((int)crc);
+		writeInt32((int)crc);
 		
 		checksum = null;
 		output = null;

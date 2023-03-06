@@ -62,8 +62,8 @@ public record Actl(
 	
 	
 	@Override public void writeData(ChunkWriter out) throws IOException {
-		out.writeInt(numFrames);
-		out.writeInt(numPlays );
+		out.writeInt32(numFrames);
+		out.writeInt32(numPlays );
 	}
 	
 }

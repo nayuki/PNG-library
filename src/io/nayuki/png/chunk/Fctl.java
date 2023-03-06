@@ -89,11 +89,11 @@ public record Fctl(
 	
 	
 	@Override public void writeData(ChunkWriter out) throws IOException {
-		out.writeInt(sequence);
-		out.writeInt(width   );
-		out.writeInt(height  );
-		out.writeInt(xOffset );
-		out.writeInt(yOffset );
+		out.writeInt32(sequence);
+		out.writeInt32(width   );
+		out.writeInt32(height  );
+		out.writeInt32(xOffset );
+		out.writeInt32(yOffset );
 		out.writeUint16(delayNumerator  );
 		out.writeUint16(delayDenominator);
 		out.writeUint8(disposeOp.ordinal());

@@ -70,7 +70,7 @@ public record Fdat(
 	@Override public void writeChunk(OutputStream out0) throws IOException {
 		int dataLen = Util.checkedLengthSum(Integer.BYTES, data);
 		var out = new ChunkWriter(dataLen, getType(), out0);
-		out.writeInt(sequence);
+		out.writeInt32(sequence);
 		out.write(data);
 		out.finish();
 	}

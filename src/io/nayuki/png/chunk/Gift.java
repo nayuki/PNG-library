@@ -102,10 +102,10 @@ public record Gift(
 	@Override public void writeChunk(OutputStream out0) throws IOException {
 		int dataLen = Util.checkedLengthSum(4 * Integer.BYTES, 2 * Byte.BYTES, 2 * 3 * Byte.BYTES, text);
 		var out = new ChunkWriter(dataLen, getType(), out0);
-		out.writeInt(textGridLeft  );
-		out.writeInt(textGridTop   );
-		out.writeInt(textGridWidth );
-		out.writeInt(textGridHeight);
+		out.writeInt32(textGridLeft  );
+		out.writeInt32(textGridTop   );
+		out.writeInt32(textGridWidth );
+		out.writeInt32(textGridHeight);
 		out.writeUint8(characterCellWidth );
 		out.writeUint8(characterCellHeight);
 		for (int i = 16; i >= 0; i -= 8)

@@ -70,7 +70,7 @@ public record Gama(int gamma) implements SmallDataChunk {
 	
 	
 	@Override public void writeData(ChunkWriter out) throws IOException {
-		out.writeInt(gamma);
+		out.writeInt32(gamma);
 	}
 	
 }

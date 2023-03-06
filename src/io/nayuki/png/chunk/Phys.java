@@ -63,8 +63,8 @@ public record Phys(
 	
 	
 	@Override public void writeData(ChunkWriter out) throws IOException {
-		out.writeInt(pixelsPerUnitX);
-		out.writeInt(pixelsPerUnitY);
+		out.writeInt32(pixelsPerUnitX);
+		out.writeInt32(pixelsPerUnitY);
 		out.writeUint8(unitSpecifier.ordinal());
 	}
 	

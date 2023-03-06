@@ -88,8 +88,8 @@ public record Ihdr(
 	
 	
 	@Override public void writeData(ChunkWriter out) throws IOException {
-		out.writeInt(width);
-		out.writeInt(height);
+		out.writeInt32(width);
+		out.writeInt32(height);
 		out.writeUint8(bitDepth);
 		out.writeUint8(colorType.value);
 		out.writeUint8(compressionMethod.ordinal());
