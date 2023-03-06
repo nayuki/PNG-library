@@ -106,12 +106,12 @@ public record Gift(
 		out.writeInt(textGridTop   );
 		out.writeInt(textGridWidth );
 		out.writeInt(textGridHeight);
-		out.writeByte(characterCellWidth );
-		out.writeByte(characterCellHeight);
+		out.writeUint8(characterCellWidth );
+		out.writeUint8(characterCellHeight);
 		for (int i = 16; i >= 0; i -= 8)
-			out.writeByte(textForegroundColor >>> i);
+			out.writeUint8(textForegroundColor >>> i);
 		for (int i = 16; i >= 0; i -= 8)
-			out.writeByte(textBackgroundColor >>> i);
+			out.writeUint8(textBackgroundColor >>> i);
 		out.write(text.getBytes(StandardCharsets.US_ASCII));
 		out.finish();
 	}

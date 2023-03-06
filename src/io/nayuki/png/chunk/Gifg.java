@@ -66,8 +66,8 @@ public record Gifg(
 	
 	
 	@Override public void writeData(ChunkWriter out) throws IOException {
-		out.writeByte(disposalMethod);
-		out.writeByte(userInputFlag ? 1 : 0);
+		out.writeUint8(disposalMethod);
+		out.writeUint8(userInputFlag ? 1 : 0);
 		out.writeShort(delayTime);
 	}
 	

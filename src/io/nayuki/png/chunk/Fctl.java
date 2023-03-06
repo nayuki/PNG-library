@@ -96,8 +96,8 @@ public record Fctl(
 		out.writeInt(yOffset );
 		out.writeShort(delayNumerator  );
 		out.writeShort(delayDenominator);
-		out.writeByte(disposeOp.ordinal());
-		out.writeByte(blendOp  .ordinal());
+		out.writeUint8(disposeOp.ordinal());
+		out.writeUint8(blendOp  .ordinal());
 	}
 	
 	

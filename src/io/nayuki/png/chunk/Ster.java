@@ -54,7 +54,7 @@ public record Ster(Mode mode) implements SmallDataChunk {
 	
 	
 	@Override public void writeData(ChunkWriter out) throws IOException {
-		out.writeByte(mode.ordinal());
+		out.writeUint8(mode.ordinal());
 	}
 	
 	

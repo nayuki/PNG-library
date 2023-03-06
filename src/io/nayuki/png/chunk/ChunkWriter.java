@@ -60,7 +60,7 @@ public final class ChunkWriter {
 	}
 	
 	
-	public void writeByte(int val) throws IOException {
+	public void writeUint8(int val) throws IOException {
 		writeInt(val, 1);
 	}
 	

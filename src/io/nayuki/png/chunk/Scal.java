@@ -77,9 +77,9 @@ public record Scal(
 	@Override public void writeChunk(OutputStream out0) throws IOException {
 		int dataLen = Util.checkedLengthSum(Byte.BYTES, pixelWidth, Byte.BYTES, pixelHeight);
 		var out = new ChunkWriter(dataLen, getType(), out0);
-		out.writeByte(unitSpecifier.ordinal() + 1);
+		out.writeUint8(unitSpecifier.ordinal() + 1);
 		out.write(pixelWidth.getBytes(StandardCharsets.US_ASCII));
-		out.writeByte(0);
+		out.writeUint8(0);
 		out.write(pixelHeight.getBytes(StandardCharsets.US_ASCII));
 		out.finish();
 	}

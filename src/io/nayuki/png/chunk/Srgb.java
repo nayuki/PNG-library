@@ -55,7 +55,7 @@ public record Srgb(RenderingIntent renderingIntent) implements SmallDataChunk {
 	
 	
 	@Override public void writeData(ChunkWriter out) throws IOException {
-		out.writeByte(renderingIntent.ordinal());
+		out.writeUint8(renderingIntent.ordinal());
 	}
 	
 	

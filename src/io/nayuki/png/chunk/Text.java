@@ -68,7 +68,7 @@ public record Text(String keyword, String text) implements Chunk {
 		int dataLen = Util.checkedLengthSum(keyword, Byte.BYTES, text);
 		var out = new ChunkWriter(dataLen, getType(), out0);
 		out.write(keyword.getBytes(StandardCharsets.ISO_8859_1));
-		out.writeByte(0);
+		out.writeUint8(0);
 		out.write(text.getBytes(StandardCharsets.ISO_8859_1));
 		out.finish();
 	}

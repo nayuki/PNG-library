@@ -131,13 +131,13 @@ public record Itxt(
 			text, Byte.BYTES, translatedKeyword.getBytes(StandardCharsets.UTF_8));
 		var out = new ChunkWriter(dataLen, getType(), out0);
 		out.write(keyword.getBytes(StandardCharsets.ISO_8859_1));
-		out.writeByte(0);
-		out.writeByte(compressionMethod.isPresent() ? 1 : 0);
-		out.writeByte(compressionMethod.map(cm -> cm.ordinal()).orElse(0));
+		out.writeUint8(0);
+		out.writeUint8(compressionMethod.isPresent() ? 1 : 0);
+		out.writeUint8(compressionMethod.map(cm -> cm.ordinal()).orElse(0));
 		out.write(languageTag.getBytes(StandardCharsets.ISO_8859_1));
-		out.writeByte(0);
+		out.writeUint8(0);
 		out.write(translatedKeyword.getBytes(StandardCharsets.UTF_8));
-		out.writeByte(0);
+		out.writeUint8(0);
 		out.write(text);
 		out.finish();
 	}

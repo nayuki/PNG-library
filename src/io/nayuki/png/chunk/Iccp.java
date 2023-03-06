@@ -81,8 +81,8 @@ public record Iccp(
 		int dataLen = Util.checkedLengthSum(profileName, 2 * Byte.BYTES, compressedProfile);
 		var out = new ChunkWriter(dataLen, getType(), out0);
 		out.write(profileName.getBytes(StandardCharsets.ISO_8859_1));
-		out.writeByte(0);
-		out.writeByte(compressionMethod.ordinal());
+		out.writeUint8(0);
+		out.writeUint8(compressionMethod.ordinal());
 		out.write(compressedProfile);
 		out.finish();
 	}

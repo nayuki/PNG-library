@@ -116,14 +116,14 @@ public record Pcal(
 		
 		var out = new ChunkWriter(dataLen, getType(), out0);
 		out.write(calibrationName.getBytes(StandardCharsets.ISO_8859_1));
-		out.writeByte(0);
+		out.writeUint8(0);
 		out.writeInt(originalZero);
 		out.writeInt(originalMax);
-		out.writeByte(equationType.ordinal());
-		out.writeByte(parameters.length);
+		out.writeUint8(equationType.ordinal());
+		out.writeUint8(parameters.length);
 		out.write(unitName.getBytes(StandardCharsets.ISO_8859_1));
 		for (String param : parameters) {
-			out.writeByte(0);
+			out.writeUint8(0);
 			out.write(param.getBytes(StandardCharsets.US_ASCII));
 		}
 		out.finish();

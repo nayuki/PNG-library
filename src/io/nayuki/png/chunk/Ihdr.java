@@ -90,11 +90,11 @@ public record Ihdr(
 	@Override public void writeData(ChunkWriter out) throws IOException {
 		out.writeInt(width);
 		out.writeInt(height);
-		out.writeByte(bitDepth);
-		out.writeByte(colorType.value);
-		out.writeByte(compressionMethod.ordinal());
-		out.writeByte(filterMethod.ordinal());
-		out.writeByte(interlaceMethod.ordinal());
+		out.writeUint8(bitDepth);
+		out.writeUint8(colorType.value);
+		out.writeUint8(compressionMethod.ordinal());
+		out.writeUint8(filterMethod.ordinal());
+		out.writeUint8(interlaceMethod.ordinal());
 	}
 	
 	
