@@ -66,11 +66,15 @@ public final class ChunkWriter {
 	
 	
 	public void writeUint8(int val) throws IOException {
+		if (val >>> 8 != 0)
+			throw new IllegalArgumentException("Value out of range");
 		writeInt(val, 1);
 	}
 	
 	
 	public void writeUint16(int val) throws IOException {
+		if (val >>> 16 != 0)
+			throw new IllegalArgumentException("Value out of range");
 		writeInt(val, 2);
 	}
 	

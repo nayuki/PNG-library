@@ -109,9 +109,9 @@ public record Gift(
 		out.writeUint8(characterCellWidth );
 		out.writeUint8(characterCellHeight);
 		for (int i = 16; i >= 0; i -= 8)
-			out.writeUint8(textForegroundColor >>> i);
+			out.writeUint8((textForegroundColor >>> i) & 0xFF);
 		for (int i = 16; i >= 0; i -= 8)
-			out.writeUint8(textBackgroundColor >>> i);
+			out.writeUint8((textBackgroundColor >>> i) & 0xFF);
 		out.write(text.getBytes(StandardCharsets.US_ASCII));
 		out.finish();
 	}
