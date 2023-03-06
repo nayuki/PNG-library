@@ -9,7 +9,6 @@
 package io.nayuki.png.chunk;
 
 import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -79,7 +78,7 @@ public record Scal(
 	}
 	
 	
-	@Override public void writeData(DataOutput out) throws IOException {
+	@Override public void writeData(ChunkWriter out) throws IOException {
 		out.writeByte(unitSpecifier.ordinal() + 1);
 		out.write(pixelWidth.getBytes(StandardCharsets.US_ASCII));
 		out.writeByte(0);

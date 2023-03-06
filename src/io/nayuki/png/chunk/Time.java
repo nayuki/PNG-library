@@ -9,7 +9,6 @@
 package io.nayuki.png.chunk;
 
 import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.OffsetDateTime;
@@ -110,7 +109,7 @@ public record Time(
 	}
 	
 	
-	@Override public void writeData(DataOutput out) throws IOException {
+	@Override public void writeData(ChunkWriter out) throws IOException {
 		out.writeShort(year  );
 		out.writeByte (month );
 		out.writeByte (day   );

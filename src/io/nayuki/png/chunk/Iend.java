@@ -8,7 +8,6 @@
 
 package io.nayuki.png.chunk;
 
-import java.io.DataOutput;
 import java.io.IOException;
 
 
@@ -38,6 +37,6 @@ public enum Iend implements BytesDataChunk {
 	}
 	
 	
-	@Override public void writeData(DataOutput out) throws IOException {}
+	@Override public void writeData(ChunkWriter out) throws IOException {}
 	
 }

@@ -10,9 +10,9 @@ package io.nayuki.png;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutput;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterOutputStream;
@@ -93,8 +93,9 @@ public interface Chunk {
 	public default byte[] getData() {
 		try {
 			var out = new ByteArrayOutputStream();
-			writeData(new DataOutputStream(out));
-			return out.toByteArray();
+			writeData(new ChunkWriter(Integer.MAX_VALUE, "AAAA", out));
+			byte[] b = out.toByteArray();
+			return Arrays.copyOfRange(b, 8, b.length);
 		} catch (IOException e) {
 			throw new AssertionError("Unreachable exception", e);
 		}
@@ -108,7 +109,7 @@ public interface Chunk {
 	 * @throws NullPointerException if {@code out} is {@code null}
 	 * @throws IOException if an I/O exceptions occurs
 	 */
-	public abstract void writeData(DataOutput out) throws IOException;
+	public abstract void writeData(ChunkWriter out) throws IOException;
 	
 	
 	/**

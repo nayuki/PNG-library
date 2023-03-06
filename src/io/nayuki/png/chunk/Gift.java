@@ -9,7 +9,6 @@
 package io.nayuki.png.chunk;
 
 import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -104,7 +103,7 @@ public record Gift(
 	}
 	
 	
-	@Override public void writeData(DataOutput out) throws IOException {
+	@Override public void writeData(ChunkWriter out) throws IOException {
 		out.writeInt(textGridLeft  );
 		out.writeInt(textGridTop   );
 		out.writeInt(textGridWidth );

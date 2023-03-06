@@ -9,7 +9,6 @@
 package io.nayuki.png.chunk;
 
 import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Objects;
 import io.nayuki.png.Chunk;
@@ -89,7 +88,7 @@ public record Ihdr(
 	}
 	
 	
-	@Override public void writeData(DataOutput out) throws IOException {
+	@Override public void writeData(ChunkWriter out) throws IOException {
 		out.writeInt(width);
 		out.writeInt(height);
 		out.writeByte(bitDepth);
