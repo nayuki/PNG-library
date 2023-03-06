@@ -119,7 +119,7 @@ public record Pcal(
 		out.writeUint8(0);
 		out.writeInt32(originalZero);
 		out.writeInt32(originalMax);
-		out.writeUint8(equationType.ordinal());
+		out.writeUint8(equationType);
 		out.writeUint8(parameters.length);
 		out.write(unitName.getBytes(StandardCharsets.ISO_8859_1));
 		for (String param : parameters) {

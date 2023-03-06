@@ -92,9 +92,9 @@ public record Ihdr(
 		out.writeInt32(height);
 		out.writeUint8(bitDepth);
 		out.writeUint8(colorType.value);
-		out.writeUint8(compressionMethod.ordinal());
-		out.writeUint8(filterMethod.ordinal());
-		out.writeUint8(interlaceMethod.ordinal());
+		out.writeUint8(compressionMethod);
+		out.writeUint8(filterMethod);
+		out.writeUint8(interlaceMethod);
 	}
 	
 	

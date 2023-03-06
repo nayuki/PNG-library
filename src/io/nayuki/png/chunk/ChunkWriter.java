@@ -60,6 +60,11 @@ public final class ChunkWriter {
 	}
 	
 	
+	public <E extends Enum<E>> void writeUint8(E val) throws IOException {
+		writeUint8(val.ordinal());
+	}
+	
+	
 	public void writeUint8(int val) throws IOException {
 		writeInt(val, 1);
 	}

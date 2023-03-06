@@ -82,7 +82,7 @@ public record Iccp(
 		var out = new ChunkWriter(dataLen, getType(), out0);
 		out.write(profileName.getBytes(StandardCharsets.ISO_8859_1));
 		out.writeUint8(0);
-		out.writeUint8(compressionMethod.ordinal());
+		out.writeUint8(compressionMethod);
 		out.write(compressedProfile);
 		out.finish();
 	}

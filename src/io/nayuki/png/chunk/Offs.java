@@ -66,7 +66,7 @@ public record Offs(
 	@Override public void writeData(ChunkWriter out) throws IOException {
 		out.writeInt32(xPosition);
 		out.writeInt32(yPosition);
-		out.writeUint8(unitSpecifier.ordinal());
+		out.writeUint8(unitSpecifier);
 	}
 	
 	
