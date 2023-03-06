@@ -10,6 +10,7 @@ package io.nayuki.png.chunk;
 
 import java.io.DataInput;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Objects;
@@ -82,16 +83,14 @@ public record Splt(
 	}
 	
 	
-	private int getDataLength() {
-		return Util.checkedLengthSum(paletteName, 2 * Byte.BYTES, data);
-	}
-	
-	
-	@Override public void writeData(ChunkWriter out) throws IOException {
+	@Override public void writeChunk(OutputStream out0) throws IOException {
+		int dataLen = Util.checkedLengthSum(paletteName, 2 * Byte.BYTES, data);
+		var out = new ChunkWriter(dataLen, getType(), out0);
 		out.write(paletteName.getBytes(StandardCharsets.ISO_8859_1));
 		out.writeByte(0);
 		out.writeByte(sampleDepth);
 		out.write(data);
+		out.finish();
 	}
 	
 }

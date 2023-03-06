@@ -9,6 +9,7 @@
 package io.nayuki.png.chunk;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import io.nayuki.png.Chunk;
 
 
@@ -21,8 +22,10 @@ interface BytesDataChunk extends Chunk {
 	public byte[] data();
 	
 	
-	@Override public default void writeData(ChunkWriter out) throws IOException {
+	@Override public default void writeChunk(OutputStream out0) throws IOException {
+		var out = new ChunkWriter(data().length, getType(), out0);
 		out.write(data());
+		out.finish();
 	}
 	
 }

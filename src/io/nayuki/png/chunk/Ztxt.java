@@ -10,6 +10,7 @@ package io.nayuki.png.chunk;
 
 import java.io.DataInput;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Objects;
@@ -90,16 +91,14 @@ public record Ztxt(
 	}
 	
 	
-	private int getDataLength() {
-		return Util.checkedLengthSum(keyword, 2 * Byte.BYTES, compressedText);
-	}
-	
-	
-	@Override public void writeData(ChunkWriter out) throws IOException {
+	@Override public void writeChunk(OutputStream out0) throws IOException {
+		int dataLen = Util.checkedLengthSum(keyword, 2 * Byte.BYTES, compressedText);
+		var out = new ChunkWriter(dataLen, getType(), out0);
 		out.write(keyword.getBytes(StandardCharsets.ISO_8859_1));
 		out.writeByte(0);
 		out.writeByte(compressionMethod.ordinal());
 		out.write(compressedText);
+		out.finish();
 	}
 	
 }

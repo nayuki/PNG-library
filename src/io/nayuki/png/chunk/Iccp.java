@@ -10,6 +10,7 @@ package io.nayuki.png.chunk;
 
 import java.io.DataInput;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Objects;
@@ -76,16 +77,14 @@ public record Iccp(
 	}
 	
 	
-	private int getDataLength() {
-		return Util.checkedLengthSum(profileName, 2 * Byte.BYTES, compressedProfile);
-	}
-	
-	
-	@Override public void writeData(ChunkWriter out) throws IOException {
+	@Override public void writeChunk(OutputStream out0) throws IOException {
+		int dataLen = Util.checkedLengthSum(profileName, 2 * Byte.BYTES, compressedProfile);
+		var out = new ChunkWriter(dataLen, getType(), out0);
 		out.write(profileName.getBytes(StandardCharsets.ISO_8859_1));
 		out.writeByte(0);
 		out.writeByte(compressionMethod.ordinal());
 		out.write(compressedProfile);
+		out.finish();
 	}
 	
 }

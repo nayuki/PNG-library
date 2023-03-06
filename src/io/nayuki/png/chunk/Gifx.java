@@ -10,6 +10,7 @@ package io.nayuki.png.chunk;
 
 import java.io.DataInput;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Objects;
 import io.nayuki.png.Chunk;
 
@@ -71,15 +72,13 @@ public record Gifx(
 	}
 	
 	
-	private int getDataLength() {
-		return Util.checkedLengthSum(applicationIdentifier, authenticationCode, applicationData);
-	}
-	
-	
-	@Override public void writeData(ChunkWriter out) throws IOException {
+	@Override public void writeChunk(OutputStream out0) throws IOException {
+		int dataLen = Util.checkedLengthSum(applicationIdentifier, authenticationCode, applicationData);
+		var out = new ChunkWriter(dataLen, getType(), out0);
 		out.write(applicationIdentifier);
 		out.write(authenticationCode);
 		out.write(applicationData);
+		out.finish();
 	}
 	
 }

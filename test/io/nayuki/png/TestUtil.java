@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Random;
 import org.junit.Assert;
-import io.nayuki.png.chunk.ChunkWriter;
 
 
 public final class TestUtil {
@@ -46,12 +45,12 @@ public final class TestUtil {
 	public static void assertDataEquals(byte[] expect, Chunk chk) {
 		var out = new ByteArrayOutputStream();
 		try {
-			chk.writeData(new ChunkWriter(Integer.MAX_VALUE, "AAAA", out));
+			chk.writeChunk(out);
 		} catch (IOException e) {
 			throw new AssertionError("Unreachable exception", e);
 		}
 		byte[] b = out.toByteArray();
-		Assert.assertArrayEquals(expect, Arrays.copyOfRange(b, 8, b.length));
+		Assert.assertArrayEquals(expect, Arrays.copyOfRange(b, 8, b.length - 4));
 	}
 	
 	

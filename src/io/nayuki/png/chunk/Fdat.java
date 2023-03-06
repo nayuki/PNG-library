@@ -10,6 +10,7 @@ package io.nayuki.png.chunk;
 
 import java.io.DataInput;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Objects;
 import io.nayuki.png.Chunk;
 
@@ -66,14 +67,12 @@ public record Fdat(
 	}
 	
 	
-	private int getDataLength() {
-		return Util.checkedLengthSum(Integer.BYTES, data);
-	}
-	
-	
-	@Override public void writeData(ChunkWriter out) throws IOException {
+	@Override public void writeChunk(OutputStream out0) throws IOException {
+		int dataLen = Util.checkedLengthSum(Integer.BYTES, data);
+		var out = new ChunkWriter(dataLen, getType(), out0);
 		out.writeInt(sequence);
 		out.write(data);
+		out.finish();
 	}
 	
 }

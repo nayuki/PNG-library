@@ -12,6 +12,7 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Objects;
@@ -107,15 +108,13 @@ public record Pcal(
 	}
 	
 	
-	private int getDataLength() {
+	@Override public void writeChunk(OutputStream out0) throws IOException {
 		var params = new Object[parameters.length];
 		System.arraycopy(parameters, 0, params, 0, params.length);
-		return Util.checkedLengthSum(calibrationName, 1, 2 * Integer.BYTES,
+		int dataLen = Util.checkedLengthSum(calibrationName, 1, 2 * Integer.BYTES,
 			2 * Byte.BYTES, unitName, params.length, Util.checkedLengthSum(params));
-	}
-	
-	
-	@Override public void writeData(ChunkWriter out) throws IOException {
+		
+		var out = new ChunkWriter(dataLen, getType(), out0);
 		out.write(calibrationName.getBytes(StandardCharsets.ISO_8859_1));
 		out.writeByte(0);
 		out.writeInt(originalZero);
@@ -127,6 +126,7 @@ public record Pcal(
 			out.writeByte(0);
 			out.write(param.getBytes(StandardCharsets.US_ASCII));
 		}
+		out.finish();
 	}
 	
 	

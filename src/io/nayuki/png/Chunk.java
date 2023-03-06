@@ -9,13 +9,11 @@
 package io.nayuki.png;
 
 import java.io.ByteArrayOutputStream;
-import java.io.DataOutput;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Objects;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterOutputStream;
-import io.nayuki.png.chunk.ChunkWriter;
 
 
 /**
@@ -71,36 +69,13 @@ public interface Chunk {
 	
 	
 	/**
-	 * Writes this chunk's data field (excluding type
-	 * and CRC-32) to the specified output stream.
-	 * @param out the output stream to write to (not {@code null})
-	 * @throws NullPointerException if {@code out} is {@code null}
-	 * @throws IOException if an I/O exceptions occurs
-	 */
-	public abstract void writeData(ChunkWriter out) throws IOException;
-	
-	
-	/**
 	 * Write's this chunk's entire sequence of bytes (length, type, data, CRC-32)
-	 * to the specified output stream. The default implementation relies on {@link
-	 * #getType()}, and {@link #writeData(DataOutput)}.
+	 * to the specified output stream.
 	 * @param out the output stream to write to (not {@code null})
 	 * @throws NullPointerException if {@code out} is {@code null}
 	 * @throws IOException if an I/O exceptions occurs
 	 */
-	public default void writeChunk(OutputStream out) throws IOException {
-		int dataLen;
-		try {
-			var bout = new ByteArrayOutputStream();
-			writeData(new ChunkWriter(Integer.MAX_VALUE, "AAAA", bout));
-			dataLen = bout.toByteArray().length - 8;
-		} catch (IOException e) {
-			throw new AssertionError("Unreachable exception", e);
-		}
-		var cout = new ChunkWriter(dataLen, getType(), out);
-		writeData(cout);
-		cout.finish();
-	}
+	public abstract void writeChunk(OutputStream out) throws IOException;
 	
 	
 	/**

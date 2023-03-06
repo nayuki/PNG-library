@@ -10,6 +10,7 @@ package io.nayuki.png.chunk;
 
 import java.io.DataInput;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import io.nayuki.png.Chunk;
@@ -73,16 +74,14 @@ public record Scal(
 	}
 	
 	
-	private int getDataLength() {
-		return Util.checkedLengthSum(Byte.BYTES, pixelWidth, Byte.BYTES, pixelHeight);
-	}
-	
-	
-	@Override public void writeData(ChunkWriter out) throws IOException {
+	@Override public void writeChunk(OutputStream out0) throws IOException {
+		int dataLen = Util.checkedLengthSum(Byte.BYTES, pixelWidth, Byte.BYTES, pixelHeight);
+		var out = new ChunkWriter(dataLen, getType(), out0);
 		out.writeByte(unitSpecifier.ordinal() + 1);
 		out.write(pixelWidth.getBytes(StandardCharsets.US_ASCII));
 		out.writeByte(0);
 		out.write(pixelHeight.getBytes(StandardCharsets.US_ASCII));
+		out.finish();
 	}
 	
 	

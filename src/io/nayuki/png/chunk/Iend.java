@@ -8,8 +8,6 @@
 
 package io.nayuki.png.chunk;
 
-import java.io.IOException;
-
 
 /**
  * An image trailer (IEND) chunk. This marks the end of a PNG data stream.
@@ -35,8 +33,5 @@ public enum Iend implements BytesDataChunk {
 	@Override public String getType() {
 		return TYPE;
 	}
-	
-	
-	@Override public void writeData(ChunkWriter out) throws IOException {}
 	
 }

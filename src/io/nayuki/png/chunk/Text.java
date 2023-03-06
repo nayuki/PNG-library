@@ -10,6 +10,7 @@ package io.nayuki.png.chunk;
 
 import java.io.DataInput;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import io.nayuki.png.Chunk;
@@ -63,15 +64,13 @@ public record Text(String keyword, String text) implements Chunk {
 	}
 	
 	
-	private int getDataLength() {
-		return Util.checkedLengthSum(keyword, Byte.BYTES, text);
-	}
-	
-	
-	@Override public void writeData(ChunkWriter out) throws IOException {
+	@Override public void writeChunk(OutputStream out0) throws IOException {
+		int dataLen = Util.checkedLengthSum(keyword, Byte.BYTES, text);
+		var out = new ChunkWriter(dataLen, getType(), out0);
 		out.write(keyword.getBytes(StandardCharsets.ISO_8859_1));
 		out.writeByte(0);
 		out.write(text.getBytes(StandardCharsets.ISO_8859_1));
+		out.finish();
 	}
 	
 }
