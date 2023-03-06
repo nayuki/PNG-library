@@ -12,7 +12,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterOutputStream;
@@ -72,26 +71,6 @@ public interface Chunk {
 	
 	
 	/**
-	 * Returns a byte array representing this chunk's data field, which excludes
-	 * the type and CRC-32. The default implementation relies on {@link #writeData(
-	 * DataOutput)}. This method must not throw an exception because of invalid
-	 * data values or the data being too long; these conditions must be checked
-	 * beforehand when the chunk object is constructed or when setters are called.
-	 * @return the data bytes (not {@code null})
-	 */
-	public default byte[] getData() {
-		try {
-			var out = new ByteArrayOutputStream();
-			writeData(new ChunkWriter(Integer.MAX_VALUE, "AAAA", out));
-			byte[] b = out.toByteArray();
-			return Arrays.copyOfRange(b, 8, b.length);
-		} catch (IOException e) {
-			throw new AssertionError("Unreachable exception", e);
-		}
-	}
-	
-	
-	/**
 	 * Writes this chunk's data field (excluding type
 	 * and CRC-32) to the specified output stream.
 	 * @param out the output stream to write to (not {@code null})
@@ -110,7 +89,15 @@ public interface Chunk {
 	 * @throws IOException if an I/O exceptions occurs
 	 */
 	public default void writeChunk(OutputStream out) throws IOException {
-		var cout = new ChunkWriter(getData().length, getType(), out);
+		int dataLen;
+		try {
+			var bout = new ByteArrayOutputStream();
+			writeData(new ChunkWriter(Integer.MAX_VALUE, "AAAA", bout));
+			dataLen = bout.toByteArray().length - 8;
+		} catch (IOException e) {
+			throw new AssertionError("Unreachable exception", e);
+		}
+		var cout = new ChunkWriter(dataLen, getType(), out);
 		writeData(cout);
 		cout.finish();
 	}

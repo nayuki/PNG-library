@@ -21,11 +21,6 @@ interface BytesDataChunk extends Chunk {
 	public byte[] data();
 	
 	
-	@Override public default byte[] getData() {
-		return data();
-	}
-	
-	
 	@Override public default void writeData(ChunkWriter out) throws IOException {
 		out.write(data());
 	}
