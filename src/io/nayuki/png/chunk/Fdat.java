@@ -66,7 +66,7 @@ public record Fdat(
 	}
 	
 	
-	@Override public int getDataLength() {
+	private int getDataLength() {
 		return Util.checkedLengthSum(Integer.BYTES, data);
 	}
 	

@@ -90,7 +90,7 @@ public record Ztxt(
 	}
 	
 	
-	@Override public int getDataLength() {
+	private int getDataLength() {
 		return Util.checkedLengthSum(keyword, 2 * Byte.BYTES, compressedText);
 	}
 	

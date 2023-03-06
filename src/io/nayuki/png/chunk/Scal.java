@@ -73,7 +73,7 @@ public record Scal(
 	}
 	
 	
-	@Override public int getDataLength() {
+	private int getDataLength() {
 		return Util.checkedLengthSum(Byte.BYTES, pixelWidth, Byte.BYTES, pixelHeight);
 	}
 	

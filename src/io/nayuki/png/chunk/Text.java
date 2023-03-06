@@ -63,7 +63,7 @@ public record Text(String keyword, String text) implements Chunk {
 	}
 	
 	
-	@Override public int getDataLength() {
+	private int getDataLength() {
 		return Util.checkedLengthSum(keyword, Byte.BYTES, text);
 	}
 	

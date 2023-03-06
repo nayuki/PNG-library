@@ -71,7 +71,7 @@ public record Gifx(
 	}
 	
 	
-	@Override public int getDataLength() {
+	private int getDataLength() {
 		return Util.checkedLengthSum(applicationIdentifier, authenticationCode, applicationData);
 	}
 	

@@ -107,7 +107,7 @@ public record Pcal(
 	}
 	
 	
-	@Override public int getDataLength() {
+	private int getDataLength() {
 		var params = new Object[parameters.length];
 		System.arraycopy(parameters, 0, params, 0, params.length);
 		return Util.checkedLengthSum(calibrationName, 1, 2 * Integer.BYTES,

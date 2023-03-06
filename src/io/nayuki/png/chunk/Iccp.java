@@ -76,7 +76,7 @@ public record Iccp(
 	}
 	
 	
-	@Override public int getDataLength() {
+	private int getDataLength() {
 		return Util.checkedLengthSum(profileName, 2 * Byte.BYTES, compressedProfile);
 	}
 	

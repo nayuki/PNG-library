@@ -125,7 +125,7 @@ public record Itxt(
 	}
 	
 	
-	@Override public int getDataLength() {
+	private int getDataLength() {
 		return Util.checkedLengthSum(keyword, 3 * Byte.BYTES, languageTag, Byte.BYTES,
 			text, Byte.BYTES, translatedKeyword.getBytes(StandardCharsets.UTF_8));
 	}

@@ -72,17 +72,6 @@ public interface Chunk {
 	
 	
 	/**
-	 * Returns the byte length of this chunk's data field, which excludes
-	 * the type and CRC-32. This can be any non-negative number.
-	 * The default implementation relies on {@link #getData()}.
-	 * @return the number of data bytes, in the range [0, 2<sup>31</sup>&minus;1)
-	 */
-	public default int getDataLength() {
-		return getData().length;
-	}
-	
-	
-	/**
 	 * Returns a byte array representing this chunk's data field, which excludes
 	 * the type and CRC-32. The default implementation relies on {@link #writeData(
 	 * DataOutput)}. This method must not throw an exception because of invalid
@@ -115,13 +104,13 @@ public interface Chunk {
 	/**
 	 * Write's this chunk's entire sequence of bytes (length, type, data, CRC-32)
 	 * to the specified output stream. The default implementation relies on {@link
-	 * #getType()}, {@link #getDataLength()}, and {@link #writeData(DataOutput)}.
+	 * #getType()}, and {@link #writeData(DataOutput)}.
 	 * @param out the output stream to write to (not {@code null})
 	 * @throws NullPointerException if {@code out} is {@code null}
 	 * @throws IOException if an I/O exceptions occurs
 	 */
 	public default void writeChunk(OutputStream out) throws IOException {
-		var cout = new ChunkWriter(getDataLength(), getType(), out);
+		var cout = new ChunkWriter(getData().length, getType(), out);
 		writeData(cout);
 		cout.finish();
 	}

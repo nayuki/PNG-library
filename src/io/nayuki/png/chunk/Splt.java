@@ -82,7 +82,7 @@ public record Splt(
 	}
 	
 	
-	@Override public int getDataLength() {
+	private int getDataLength() {
 		return Util.checkedLengthSum(paletteName, 2 * Byte.BYTES, data);
 	}
 	

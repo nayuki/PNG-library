@@ -98,7 +98,7 @@ public record Gift(
 	}
 	
 	
-	@Override public int getDataLength() {
+	private int getDataLength() {
 		return Util.checkedLengthSum(4 * Integer.BYTES, 2 * Byte.BYTES, 2 * 3 * Byte.BYTES, text);
 	}
 	
