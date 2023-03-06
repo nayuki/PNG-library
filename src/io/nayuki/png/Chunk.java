@@ -13,12 +13,10 @@ import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Objects;
-import java.util.zip.CRC32;
-import java.util.zip.CheckedOutputStream;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterOutputStream;
+import io.nayuki.png.chunk.ChunkWriter;
 
 
 /**
@@ -122,26 +120,9 @@ public interface Chunk {
 	 * @throws IOException if an I/O exceptions occurs
 	 */
 	public default void writeChunk(OutputStream out) throws IOException {
-		Objects.requireNonNull(out);
-		DataOutput dout = new DataOutputStream(out);
-		int dataLen = getDataLength();
-		if (dataLen < 0)
-			throw new AssertionError("Non-positive chunk data length");
-		dout.writeInt(dataLen);
-		
-		String type = getType();
-		Chunk.checkType(type);
-		var cout = new CheckedOutputStream(out, new CRC32());
-		cout.write(type.getBytes(StandardCharsets.US_ASCII));
-		
-		var bout = new BoundedOutputStream(cout, dataLen);
-		writeData(new DataOutputStream(bout));
-		bout.finish();
-		
-		long crc = cout.getChecksum().getValue();
-		if (crc >>> 32 != 0)
-			throw new AssertionError("CRC-32 must be uint32");
-		dout.writeInt((int)crc);
+		var cout = new ChunkWriter(getDataLength(), getType(), out);
+		writeData(cout);
+		cout.finish();
 	}
 	
 	
