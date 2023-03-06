@@ -9,7 +9,6 @@
 package io.nayuki.png.chunk;
 
 import static io.nayuki.png.TestUtil.hexToBytes;
-import static org.junit.Assert.assertArrayEquals;
 import org.junit.Test;
 import io.nayuki.png.TestUtil;
 
@@ -72,7 +71,7 @@ public final class PlteTest {
 		
 		for (String cs : CASES) {
 			byte[] b = hexToBytes(cs);
-			assertArrayEquals(b, new Plte(b).getData());
+			TestUtil.assertDataEquals(b, new Plte(b));
 		}
 	}
 	

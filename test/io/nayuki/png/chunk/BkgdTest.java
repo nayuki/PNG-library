@@ -9,7 +9,6 @@
 package io.nayuki.png.chunk;
 
 import static io.nayuki.png.TestUtil.hexToBytes;
-import static org.junit.Assert.assertArrayEquals;
 import org.junit.Test;
 import io.nayuki.png.TestUtil;
 
@@ -63,7 +62,7 @@ public final class BkgdTest {
 		
 		for (String cs : CASES) {
 			byte[] b = hexToBytes(cs);
-			assertArrayEquals(b, new Bkgd(b).getData());
+			TestUtil.assertDataEquals(b, new Bkgd(b));
 		}
 	}
 	

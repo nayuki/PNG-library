@@ -8,7 +8,6 @@
 
 package io.nayuki.png.chunk;
 
-import static org.junit.Assert.assertArrayEquals;
 import org.junit.Test;
 import io.nayuki.png.TestUtil;
 
@@ -40,7 +39,7 @@ public final class HistTest {
 				bytes[i * 2 + 1] = (byte)(val >>> 0);
 				shorts[i] = (short)val;
 			}
-			assertArrayEquals(bytes, new Hist(shorts).getData());
+			TestUtil.assertDataEquals(bytes, new Hist(shorts));
 		}
 	}
 	

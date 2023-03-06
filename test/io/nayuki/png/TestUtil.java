@@ -37,7 +37,12 @@ public final class TestUtil {
 	
 	
 	public static void assertDataEquals(String expectHex, Chunk chk) {
-		Assert.assertArrayEquals(hexToBytes(expectHex), chk.getData());
+		assertDataEquals(hexToBytes(expectHex), chk);
+	}
+	
+	
+	public static void assertDataEquals(byte[] expect, Chunk chk) {
+		Assert.assertArrayEquals(expect, chk.getData());
 	}
 	
 	

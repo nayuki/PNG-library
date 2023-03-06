@@ -9,7 +9,6 @@
 package io.nayuki.png.chunk;
 
 import static io.nayuki.png.TestUtil.hexToBytes;
-import static org.junit.Assert.assertArrayEquals;
 import java.util.Arrays;
 import org.junit.Test;
 import io.nayuki.png.TestUtil;
@@ -82,7 +81,7 @@ public final class SbitTest {
 		
 		for (String cs : CASES) {
 			byte[] b = hexToBytes(cs);
-			assertArrayEquals(b, new Sbit(b).getData());
+			TestUtil.assertDataEquals(b, new Sbit(b));
 		}
 	}
 	

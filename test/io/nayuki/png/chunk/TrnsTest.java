@@ -8,7 +8,6 @@
 
 package io.nayuki.png.chunk;
 
-import static org.junit.Assert.assertArrayEquals;
 import org.junit.Test;
 import io.nayuki.png.TestUtil;
 
@@ -51,7 +50,7 @@ public final class TrnsTest {
 		for (int len = 0; len <= 256; len++) {
 			var b = new byte[len];
 			TestUtil.rand.nextBytes(b);
-			assertArrayEquals(b, new Trns(b).getData());
+			TestUtil.assertDataEquals(b, new Trns(b));
 		}
 	}
 	
