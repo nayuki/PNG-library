@@ -94,7 +94,7 @@ public record Ztxt(
 	@Override public void writeChunk(OutputStream out0) throws IOException {
 		int dataLen = Util.checkedLengthSum(keyword, 2 * Byte.BYTES, compressedText);
 		var out = new ChunkWriter(dataLen, getType(), out0);
-		out.write(keyword.getBytes(StandardCharsets.ISO_8859_1));
+		out.writeIso8859_1(keyword);
 		out.writeUint8(0);
 		out.writeUint8(compressionMethod);
 		out.write(compressedText);

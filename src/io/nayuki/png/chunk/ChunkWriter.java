@@ -93,6 +93,11 @@ public final class ChunkWriter {
 	}
 	
 	
+	public void writeIso8859_1(String s) throws IOException {
+		write(s.getBytes(StandardCharsets.ISO_8859_1));
+	}
+	
+	
 	public void finish() throws IOException {
 		if (output == null)
 			throw new IllegalStateException("Already finished");

@@ -130,11 +130,11 @@ public record Itxt(
 		int dataLen = Util.checkedLengthSum(keyword, 3 * Byte.BYTES, languageTag, Byte.BYTES,
 			text, Byte.BYTES, translatedKeyword.getBytes(StandardCharsets.UTF_8));
 		var out = new ChunkWriter(dataLen, getType(), out0);
-		out.write(keyword.getBytes(StandardCharsets.ISO_8859_1));
+		out.writeIso8859_1(keyword);
 		out.writeUint8(0);
 		out.writeUint8(compressionMethod.isPresent() ? 1 : 0);
 		out.writeUint8(compressionMethod.map(cm -> cm.ordinal()).orElse(0));
-		out.write(languageTag.getBytes(StandardCharsets.ISO_8859_1));
+		out.writeIso8859_1(languageTag);
 		out.writeUint8(0);
 		out.write(translatedKeyword.getBytes(StandardCharsets.UTF_8));
 		out.writeUint8(0);

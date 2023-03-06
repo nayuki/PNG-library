@@ -86,7 +86,7 @@ public record Splt(
 	@Override public void writeChunk(OutputStream out0) throws IOException {
 		int dataLen = Util.checkedLengthSum(paletteName, 2 * Byte.BYTES, data);
 		var out = new ChunkWriter(dataLen, getType(), out0);
-		out.write(paletteName.getBytes(StandardCharsets.ISO_8859_1));
+		out.writeIso8859_1(paletteName);
 		out.writeUint8(0);
 		out.writeUint8(sampleDepth);
 		out.write(data);
