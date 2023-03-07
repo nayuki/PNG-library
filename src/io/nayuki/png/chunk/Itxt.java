@@ -129,7 +129,7 @@ public record Itxt(
 	@Override public void writeChunk(OutputStream out) throws IOException {
 		int dataLen = Util.checkedLengthSum(keyword, 3 * Byte.BYTES, languageTag, Byte.BYTES,
 			text, Byte.BYTES, translatedKeyword.getBytes(StandardCharsets.UTF_8));
-		var cout = new ChunkWriter(dataLen, getType(), out);
+		var cout = new ChunkWriter(dataLen, TYPE, out);
 		cout.writeIso8859_1(keyword);
 		cout.writeUint8(0);
 		cout.writeUint8(compressionMethod.isPresent() ? 1 : 0);

@@ -85,7 +85,7 @@ public record Splt(
 	
 	@Override public void writeChunk(OutputStream out) throws IOException {
 		int dataLen = Util.checkedLengthSum(paletteName, 2 * Byte.BYTES, data);
-		var cout = new ChunkWriter(dataLen, getType(), out);
+		var cout = new ChunkWriter(dataLen, TYPE, out);
 		cout.writeIso8859_1(paletteName);
 		cout.writeUint8(0);
 		cout.writeUint8(sampleDepth);

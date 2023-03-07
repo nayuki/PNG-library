@@ -114,7 +114,7 @@ public record Pcal(
 		int dataLen = Util.checkedLengthSum(calibrationName, 1, 2 * Integer.BYTES,
 			2 * Byte.BYTES, unitName, params.length, Util.checkedLengthSum(params));
 		
-		var cout = new ChunkWriter(dataLen, getType(), out);
+		var cout = new ChunkWriter(dataLen, TYPE, out);
 		cout.writeIso8859_1(calibrationName);
 		cout.writeUint8(0);
 		cout.writeInt32(originalZero);
