@@ -19,13 +19,13 @@ import io.nayuki.png.Chunk;
  */
 interface BytesDataChunk extends Chunk {
 	
-	public byte[] data();
-	
-	
 	@Override public default void writeChunk(OutputStream out) throws IOException {
 		var cout = new ChunkWriter(data().length, getType(), out);
 		cout.write(data());
 		cout.finish();
 	}
+	
+	
+	public byte[] data();
 	
 }

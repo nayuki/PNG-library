@@ -21,9 +21,6 @@ import io.nayuki.png.Chunk;
  */
 interface SmallDataChunk extends Chunk {
 	
-	public abstract void writeData(ChunkWriter out) throws IOException;
-	
-	
 	@Override public default void writeChunk(OutputStream out) throws IOException {
 		var bout = new ByteArrayOutputStream();
 		try {
@@ -37,5 +34,8 @@ interface SmallDataChunk extends Chunk {
 		cout.write(data);
 		cout.finish();
 	}
+	
+	
+	public abstract void writeData(ChunkWriter out) throws IOException;
 	
 }
