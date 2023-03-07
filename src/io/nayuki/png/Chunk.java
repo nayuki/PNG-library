@@ -69,8 +69,8 @@ public interface Chunk {
 	
 	
 	/**
-	 * Write's this chunk's entire sequence of bytes (length, type, data, CRC-32)
-	 * to the specified output stream.
+	 * Writes this chunk's entire sequence of bytes (length,
+	 * type, data, CRC-32) to the specified output stream.
 	 * @param out the output stream to write to (not {@code null})
 	 * @throws NullPointerException if {@code out} is {@code null}
 	 * @throws IOException if an I/O exceptions occurs

@@ -15,6 +15,10 @@ import java.util.Arrays;
 import io.nayuki.png.Chunk;
 
 
+/**
+ * Convenient mix-in for chunk types whose data length has a small upper bound,
+ * and thus the chunk can be serialized to memory to calculate the length.
+ */
 interface SmallDataChunk extends Chunk {
 	
 	public abstract void writeData(ChunkWriter out) throws IOException;
