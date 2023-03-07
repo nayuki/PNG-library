@@ -124,7 +124,7 @@ public record Pcal(
 		cout.writeIso8859_1(unitName);
 		for (String param : parameters) {
 			cout.writeUint8(0);
-			cout.write(param.getBytes(StandardCharsets.US_ASCII));
+			cout.writeAscii(param);
 		}
 		cout.finish();
 	}

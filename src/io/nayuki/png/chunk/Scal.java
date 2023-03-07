@@ -78,9 +78,9 @@ public record Scal(
 		int dataLen = Util.checkedLengthSum(Byte.BYTES, pixelWidth, Byte.BYTES, pixelHeight);
 		var cout = new ChunkWriter(dataLen, TYPE, out);
 		cout.writeUint8(unitSpecifier.ordinal() + 1);
-		cout.write(pixelWidth.getBytes(StandardCharsets.US_ASCII));
+		cout.writeAscii(pixelWidth);
 		cout.writeUint8(0);
-		cout.write(pixelHeight.getBytes(StandardCharsets.US_ASCII));
+		cout.writeAscii(pixelHeight);
 		cout.finish();
 	}
 	
