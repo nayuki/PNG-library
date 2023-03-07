@@ -24,7 +24,7 @@ interface SmallDataChunk extends Chunk {
 	public abstract void writeData(ChunkWriter out) throws IOException;
 	
 	
-	public default void writeChunk(OutputStream out) throws IOException {
+	@Override public default void writeChunk(OutputStream out) throws IOException {
 		var bout = new ByteArrayOutputStream();
 		try {
 			writeData(new ChunkWriter(Integer.MAX_VALUE, "AAAA", bout));
