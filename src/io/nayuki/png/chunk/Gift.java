@@ -101,19 +101,19 @@ public record Gift(
 	
 	@Override public void writeChunk(OutputStream out0) throws IOException {
 		int dataLen = Util.checkedLengthSum(4 * Integer.BYTES, 2 * Byte.BYTES, 2 * 3 * Byte.BYTES, text);
-		var out = new ChunkWriter(dataLen, getType(), out0);
-		out.writeInt32(textGridLeft  );
-		out.writeInt32(textGridTop   );
-		out.writeInt32(textGridWidth );
-		out.writeInt32(textGridHeight);
-		out.writeUint8(characterCellWidth );
-		out.writeUint8(characterCellHeight);
+		var cout = new ChunkWriter(dataLen, getType(), out0);
+		cout.writeInt32(textGridLeft  );
+		cout.writeInt32(textGridTop   );
+		cout.writeInt32(textGridWidth );
+		cout.writeInt32(textGridHeight);
+		cout.writeUint8(characterCellWidth );
+		cout.writeUint8(characterCellHeight);
 		for (int i = 16; i >= 0; i -= 8)
-			out.writeUint8((textForegroundColor >>> i) & 0xFF);
+			cout.writeUint8((textForegroundColor >>> i) & 0xFF);
 		for (int i = 16; i >= 0; i -= 8)
-			out.writeUint8((textBackgroundColor >>> i) & 0xFF);
-		out.write(text.getBytes(StandardCharsets.US_ASCII));
-		out.finish();
+			cout.writeUint8((textBackgroundColor >>> i) & 0xFF);
+		cout.write(text.getBytes(StandardCharsets.US_ASCII));
+		cout.finish();
 	}
 	
 }

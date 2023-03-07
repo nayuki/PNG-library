@@ -114,19 +114,19 @@ public record Pcal(
 		int dataLen = Util.checkedLengthSum(calibrationName, 1, 2 * Integer.BYTES,
 			2 * Byte.BYTES, unitName, params.length, Util.checkedLengthSum(params));
 		
-		var out = new ChunkWriter(dataLen, getType(), out0);
-		out.writeIso8859_1(calibrationName);
-		out.writeUint8(0);
-		out.writeInt32(originalZero);
-		out.writeInt32(originalMax);
-		out.writeUint8(equationType);
-		out.writeUint8(parameters.length);
-		out.writeIso8859_1(unitName);
+		var cout = new ChunkWriter(dataLen, getType(), out0);
+		cout.writeIso8859_1(calibrationName);
+		cout.writeUint8(0);
+		cout.writeInt32(originalZero);
+		cout.writeInt32(originalMax);
+		cout.writeUint8(equationType);
+		cout.writeUint8(parameters.length);
+		cout.writeIso8859_1(unitName);
 		for (String param : parameters) {
-			out.writeUint8(0);
-			out.write(param.getBytes(StandardCharsets.US_ASCII));
+			cout.writeUint8(0);
+			cout.write(param.getBytes(StandardCharsets.US_ASCII));
 		}
-		out.finish();
+		cout.finish();
 	}
 	
 	

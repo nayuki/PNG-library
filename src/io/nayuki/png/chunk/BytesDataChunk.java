@@ -23,9 +23,9 @@ interface BytesDataChunk extends Chunk {
 	
 	
 	@Override public default void writeChunk(OutputStream out0) throws IOException {
-		var out = new ChunkWriter(data().length, getType(), out0);
-		out.write(data());
-		out.finish();
+		var cout = new ChunkWriter(data().length, getType(), out0);
+		cout.write(data());
+		cout.finish();
 	}
 	
 }

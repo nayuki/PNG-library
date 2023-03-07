@@ -66,11 +66,11 @@ public record Text(String keyword, String text) implements Chunk {
 	
 	@Override public void writeChunk(OutputStream out0) throws IOException {
 		int dataLen = Util.checkedLengthSum(keyword, Byte.BYTES, text);
-		var out = new ChunkWriter(dataLen, getType(), out0);
-		out.writeIso8859_1(keyword);
-		out.writeUint8(0);
-		out.writeIso8859_1(text);
-		out.finish();
+		var cout = new ChunkWriter(dataLen, getType(), out0);
+		cout.writeIso8859_1(keyword);
+		cout.writeUint8(0);
+		cout.writeIso8859_1(text);
+		cout.finish();
 	}
 	
 }
