@@ -99,9 +99,9 @@ public record Gift(
 	}
 	
 	
-	@Override public void writeChunk(OutputStream out0) throws IOException {
+	@Override public void writeChunk(OutputStream out) throws IOException {
 		int dataLen = Util.checkedLengthSum(4 * Integer.BYTES, 2 * Byte.BYTES, 2 * 3 * Byte.BYTES, text);
-		var cout = new ChunkWriter(dataLen, getType(), out0);
+		var cout = new ChunkWriter(dataLen, getType(), out);
 		cout.writeInt32(textGridLeft  );
 		cout.writeInt32(textGridTop   );
 		cout.writeInt32(textGridWidth );

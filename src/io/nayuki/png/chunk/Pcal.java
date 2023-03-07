@@ -108,13 +108,13 @@ public record Pcal(
 	}
 	
 	
-	@Override public void writeChunk(OutputStream out0) throws IOException {
+	@Override public void writeChunk(OutputStream out) throws IOException {
 		var params = new Object[parameters.length];
 		System.arraycopy(parameters, 0, params, 0, params.length);
 		int dataLen = Util.checkedLengthSum(calibrationName, 1, 2 * Integer.BYTES,
 			2 * Byte.BYTES, unitName, params.length, Util.checkedLengthSum(params));
 		
-		var cout = new ChunkWriter(dataLen, getType(), out0);
+		var cout = new ChunkWriter(dataLen, getType(), out);
 		cout.writeIso8859_1(calibrationName);
 		cout.writeUint8(0);
 		cout.writeInt32(originalZero);

@@ -67,9 +67,9 @@ public record Fdat(
 	}
 	
 	
-	@Override public void writeChunk(OutputStream out0) throws IOException {
+	@Override public void writeChunk(OutputStream out) throws IOException {
 		int dataLen = Util.checkedLengthSum(Integer.BYTES, data);
-		var cout = new ChunkWriter(dataLen, getType(), out0);
+		var cout = new ChunkWriter(dataLen, getType(), out);
 		cout.writeInt32(sequence);
 		cout.write(data);
 		cout.finish();

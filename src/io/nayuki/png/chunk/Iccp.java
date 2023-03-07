@@ -77,9 +77,9 @@ public record Iccp(
 	}
 	
 	
-	@Override public void writeChunk(OutputStream out0) throws IOException {
+	@Override public void writeChunk(OutputStream out) throws IOException {
 		int dataLen = Util.checkedLengthSum(profileName, 2 * Byte.BYTES, compressedProfile);
-		var cout = new ChunkWriter(dataLen, getType(), out0);
+		var cout = new ChunkWriter(dataLen, getType(), out);
 		cout.writeIso8859_1(profileName);
 		cout.writeUint8(0);
 		cout.writeUint8(compressionMethod);

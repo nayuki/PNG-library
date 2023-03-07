@@ -72,9 +72,9 @@ public record Gifx(
 	}
 	
 	
-	@Override public void writeChunk(OutputStream out0) throws IOException {
+	@Override public void writeChunk(OutputStream out) throws IOException {
 		int dataLen = Util.checkedLengthSum(applicationIdentifier, authenticationCode, applicationData);
-		var cout = new ChunkWriter(dataLen, getType(), out0);
+		var cout = new ChunkWriter(dataLen, getType(), out);
 		cout.write(applicationIdentifier);
 		cout.write(authenticationCode);
 		cout.write(applicationData);

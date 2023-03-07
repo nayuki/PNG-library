@@ -91,9 +91,9 @@ public record Ztxt(
 	}
 	
 	
-	@Override public void writeChunk(OutputStream out0) throws IOException {
+	@Override public void writeChunk(OutputStream out) throws IOException {
 		int dataLen = Util.checkedLengthSum(keyword, 2 * Byte.BYTES, compressedText);
-		var cout = new ChunkWriter(dataLen, getType(), out0);
+		var cout = new ChunkWriter(dataLen, getType(), out);
 		cout.writeIso8859_1(keyword);
 		cout.writeUint8(0);
 		cout.writeUint8(compressionMethod);
