@@ -9,57 +9,11 @@
 package io.nayuki.png.chunk;
 
 import static org.junit.Assert.assertEquals;
-import org.junit.Assert;
 import org.junit.Test;
 import io.nayuki.png.TestUtil;
 
 
 public final class UtilTest {
-	
-	@Test public void testSplitByNul() {
-		record Case(String input, int numParts, String... outputs) {}
-		Case[] CASES = {
-			new Case("", 1, ""),
-			new Case("00", 1, "00"),
-			new Case("FF", 1, "FF"),
-			new Case("AA00BB", 1, "AA00BB"),
-			new Case("AA00BB", 2, "AA", "BB"),
-			new Case("00", 2, "", ""),
-			new Case("00BB", 2, "", "BB"),
-			new Case("AA00", 2, "AA", ""),
-			new Case("DEAD00BE00EF", 3, "DEAD", "BE", "EF"),
-			new Case("DEAD00BE00EF00", 3, "DEAD", "BE", "EF00"),
-			new Case("DEAD00BE00EF000000CAFE", 6, "DEAD", "BE", "EF", "", "", "CAFE"),
-		};
-		
-		for (Case cs : CASES) {
-			byte[][] actual = Util.splitByNul(TestUtil.hexToBytes(cs.input), cs.numParts);
-			assertEquals(cs.outputs.length, actual.length);
-			for (int i = 0; i < actual.length; i++)
-				Assert.assertArrayEquals(TestUtil.hexToBytes(cs.outputs[i]), actual[i]);
-		}
-	}
-	
-	
-	@Test public void testSplitByNulBad() {
-		Object[][] CASES = {
-			{"", 2},
-			{"49", 2},
-			{"00", 3},
-			{"1A", 3},
-			{"110022", 3},
-			{"00112233", 3},
-			{"33112200", 3},
-			{"0123456789", 5},
-			{"0100234500006789", 5},
-		};
-		
-		for (Object[] cs : CASES) {
-			TestUtil.runExpect(IllegalArgumentException.class,
-				() -> Util.splitByNul(TestUtil.hexToBytes((String)cs[0]), (int)cs[1]));
-		}
-	}
-	
 	
 	@Test public void testCheckKeyword() {
 		String[] CASES = {

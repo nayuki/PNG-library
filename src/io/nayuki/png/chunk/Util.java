@@ -10,7 +10,6 @@ package io.nayuki.png.chunk;
 
 import java.io.DataInput;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -72,29 +71,6 @@ public final class Util {
 			default -> Custom.read(in);
 		};
 		in.finish();
-		return result;
-	}
-	
-	
-	// Splits the array by the foremost (numParts - 1) NUL
-	// bytes, throwing an exception if not enough exist.
-	static byte[][] splitByNul(byte[] data, int numParts) {
-		var result = new byte[numParts][];
-		int start = 0;
-		for (int i = 0; i < result.length - 1; i++) {
-			int end = start;
-			while (true) {
-				if (end >= data.length)
-					throw new IllegalArgumentException("Missing expected NUL byte");
-				else if (data[end] == 0)
-					break;
-				else
-					end++;
-			}
-			result[i] = Arrays.copyOfRange(data, start, end);
-			start = end + 1;
-		}
-		result[result.length - 1] = Arrays.copyOfRange(data, start, data.length);
 		return result;
 	}
 	
