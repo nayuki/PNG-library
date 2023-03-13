@@ -11,7 +11,6 @@ package io.nayuki.png.chunk;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Objects;
 import io.nayuki.png.Chunk;
 
@@ -54,14 +53,10 @@ public record Iccp(
 	 */
 	public static Iccp read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
-		
-		byte[][] parts = Util.splitByNul(in.readRemainingBytes(), 2);
-		if (parts[1].length < 1)
-			throw new IllegalArgumentException("Missing compression method");
-		return new Iccp(
-			new String(parts[0], StandardCharsets.ISO_8859_1),
-			Util.indexInto(CompressionMethod.values(), parts[1][0]),
-			Arrays.copyOfRange(parts[1], 1, parts[1].length));
+		String profileName = in.readString(ChunkReader.Until.NUL, StandardCharsets.ISO_8859_1);
+		CompressionMethod compMethod = Util.indexInto(CompressionMethod.values(), in.readUint8());
+		byte[] compProfile = in.readRemainingBytes();
+		return new Iccp(profileName, compMethod, compProfile);
 	}
 	
 	

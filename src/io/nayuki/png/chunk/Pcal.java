@@ -8,12 +8,9 @@
 
 package io.nayuki.png.chunk;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Objects;
 import io.nayuki.png.Chunk;
 
@@ -73,26 +70,16 @@ public record Pcal(
 	 */
 	public static Pcal read(ChunkReader in0) throws IOException {
 		Objects.requireNonNull(in0);
-		
-		byte[][] parts = Util.splitByNul(in0.readRemainingBytes(), 2);
-		var calibrationName = new String(parts[0], StandardCharsets.ISO_8859_1);
-		if (parts[1].length < 10)
-			throw new IllegalArgumentException("Missing fields");
-		byte[] prefix = Arrays.copyOf(parts[1], 10);
-		var in = new DataInputStream(new ByteArrayInputStream(prefix));
-		int originalZero = in.readInt();
-		int originalMax = in.readInt();
-		EquationType equationType = Util.indexInto(EquationType.values(), in.readUnsignedByte());
-		int numParameters = in.readUnsignedByte();
-		
-		byte[] suffix = Arrays.copyOfRange(parts[1], 10, parts[1].length);
-		parts = Util.splitByNul(suffix, numParameters + 1);
-		var unitName = new String(parts[0], StandardCharsets.ISO_8859_1);
+		String calibName = in0.readString(ChunkReader.Until.NUL, StandardCharsets.ISO_8859_1);
+		int originalZero = in0.readInt32();
+		int originalMax = in0.readInt32();
+		EquationType equationType = Util.indexInto(EquationType.values(), in0.readUint8());
+		int numParameters = in0.readUint8();
+		String unitName = in0.readString(ChunkReader.Until.NUL, StandardCharsets.ISO_8859_1);
 		var parameters = new String[numParameters];
 		for (int i = 0; i < parameters.length; i++)
-			parameters[i] = new String(parts[1 + i], StandardCharsets.US_ASCII);
-		
-		return new Pcal(calibrationName, unitName, originalZero, originalMax, equationType, parameters);
+			parameters[i] = in0.readString((i < parameters.length - 1 ? ChunkReader.Until.NUL : ChunkReader.Until.END), StandardCharsets.US_ASCII);
+		return new Pcal(calibName, unitName, originalZero, originalMax, equationType, parameters);
 	}
 	
 	

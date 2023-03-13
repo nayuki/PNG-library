@@ -11,7 +11,6 @@ package io.nayuki.png.chunk;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Objects;
 import io.nayuki.png.Chunk;
 
@@ -60,14 +59,10 @@ public record Splt(
 	 */
 	public static Splt read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
-		
-		byte[][] parts = Util.splitByNul(in.readRemainingBytes(), 2);
-		if (parts[1].length < 1)
-			throw new IllegalArgumentException("Missing sample depth");
-		return new Splt(
-			new String(parts[0], StandardCharsets.ISO_8859_1),
-			parts[1][0],
-			Arrays.copyOfRange(parts[1], 1, parts[1].length));
+		String paletteName = in.readString(ChunkReader.Until.NUL, StandardCharsets.ISO_8859_1);
+		int sampleDepth = in.readUint8();
+		byte[] data = in.readRemainingBytes();
+		return new Splt(paletteName, sampleDepth, data);
 	}
 	
 	

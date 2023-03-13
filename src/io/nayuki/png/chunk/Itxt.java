@@ -11,7 +11,6 @@ package io.nayuki.png.chunk;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import io.nayuki.png.Chunk;
@@ -81,26 +80,19 @@ public record Itxt(
 	 */
 	public static Itxt read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
-		
-		byte[][] parts0 = Util.splitByNul(in.readRemainingBytes(), 2);
-		if (parts0[1].length < 2)
-			throw new IllegalArgumentException("Missing compression flag or compression method");
-		byte[] rest = Arrays.copyOfRange(parts0[1], 2, parts0[1].length);
-		byte[][] parts1 = Util.splitByNul(rest, 3);
-		
-		int compFlag = parts0[1][0];
-		int compMethod = parts0[1][1];
+		String keyword = in.readString(ChunkReader.Until.NUL, StandardCharsets.ISO_8859_1);
+		int compFlag = in.readUint8();
+		int compMethod = in.readUint8();
 		if (compFlag >>> 1 != 0)
 			throw new IllegalArgumentException("Compression flag out of range");
 		if (compFlag == 0 && compMethod != 0)
 			throw new IllegalArgumentException("Invalid compression method");
-		
-		return new Itxt(
-			new String(parts0[0], StandardCharsets.ISO_8859_1),
-			new String(parts1[0], StandardCharsets.ISO_8859_1),
-			new String(parts1[1], StandardCharsets.UTF_8),
+		String language = in.readString(ChunkReader.Until.NUL, StandardCharsets.ISO_8859_1);
+		String transKeyword = in.readString(ChunkReader.Until.NUL, StandardCharsets.UTF_8);
+		byte[] text = in.readRemainingBytes();
+		return new Itxt(keyword, language, transKeyword,
 			compFlag == 0 ? Optional.empty() : Optional.of(Util.indexInto(CompressionMethod.values(), compMethod)),
-			parts1[2]);
+			text);
 	}
 	
 	

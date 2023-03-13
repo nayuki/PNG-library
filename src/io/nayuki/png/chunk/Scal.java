@@ -52,13 +52,10 @@ public record Scal(
 	 */
 	public static Scal read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
-		
 		UnitSpecifier unitSpecifier = Util.indexInto(UnitSpecifier.values(), in.readUint8() - 1);
-		byte[][] parts = Util.splitByNul(in.readRemainingBytes(), 2);
-		return new Scal(
-			unitSpecifier,
-			new String(parts[0], StandardCharsets.US_ASCII),
-			new String(parts[1], StandardCharsets.US_ASCII));
+		String pixelWidth = in.readString(ChunkReader.Until.NUL, StandardCharsets.US_ASCII);
+		String pixelHeight = in.readString(ChunkReader.Until.END, StandardCharsets.US_ASCII);
+		return new Scal(unitSpecifier, pixelWidth, pixelHeight);
 	}
 	
 	

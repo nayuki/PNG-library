@@ -11,7 +11,9 @@ package io.nayuki.png.chunk;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
@@ -109,6 +111,41 @@ public final class ChunkReader {
 	}
 	
 	
+	public String readString(Until until, Charset cs) throws IOException {
+		return switch (until) {
+			case NUL -> {
+				var buf = new byte[1];
+				int bufLen = 0;
+				while (true) {
+					if (dataRemaining <= 0)
+						throw new IllegalStateException("Attempt to read too many bytes");
+					int b = input.read();
+					if (b == -1)
+						throw new EOFException();
+					else if (b == 0)
+						break;
+					else {
+						if (bufLen >= buf.length) {
+							int newLen = (int)Math.min((long)buf.length * 2, Integer.MAX_VALUE - 8);
+							if (newLen <= buf.length)
+								throw new IllegalArgumentException("String too long");
+							buf = Arrays.copyOf(buf, newLen);
+						}
+						buf[bufLen] = (byte)b;
+						bufLen++;
+					}
+				}
+				yield new String(buf, 0, bufLen, cs);
+			}
+			case END -> {
+				var buf = new byte[dataRemaining];
+				readFully(buf, 0, buf.length);
+				yield new String(buf, cs);
+			}
+		};
+	}
+	
+	
 	public void finish() throws IOException {
 		if (input == null)
 			throw new IllegalStateException("Already finished");
@@ -127,6 +164,12 @@ public final class ChunkReader {
 		checksum = null;
 		input = null;
 		dataRemaining = -1;
+	}
+	
+	
+	
+	public enum Until {
+		NUL, END
 	}
 	
 }

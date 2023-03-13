@@ -45,10 +45,9 @@ public record Text(String keyword, String text) implements Chunk {
 	 */
 	public static Text read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
-		byte[][] parts = Util.splitByNul(in.readRemainingBytes(), 2);
-		return new Text(
-			new String(parts[0], StandardCharsets.ISO_8859_1),
-			new String(parts[1], StandardCharsets.ISO_8859_1));
+		String keyword = in.readString(ChunkReader.Until.NUL, StandardCharsets.ISO_8859_1);
+		String text = in.readString(ChunkReader.Until.END, StandardCharsets.ISO_8859_1);
+		return new Text(keyword, text);
 	}
 	
 	
