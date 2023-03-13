@@ -62,23 +62,23 @@ public record Pcal(
 	/**
 	 * Reads from the specified chunk reader, parses the
 	 * fields, and returns a new chunk object of this type.
-	 * @param in0 the chunk reader to read the chunk's data from (not {@code null})
+	 * @param in the chunk reader to read the chunk's data from (not {@code null})
 	 * @return a new chunk object of this type (not {@code null})
 	 * @throws NullPointerException if the input stream is {@code null}
 	 * @throws IllegalArgumentException if the read data is invalid for this chunk type
 	 * @throws IOException if an I/O exception occurs
 	 */
-	public static Pcal read(ChunkReader in0) throws IOException {
-		Objects.requireNonNull(in0);
-		String calibName = in0.readString(ChunkReader.Until.NUL, StandardCharsets.ISO_8859_1);
-		int originalZero = in0.readInt32();
-		int originalMax = in0.readInt32();
-		EquationType equationType = Util.indexInto(EquationType.values(), in0.readUint8());
-		int numParameters = in0.readUint8();
-		String unitName = in0.readString(ChunkReader.Until.NUL, StandardCharsets.ISO_8859_1);
+	public static Pcal read(ChunkReader in) throws IOException {
+		Objects.requireNonNull(in);
+		String calibName = in.readString(ChunkReader.Until.NUL, StandardCharsets.ISO_8859_1);
+		int originalZero = in.readInt32();
+		int originalMax = in.readInt32();
+		EquationType equationType = Util.indexInto(EquationType.values(), in.readUint8());
+		int numParameters = in.readUint8();
+		String unitName = in.readString(ChunkReader.Until.NUL, StandardCharsets.ISO_8859_1);
 		var parameters = new String[numParameters];
 		for (int i = 0; i < parameters.length; i++)
-			parameters[i] = in0.readString((i < parameters.length - 1 ? ChunkReader.Until.NUL : ChunkReader.Until.END), StandardCharsets.US_ASCII);
+			parameters[i] = in.readString((i < parameters.length - 1 ? ChunkReader.Until.NUL : ChunkReader.Until.END), StandardCharsets.US_ASCII);
 		return new Pcal(calibName, unitName, originalZero, originalMax, equationType, parameters);
 	}
 	
