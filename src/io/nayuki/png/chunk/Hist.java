@@ -8,7 +8,6 @@
 
 package io.nayuki.png.chunk;
 
-import java.io.DataInput;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -34,24 +33,20 @@ public record Hist(short[] frequencies) implements SmallDataChunk {
 	
 	
 	/**
-	 * Reads the specified number of bytes from the specified input stream,
-	 * parses the fields, and returns a new chunk object of this type.
-	 * @param dataLen the expected number of bytes of chunk data (non-negative)
-	 * @param in the input stream to read from (not {@code null})
+	 * Reads from the specified chunk reader, parses the
+	 * fields, and returns a new chunk object of this type.
+	 * @param in the chunk reader to read the chunk's data from (not {@code null})
 	 * @return a new chunk object of this type (not {@code null})
 	 * @throws NullPointerException if the input stream is {@code null}
-	 * @throws IllegalArgumentException if {@code dataLen} is negative
-	 * or the read data is invalid for this chunk type
+	 * @throws IllegalArgumentException if the read data is invalid for this chunk type
 	 * @throws IOException if an I/O exception occurs
 	 */
-	public static Hist read(int dataLen, DataInput in) throws IOException {
-		if (dataLen < 0)
-			throw new IllegalArgumentException("Negative data length");
+	public static Hist read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
 		
-		var freqs = new short[dataLen / Short.BYTES];
+		var freqs = new short[in.getRemainingCount() / Short.BYTES];
 		for (int i = 0; i < freqs.length; i++)
-			freqs[i] = in.readShort();
+			freqs[i] = (short)in.readUnsignedShort();
 		return new Hist(freqs);
 	}
 	

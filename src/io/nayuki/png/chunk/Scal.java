@@ -8,7 +8,6 @@
 
 package io.nayuki.png.chunk;
 
-import java.io.DataInput;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -43,23 +42,19 @@ public record Scal(
 	
 	
 	/**
-	 * Reads the specified number of bytes from the specified input stream,
-	 * parses the fields, and returns a new chunk object of this type.
-	 * @param dataLen the expected number of bytes of chunk data (non-negative)
-	 * @param in the input stream to read from (not {@code null})
+	 * Reads from the specified chunk reader, parses the
+	 * fields, and returns a new chunk object of this type.
+	 * @param in the chunk reader to read the chunk's data from (not {@code null})
 	 * @return a new chunk object of this type (not {@code null})
 	 * @throws NullPointerException if the input stream is {@code null}
-	 * @throws IllegalArgumentException if {@code dataLen} is negative
-	 * or the read data is invalid for this chunk type
+	 * @throws IllegalArgumentException if the read data is invalid for this chunk type
 	 * @throws IOException if an I/O exception occurs
 	 */
-	public static Scal read(int dataLen, DataInput in) throws IOException {
-		if (dataLen < 0)
-			throw new IllegalArgumentException("Negative data length");
+	public static Scal read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
 		
 		UnitSpecifier unitSpecifier = Util.indexInto(UnitSpecifier.values(), in.readUnsignedByte() - 1);
-		byte[][] parts = Util.readAndSplitByNul(dataLen - 1, in, 2);
+		byte[][] parts = Util.splitByNul(in.readRemainingBytes(), 2);
 		return new Scal(
 			unitSpecifier,
 			new String(parts[0], StandardCharsets.US_ASCII),

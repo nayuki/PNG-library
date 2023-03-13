@@ -23,60 +23,56 @@ import io.nayuki.png.Chunk;
 public final class Util {
 	
 	/**
-	 * If the specified chunk type is represented by a known class in this package ({@link
-	 * io.nayuki.png.chunk}), then this function calls the {@code read()} function of that
-	 * class to parse and return a chunk of that type. For example, calling this function
-	 * with the chunk type "IHDR" will return an object of the class {@link Ihdr}) or throw an
-	 * {@code IllegalArgumentException} if the data is invalid. Otherwise if the chunk type
-	 * is not of a known type, then a {@link Custom} chunk is returned. This function can read
-	 * fewer than {@code dataLen} bytes; the caller should check for this erroneous behavior.
-	 * @param type the type of the chunk to be parsed
-	 * @param dataLen the expected length of chunk's data field, a non-negative number
-	 * @param in the input stream to read the chunk's data from
-	 * @return a new chunk object representing the data parsed from the input stream
-	 * @throws NullPointerException if the type or input stream is {@code null}
+	 * Reads from the specified chunk reader and returns a chunk object representing the
+	 * data that is read. If the chunk reader holds a type that corresponds to a known class
+	 * in this package ({@link io.nayuki.png.chunk}), then this function calls the {@code
+	 * read()} function of that class to parse and return a chunk of that type. For example,
+	 * calling this function with the chunk type "IHDR" will return an object of the class {@link
+	 * Ihdr} or throw an {@code IllegalArgumentException} if the data is invalid. Otherwise
+	 * if the chunk type is not of a known type, then a {@link Custom} chunk is returned.
+	 * @param in the chunk reader to read the chunk's data from (not {@code null})
+	 * @return a chunk object representing the data parsed from the chunk reader (not {@code null})
+	 * @throws NullPointerException if the chunk reader is {@code null}
 	 * @throws IllegalArgumentException if the chunk contains invalid data
 	 * @throws IOException if an I/O exception occurs
 	 */
-	public static Chunk readChunk(String type, int dataLen, DataInput in) throws IOException {
-		Objects.requireNonNull(type);
+	public static Chunk readChunk(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
-		if (dataLen < 0)
-			throw new IllegalArgumentException("Negative data length");
-		
-		return switch (type) {
-			case Actl.TYPE -> Actl.read(         in);
-			case Bkgd.TYPE -> Bkgd.read(dataLen, in);
-			case Chrm.TYPE -> Chrm.read(         in);
-			case Dsig.TYPE -> Dsig.read(dataLen, in);
-			case Exif.TYPE -> Exif.read(dataLen, in);
-			case Fctl.TYPE -> Fctl.read(         in);
-			case Fdat.TYPE -> Fdat.read(dataLen, in);
-			case Gama.TYPE -> Gama.read(         in);
-			case Gifg.TYPE -> Gifg.read(         in);
-			case Gift.TYPE -> Gift.read(dataLen, in);
-			case Gifx.TYPE -> Gifx.read(dataLen, in);
-			case Hist.TYPE -> Hist.read(dataLen, in);
-			case Iccp.TYPE -> Iccp.read(dataLen, in);
-			case Idat.TYPE -> Idat.read(dataLen, in);
+		Chunk result = switch (in.getType()) {
+			case Actl.TYPE -> Actl.read(in);
+			case Bkgd.TYPE -> Bkgd.read(in);
+			case Chrm.TYPE -> Chrm.read(in);
+			case Dsig.TYPE -> Dsig.read(in);
+			case Exif.TYPE -> Exif.read(in);
+			case Fctl.TYPE -> Fctl.read(in);
+			case Fdat.TYPE -> Fdat.read(in);
+			case Gama.TYPE -> Gama.read(in);
+			case Gifg.TYPE -> Gifg.read(in);
+			case Gift.TYPE -> Gift.read(in);
+			case Gifx.TYPE -> Gifx.read(in);
+			case Hist.TYPE -> Hist.read(in);
+			case Iccp.TYPE -> Iccp.read(in);
+			case Idat.TYPE -> Idat.read(in);
 			case Iend.TYPE -> Iend.SINGLETON;
-			case Ihdr.TYPE -> Ihdr.read(         in);
-			case Itxt.TYPE -> Itxt.read(dataLen, in);
-			case Offs.TYPE -> Offs.read(         in);
-			case Pcal.TYPE -> Pcal.read(dataLen, in);
-			case Phys.TYPE -> Phys.read(         in);
-			case Plte.TYPE -> Plte.read(dataLen, in);
-			case Sbit.TYPE -> Sbit.read(dataLen, in);
-			case Scal.TYPE -> Scal.read(dataLen, in);
-			case Splt.TYPE -> Splt.read(dataLen, in);
-			case Srgb.TYPE -> Srgb.read(         in);
-			case Ster.TYPE -> Ster.read(         in);
-			case Text.TYPE -> Text.read(dataLen, in);
-			case Time.TYPE -> Time.read(         in);
-			case Trns.TYPE -> Trns.read(dataLen, in);
-			case Ztxt.TYPE -> Ztxt.read(dataLen, in);
-			default -> Custom.read(type, dataLen, in);
+			case Ihdr.TYPE -> Ihdr.read(in);
+			case Itxt.TYPE -> Itxt.read(in);
+			case Offs.TYPE -> Offs.read(in);
+			case Pcal.TYPE -> Pcal.read(in);
+			case Phys.TYPE -> Phys.read(in);
+			case Plte.TYPE -> Plte.read(in);
+			case Sbit.TYPE -> Sbit.read(in);
+			case Scal.TYPE -> Scal.read(in);
+			case Splt.TYPE -> Splt.read(in);
+			case Srgb.TYPE -> Srgb.read(in);
+			case Ster.TYPE -> Ster.read(in);
+			case Text.TYPE -> Text.read(in);
+			case Time.TYPE -> Time.read(in);
+			case Trns.TYPE -> Trns.read(in);
+			case Ztxt.TYPE -> Ztxt.read(in);
+			default -> Custom.read(in);
 		};
+		in.finish();
+		return result;
 	}
 	
 	

@@ -8,7 +8,6 @@
 
 package io.nayuki.png.chunk;
 
-import java.io.DataInput;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Objects;
@@ -43,24 +42,22 @@ public record Gifx(
 	
 	
 	/**
-	 * Reads the specified number of bytes from the specified input stream,
-	 * parses the fields, and returns a new chunk object of this type.
-	 * @param dataLen the expected number of bytes of chunk data (non-negative)
-	 * @param in the input stream to read from (not {@code null})
+	 * Reads from the specified chunk reader, parses the
+	 * fields, and returns a new chunk object of this type.
+	 * @param in the chunk reader to read the chunk's data from (not {@code null})
 	 * @return a new chunk object of this type (not {@code null})
 	 * @throws NullPointerException if the input stream is {@code null}
-	 * @throws IllegalArgumentException if {@code dataLen} is negative
-	 * or the read data is invalid for this chunk type
+	 * @throws IllegalArgumentException if the read data is invalid for this chunk type
 	 * @throws IOException if an I/O exception occurs
 	 */
-	public static Gifx read(int dataLen, DataInput in) throws IOException {
-		if (dataLen < 0)
-			throw new IllegalArgumentException("Negative data length");
+	public static Gifx read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
 		
-		byte[] appIdentifier = Util.readBytes(in, 8);
-		byte[] authCode = Util.readBytes(in, 3);
-		byte[] appData = Util.readBytes(in, dataLen - appIdentifier.length - authCode.length);
+		var appIdentifier = new byte[8];
+		in.readFully(appIdentifier, 0, appIdentifier.length);
+		var authCode = new byte[3];
+		in.readFully(authCode, 0, authCode.length);
+		byte[] appData = in.readRemainingBytes();
 		return new Gifx(appIdentifier, authCode, appData);
 	}
 	

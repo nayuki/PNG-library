@@ -10,7 +10,6 @@ package io.nayuki.png;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,8 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.zip.CRC32;
-import java.util.zip.CheckedInputStream;
+import io.nayuki.png.chunk.ChunkReader;
 import io.nayuki.png.chunk.Custom;
 import io.nayuki.png.chunk.Ihdr;
 import io.nayuki.png.chunk.Util;
@@ -88,13 +86,12 @@ public record XngFile(Type type, List<Chunk> chunks) {
 	 * signature, chunk outer structure, or chunk inner structure (if parsing is enabled)
 	 * @throws IOException if an I/O exception occurs
 	 */
-	@SuppressWarnings("resource")  // This function needs to use many intermediate filters and discard them without closing the top-level stream
 	public static XngFile read(InputStream in, boolean parse) throws IOException {
 		Objects.requireNonNull(in);
-		var din0 = new DataInputStream(in);
+		var bin = new BufferedInputStream(in);
 		
 		var sig = new byte[8];
-		din0.readFully(sig);
+		new DataInputStream(bin).readFully(sig);
 		Type fileType = null;
 		for (Type t : Type.values()) {
 			if (Arrays.equals(t.signature, sig))
@@ -105,34 +102,18 @@ public record XngFile(Type type, List<Chunk> chunks) {
 		
 		List<Chunk> chunks = new ArrayList<>();
 		while (true) {
-			int dataLen = din0.read();
-			if (dataLen == -1)
+			bin.mark(1);
+			if (bin.read() == -1)
 				break;
-			for (int i = 0; i < 3; i++)
-				dataLen = (dataLen << 8) | din0.readUnsignedByte();
-			if (dataLen < 0)
-				throw new IllegalArgumentException("Chunk data length out of range");
+			bin.reset();
 			
-			var cin = new CheckedInputStream(in, new CRC32());
-			DataInput din1 = new DataInputStream(cin);
-			var sb = new StringBuilder();
-			for (int i = 0; i < 4; i++)
-				sb.append((char)din1.readUnsignedByte());
-			String type = sb.toString();
-			Chunk.checkType(type);
-			
-			var bin = new BoundedInputStream(cin, dataLen);
+			var cin = new ChunkReader(bin);
 			if (parse)
-				chunks.add(Util.readChunk(type, dataLen, new DataInputStream(bin)));
-			else
-				chunks.add(Custom.read(type, dataLen, new DataInputStream(bin)));
-			bin.finish();
-			
-			long crc = cin.getChecksum().getValue();
-			if (crc >>> 32 != 0)
-				throw new AssertionError("CRC-32 must be uint32");
-			if (din0.readInt() != (int)crc)
-				throw new IllegalArgumentException("Chunk CRC-32 mismatch");
+				chunks.add(Util.readChunk(cin));
+			else {
+				chunks.add(Custom.read(cin));
+				cin.finish();
+			}
 		}
 		return new XngFile(fileType, chunks);
 	}

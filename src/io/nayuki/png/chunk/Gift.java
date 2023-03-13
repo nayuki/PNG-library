@@ -8,7 +8,6 @@
 
 package io.nayuki.png.chunk;
 
-import java.io.DataInput;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -56,19 +55,15 @@ public record Gift(
 	
 	
 	/**
-	 * Reads the specified number of bytes from the specified input stream,
-	 * parses the fields, and returns a new chunk object of this type.
-	 * @param dataLen the expected number of bytes of chunk data (non-negative)
-	 * @param in the input stream to read from (not {@code null})
+	 * Reads from the specified chunk reader, parses the
+	 * fields, and returns a new chunk object of this type.
+	 * @param in the chunk reader to read the chunk's data from (not {@code null})
 	 * @return a new chunk object of this type (not {@code null})
 	 * @throws NullPointerException if the input stream is {@code null}
-	 * @throws IllegalArgumentException if {@code dataLen} is negative
-	 * or the read data is invalid for this chunk type
+	 * @throws IllegalArgumentException if the read data is invalid for this chunk type
 	 * @throws IOException if an I/O exception occurs
 	 */
-	public static Gift read(int dataLen, DataInput in) throws IOException {
-		if (dataLen < 0)
-			throw new IllegalArgumentException("Negative data length");
+	public static Gift read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
 		
 		int textGridLeft   = in.readInt();
@@ -88,7 +83,7 @@ public record Gift(
 		return new Gift(
 			textGridLeft, textGridTop, textGridWidth, textGridHeight,
 			charCellWidth, charCellHeight, textForegroundColor, textBackgroundColor,
-			new String(Util.readBytes(in, dataLen - 24), StandardCharsets.US_ASCII));
+			new String(in.readRemainingBytes(), StandardCharsets.US_ASCII));
 	}
 	
 	
