@@ -8,7 +8,6 @@
 
 package io.nayuki.png.chunk;
 
-import java.io.DataInput;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -140,14 +139,6 @@ public final class Util {
 		"([+-]?)(\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][+-]?\\d+)?");
 	
 	private static final Pattern NONZERO = Pattern.compile("[1-9]");
-	
-	
-	// Returns a new array of fully reading the given number of bytes.
-	static byte[] readBytes(DataInput in, int len) throws IOException {
-		var result = new byte[len];
-		in.readFully(result);
-		return result;
-	}
 	
 	
 	// Returns the given array element or throws a specific exception.
