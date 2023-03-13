@@ -70,15 +70,15 @@ public record Gift(
 		int textGridTop    = in.readInt();
 		int textGridWidth  = in.readInt();
 		int textGridHeight = in.readInt();
-		int charCellWidth  = in.readUnsignedByte();
-		int charCellHeight = in.readUnsignedByte();
+		int charCellWidth  = in.readUint8();
+		int charCellHeight = in.readUint8();
 		
 		int textForegroundColor = 0;
 		for (int i = 0; i < 3; i++)
-			textForegroundColor = (textForegroundColor << 8) | in.readUnsignedByte();
+			textForegroundColor = (textForegroundColor << 8) | in.readUint8();
 		int textBackgroundColor = 0;
 		for (int i = 0; i < 3; i++)
-			textBackgroundColor = (textBackgroundColor << 8) | in.readUnsignedByte();
+			textBackgroundColor = (textBackgroundColor << 8) | in.readUint8();
 		
 		return new Gift(
 			textGridLeft, textGridTop, textGridWidth, textGridHeight,

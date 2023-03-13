@@ -73,8 +73,8 @@ public record Fctl(
 		int yOffset  = in.readInt();
 		int delayNumerator   = in.readUnsignedShort();
 		int delayDenominator = in.readUnsignedShort();
-		DisposeOperation disposeOp = Util.indexInto(DisposeOperation.values(), in.readUnsignedByte());
-		BlendOperation blendOp     = Util.indexInto(BlendOperation  .values(), in.readUnsignedByte());
+		DisposeOperation disposeOp = Util.indexInto(DisposeOperation.values(), in.readUint8());
+		BlendOperation blendOp     = Util.indexInto(BlendOperation  .values(), in.readUint8());
 		return new Fctl(sequence, width, height, xOffset, yOffset,
 			delayNumerator, delayDenominator, disposeOp, blendOp);
 	}

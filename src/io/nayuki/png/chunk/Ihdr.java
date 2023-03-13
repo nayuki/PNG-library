@@ -61,10 +61,10 @@ public record Ihdr(
 		Objects.requireNonNull(in);
 		int width = in.readInt();
 		int height = in.readInt();
-		int bitDepth = in.readUnsignedByte();
+		int bitDepth = in.readUint8();
 		
 		ColorType colorType = null;
-		int colorTypeInt = in.readUnsignedByte();
+		int colorTypeInt = in.readUint8();
 		for (ColorType val : ColorType.values()) {
 			if (val.value == colorTypeInt)
 				colorType = val;
@@ -72,9 +72,9 @@ public record Ihdr(
 		if (colorType == null)
 			throw new IllegalArgumentException("Unrecognized value for enumeration");
 		
-		CompressionMethod compressionMethod = Util.indexInto(CompressionMethod.values(), in.readUnsignedByte());
-		FilterMethod filterMethod = Util.indexInto(FilterMethod.values(), in.readUnsignedByte());
-		InterlaceMethod interlaceMethod = Util.indexInto(InterlaceMethod.values(), in.readUnsignedByte());
+		CompressionMethod compressionMethod = Util.indexInto(CompressionMethod.values(), in.readUint8());
+		FilterMethod filterMethod = Util.indexInto(FilterMethod.values(), in.readUint8());
+		InterlaceMethod interlaceMethod = Util.indexInto(InterlaceMethod.values(), in.readUint8());
 		return new Ihdr(width, height, bitDepth, colorType, compressionMethod, filterMethod, interlaceMethod);
 	}
 	

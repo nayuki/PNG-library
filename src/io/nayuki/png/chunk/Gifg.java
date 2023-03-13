@@ -48,8 +48,8 @@ public record Gifg(
 	 */
 	public static Gifg read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
-		int disposalMethod = in.readUnsignedByte();
-		int userInputFlag = in.readUnsignedByte();
+		int disposalMethod = in.readUint8();
+		int userInputFlag = in.readUint8();
 		int delayTime = in.readUnsignedShort();
 		if (userInputFlag >>> 1 != 0)
 			throw new IllegalArgumentException("User input flag out of range");

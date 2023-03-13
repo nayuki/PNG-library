@@ -81,11 +81,11 @@ public record Time(
 	public static Time read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
 		int year   = in.readUnsignedShort();
-		int month  = in.readUnsignedByte ();
-		int day    = in.readUnsignedByte ();
-		int hour   = in.readUnsignedByte ();
-		int minute = in.readUnsignedByte ();
-		int second = in.readUnsignedByte ();
+		int month  = in.readUint8();
+		int day    = in.readUint8();
+		int hour   = in.readUint8();
+		int minute = in.readUint8();
+		int second = in.readUint8();
 		return new Time(year, month, day, hour, minute, second);
 	}
 	

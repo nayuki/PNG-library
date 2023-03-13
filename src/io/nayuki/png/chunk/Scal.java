@@ -53,7 +53,7 @@ public record Scal(
 	public static Scal read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
 		
-		UnitSpecifier unitSpecifier = Util.indexInto(UnitSpecifier.values(), in.readUnsignedByte() - 1);
+		UnitSpecifier unitSpecifier = Util.indexInto(UnitSpecifier.values(), in.readUint8() - 1);
 		byte[][] parts = Util.splitByNul(in.readRemainingBytes(), 2);
 		return new Scal(
 			unitSpecifier,

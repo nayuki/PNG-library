@@ -85,7 +85,7 @@ public final class ChunkReader {
 	}
 	
 	
-	public int readUnsignedByte() throws IOException {
+	public int readUint8() throws IOException {
 		return readInt(1);
 	}
 	
