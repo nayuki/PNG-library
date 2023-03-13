@@ -46,7 +46,7 @@ public record Hist(short[] frequencies) implements SmallDataChunk {
 		
 		var freqs = new short[in.getRemainingCount() / Short.BYTES];
 		for (int i = 0; i < freqs.length; i++)
-			freqs[i] = (short)in.readUnsignedShort();
+			freqs[i] = (short)in.readUint16();
 		return new Hist(freqs);
 	}
 	

@@ -50,7 +50,7 @@ public record Gifg(
 		Objects.requireNonNull(in);
 		int disposalMethod = in.readUint8();
 		int userInputFlag = in.readUint8();
-		int delayTime = in.readUnsignedShort();
+		int delayTime = in.readUint16();
 		if (userInputFlag >>> 1 != 0)
 			throw new IllegalArgumentException("User input flag out of range");
 		return new Gifg(disposalMethod, userInputFlag != 0, delayTime);

@@ -90,7 +90,7 @@ public final class ChunkReader {
 	}
 	
 	
-	public int readUnsignedShort() throws IOException {
+	public int readUint16() throws IOException {
 		return readInt(2);
 	}
 	
