@@ -49,7 +49,7 @@ public record Fdat(
 	 */
 	public static Fdat read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
-		int sequence = in.readInt();
+		int sequence = in.readInt32();
 		byte[] data = in.readRemainingBytes();
 		return new Fdat(sequence, data);
 	}

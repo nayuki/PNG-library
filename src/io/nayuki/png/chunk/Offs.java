@@ -48,8 +48,8 @@ public record Offs(
 	 */
 	public static Offs read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
-		int xPosition = in.readInt();
-		int yPosition = in.readInt();
+		int xPosition = in.readInt32();
+		int yPosition = in.readInt32();
 		UnitSpecifier unitSpecifier = Util.indexInto(UnitSpecifier.values(), in.readUint8());
 		return new Offs(xPosition, yPosition, unitSpecifier);
 	}

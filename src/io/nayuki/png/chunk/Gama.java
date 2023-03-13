@@ -57,7 +57,7 @@ public record Gama(int gamma) implements SmallDataChunk {
 	 */
 	public static Gama read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
-		return new Gama(in.readInt());
+		return new Gama(in.readInt32());
 	}
 	
 	

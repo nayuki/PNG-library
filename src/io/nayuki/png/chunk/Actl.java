@@ -47,8 +47,8 @@ public record Actl(
 	 */
 	public static Actl read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
-		int numFrames = in.readInt();
-		int numPlays  = in.readInt();
+		int numFrames = in.readInt32();
+		int numPlays  = in.readInt32();
 		return new Actl(numFrames, numPlays);
 	}
 	

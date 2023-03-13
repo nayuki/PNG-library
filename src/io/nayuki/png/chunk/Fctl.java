@@ -66,11 +66,11 @@ public record Fctl(
 	 */
 	public static Fctl read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
-		int sequence = in.readInt();
-		int width    = in.readInt();
-		int height   = in.readInt();
-		int xOffset  = in.readInt();
-		int yOffset  = in.readInt();
+		int sequence = in.readInt32();
+		int width    = in.readInt32();
+		int height   = in.readInt32();
+		int xOffset  = in.readInt32();
+		int yOffset  = in.readInt32();
 		int delayNumerator   = in.readUint16();
 		int delayDenominator = in.readUint16();
 		DisposeOperation disposeOp = Util.indexInto(DisposeOperation.values(), in.readUint8());

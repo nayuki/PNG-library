@@ -36,7 +36,7 @@ public final class ChunkReader {
 		input = Objects.requireNonNull(in);
 		
 		dataRemaining = 4;
-		int dataLen = readInt();
+		int dataLen = readInt32();
 		if (dataLen < 0)
 			throw new IllegalArgumentException("Chunk data length out of range");
 		
@@ -95,7 +95,7 @@ public final class ChunkReader {
 	}
 	
 	
-	public int readInt() throws IOException {
+	public int readInt32() throws IOException {
 		return readInt(4);
 	}
 	
@@ -121,7 +121,7 @@ public final class ChunkReader {
 		if (crc >>> 32 != 0)
 			throw new AssertionError("Unreachable value");
 		dataRemaining = 4;
-		if (readInt() != (int)crc)
+		if (readInt32() != (int)crc)
 			throw new IllegalArgumentException("Chunk CRC-32 mismatch");
 		
 		checksum = null;

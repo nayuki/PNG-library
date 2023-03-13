@@ -66,10 +66,10 @@ public record Gift(
 	public static Gift read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
 		
-		int textGridLeft   = in.readInt();
-		int textGridTop    = in.readInt();
-		int textGridWidth  = in.readInt();
-		int textGridHeight = in.readInt();
+		int textGridLeft   = in.readInt32();
+		int textGridTop    = in.readInt32();
+		int textGridWidth  = in.readInt32();
+		int textGridHeight = in.readInt32();
 		int charCellWidth  = in.readUint8();
 		int charCellHeight = in.readUint8();
 		

@@ -59,8 +59,8 @@ public record Ihdr(
 	 */
 	public static Ihdr read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
-		int width = in.readInt();
-		int height = in.readInt();
+		int width = in.readInt32();
+		int height = in.readInt32();
 		int bitDepth = in.readUint8();
 		
 		ColorType colorType = null;

@@ -75,14 +75,14 @@ public record Chrm(
 	 */
 	public static Chrm read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
-		int whitePointX = in.readInt();
-		int whitePointY = in.readInt();
-		int redX        = in.readInt();
-		int redY        = in.readInt();
-		int greenX      = in.readInt();
-		int greenY      = in.readInt();
-		int blueX       = in.readInt();
-		int blueY       = in.readInt();
+		int whitePointX = in.readInt32();
+		int whitePointY = in.readInt32();
+		int redX        = in.readInt32();
+		int redY        = in.readInt32();
+		int greenX      = in.readInt32();
+		int greenY      = in.readInt32();
+		int blueX       = in.readInt32();
+		int blueY       = in.readInt32();
 		return new Chrm(
 			whitePointX, whitePointY,
 			redX       , redY       ,

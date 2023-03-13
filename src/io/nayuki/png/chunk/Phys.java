@@ -47,8 +47,8 @@ public record Phys(
 	 */
 	public static Phys read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
-		int pixelsPerUnitX = in.readInt();
-		int pixelsPerUnitY = in.readInt();
+		int pixelsPerUnitX = in.readInt32();
+		int pixelsPerUnitY = in.readInt32();
 		UnitSpecifier unitSpecifier = Util.indexInto(UnitSpecifier.values(), in.readUint8());
 		return new Phys(pixelsPerUnitX, pixelsPerUnitY, unitSpecifier);
 	}
