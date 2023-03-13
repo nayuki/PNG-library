@@ -141,15 +141,6 @@ public final class Util {
 	private static final Pattern NONZERO = Pattern.compile("[1-9]");
 	
 	
-	// Returns the given array element or throws a specific exception.
-	static <E> E indexInto(E[] array, int index) {
-		if (0 <= index && index < array.length)
-			return array[index];
-		else
-			throw new IllegalArgumentException("Unrecognized value for enumeration");
-	}
-	
-	
 	private Util() {}
 	
 }

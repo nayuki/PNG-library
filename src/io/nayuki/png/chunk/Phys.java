@@ -49,7 +49,7 @@ public record Phys(
 		Objects.requireNonNull(in);
 		int pixelsPerUnitX = in.readInt32();
 		int pixelsPerUnitY = in.readInt32();
-		UnitSpecifier unitSpecifier = Util.indexInto(UnitSpecifier.values(), in.readUint8());
+		UnitSpecifier unitSpecifier = in.readEnum(UnitSpecifier.values());
 		return new Phys(pixelsPerUnitX, pixelsPerUnitY, unitSpecifier);
 	}
 	

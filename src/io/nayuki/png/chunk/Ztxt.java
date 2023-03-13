@@ -58,7 +58,7 @@ public record Ztxt(
 	public static Ztxt read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
 		String keyword = in.readString(ChunkReader.Until.NUL, StandardCharsets.ISO_8859_1);
-		CompressionMethod compMethod = Util.indexInto(CompressionMethod.values(), in.readUint8());
+		CompressionMethod compMethod = in.readEnum(CompressionMethod.values());
 		byte[] compText = in.readRemainingBytes();
 		return new Ztxt(keyword, compMethod, compText);
 	}

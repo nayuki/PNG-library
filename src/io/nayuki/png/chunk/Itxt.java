@@ -83,15 +83,19 @@ public record Itxt(
 		String keyword = in.readString(ChunkReader.Until.NUL, StandardCharsets.ISO_8859_1);
 		int compFlag = in.readUint8();
 		int compMethod = in.readUint8();
-		if (compFlag >>> 1 != 0)
+		if (compFlag == 0) {
+			if (compMethod != 0)
+				throw new IllegalArgumentException("Invalid compression method");
+		} else if (compFlag == 1) {
+			if (compMethod > CompressionMethod.values().length)
+				throw new IllegalArgumentException("Unrecognized value for enumeration");
+		} else
 			throw new IllegalArgumentException("Compression flag out of range");
-		if (compFlag == 0 && compMethod != 0)
-			throw new IllegalArgumentException("Invalid compression method");
 		String language = in.readString(ChunkReader.Until.NUL, StandardCharsets.ISO_8859_1);
 		String transKeyword = in.readString(ChunkReader.Until.NUL, StandardCharsets.UTF_8);
 		byte[] text = in.readRemainingBytes();
 		return new Itxt(keyword, language, transKeyword,
-			compFlag == 0 ? Optional.empty() : Optional.of(Util.indexInto(CompressionMethod.values(), compMethod)),
+			compFlag == 0 ? Optional.empty() : Optional.of(CompressionMethod.values()[compMethod]),
 			text);
 	}
 	

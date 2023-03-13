@@ -73,7 +73,7 @@ public record Pcal(
 		String calibName = in.readString(ChunkReader.Until.NUL, StandardCharsets.ISO_8859_1);
 		int originalZero = in.readInt32();
 		int originalMax = in.readInt32();
-		EquationType equationType = Util.indexInto(EquationType.values(), in.readUint8());
+		EquationType equationType = in.readEnum(EquationType.values());
 		int numParameters = in.readUint8();
 		String unitName = in.readString(ChunkReader.Until.NUL, StandardCharsets.ISO_8859_1);
 		var parameters = new String[numParameters];

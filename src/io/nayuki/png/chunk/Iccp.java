@@ -54,7 +54,7 @@ public record Iccp(
 	public static Iccp read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
 		String profileName = in.readString(ChunkReader.Until.NUL, StandardCharsets.ISO_8859_1);
-		CompressionMethod compMethod = Util.indexInto(CompressionMethod.values(), in.readUint8());
+		CompressionMethod compMethod = in.readEnum(CompressionMethod.values());
 		byte[] compProfile = in.readRemainingBytes();
 		return new Iccp(profileName, compMethod, compProfile);
 	}

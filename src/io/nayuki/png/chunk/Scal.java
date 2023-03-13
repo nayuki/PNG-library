@@ -52,7 +52,10 @@ public record Scal(
 	 */
 	public static Scal read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
-		UnitSpecifier unitSpecifier = Util.indexInto(UnitSpecifier.values(), in.readUint8() - 1);
+		int unitSpecIndex = in.readUint8() - 1;
+		if (!(0 <= unitSpecIndex && unitSpecIndex < UnitSpecifier.values().length))
+			throw new IllegalArgumentException("Unrecognized value for enumeration");
+		UnitSpecifier unitSpecifier = UnitSpecifier.values()[unitSpecIndex];
 		String pixelWidth = in.readString(ChunkReader.Until.NUL, StandardCharsets.US_ASCII);
 		String pixelHeight = in.readString(ChunkReader.Until.END, StandardCharsets.US_ASCII);
 		return new Scal(unitSpecifier, pixelWidth, pixelHeight);

@@ -50,7 +50,7 @@ public record Offs(
 		Objects.requireNonNull(in);
 		int xPosition = in.readInt32();
 		int yPosition = in.readInt32();
-		UnitSpecifier unitSpecifier = Util.indexInto(UnitSpecifier.values(), in.readUint8());
+		UnitSpecifier unitSpecifier = in.readEnum(UnitSpecifier.values());
 		return new Offs(xPosition, yPosition, unitSpecifier);
 	}
 	

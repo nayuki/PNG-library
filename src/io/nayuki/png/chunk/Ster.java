@@ -40,7 +40,7 @@ public record Ster(Mode mode) implements SmallDataChunk {
 	 */
 	public static Ster read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
-		Mode mode = Util.indexInto(Mode.values(), in.readUint8());
+		Mode mode = in.readEnum(Mode.values());
 		return new Ster(mode);
 	}
 	

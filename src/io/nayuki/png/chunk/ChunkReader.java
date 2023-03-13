@@ -111,6 +111,15 @@ public final class ChunkReader {
 	}
 	
 	
+	public <E extends Enum<E>> E readEnum(E[] allValues) throws IOException {
+		int index = readUint8();
+		if (0 <= index && index < allValues.length)
+			return allValues[index];
+		else
+			throw new IllegalArgumentException("Unrecognized value for enumeration");
+	}
+	
+	
 	public String readString(Until until, Charset cs) throws IOException {
 		return switch (until) {
 			case NUL -> {

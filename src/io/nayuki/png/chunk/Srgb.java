@@ -41,7 +41,7 @@ public record Srgb(RenderingIntent renderingIntent) implements SmallDataChunk {
 	 */
 	public static Srgb read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
-		RenderingIntent renderingIntent = Util.indexInto(RenderingIntent.values(), in.readUint8());
+		RenderingIntent renderingIntent = in.readEnum(RenderingIntent.values());
 		return new Srgb(renderingIntent);
 	}
 	
