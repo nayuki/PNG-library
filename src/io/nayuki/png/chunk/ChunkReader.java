@@ -122,38 +122,35 @@ final class ChunkReader {
 	}
 	
 	
-	public String readString(Until until, Charset cs) throws IOException {
-		return switch (until) {
-			case NUL -> {
-				var buf = new byte[1];
-				int bufLen = 0;
-				while (true) {
-					if (dataRemaining <= 0)
-						throw new IllegalStateException("Attempt to read too many bytes");
-					int b = input.read();
-					if (b == -1)
-						throw new EOFException();
-					else if (b == 0)
-						break;
-					else {
-						if (bufLen >= buf.length) {
-							int newLen = (int)Math.min((long)buf.length * 2, Integer.MAX_VALUE - 8);
-							if (newLen <= buf.length)
-								throw new IllegalArgumentException("String too long");
-							buf = Arrays.copyOf(buf, newLen);
-						}
-						buf[bufLen] = (byte)b;
-						bufLen++;
+	public String readString(boolean endByNul, Charset cs) throws IOException {
+		if (endByNul) {
+			var buf = new byte[1];
+			int bufLen = 0;
+			while (true) {
+				if (dataRemaining <= 0)
+					throw new IllegalStateException("Attempt to read too many bytes");
+				int b = input.read();
+				if (b == -1)
+					throw new EOFException();
+				else if (b == 0)
+					break;
+				else {
+					if (bufLen >= buf.length) {
+						int newLen = (int)Math.min((long)buf.length * 2, Integer.MAX_VALUE - 8);
+						if (newLen <= buf.length)
+							throw new IllegalArgumentException("String too long");
+						buf = Arrays.copyOf(buf, newLen);
 					}
+					buf[bufLen] = (byte)b;
+					bufLen++;
 				}
-				yield new String(buf, 0, bufLen, cs);
 			}
-			case END -> {
-				var buf = new byte[dataRemaining];
-				readFully(buf, 0, buf.length);
-				yield new String(buf, cs);
-			}
-		};
+			return new String(buf, 0, bufLen, cs);
+		} else {
+			var buf = new byte[dataRemaining];
+			readFully(buf, 0, buf.length);
+			return new String(buf, cs);
+		}
 	}
 	
 	
@@ -175,12 +172,6 @@ final class ChunkReader {
 		checksum = null;
 		input = null;
 		dataRemaining = -1;
-	}
-	
-	
-	
-	public enum Until {
-		NUL, END
 	}
 	
 }

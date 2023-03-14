@@ -46,8 +46,8 @@ public record Scal(
 		if (!(0 <= unitSpecIndex && unitSpecIndex < UnitSpecifier.values().length))
 			throw new IllegalArgumentException("Unrecognized value for enumeration");
 		UnitSpecifier unitSpecifier = UnitSpecifier.values()[unitSpecIndex];
-		String pixelWidth = in.readString(ChunkReader.Until.NUL, StandardCharsets.US_ASCII);
-		String pixelHeight = in.readString(ChunkReader.Until.END, StandardCharsets.US_ASCII);
+		String pixelWidth = in.readString(true, StandardCharsets.US_ASCII);
+		String pixelHeight = in.readString(false, StandardCharsets.US_ASCII);
 		return new Scal(unitSpecifier, pixelWidth, pixelHeight);
 	}
 	

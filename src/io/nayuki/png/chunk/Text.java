@@ -35,8 +35,8 @@ public record Text(String keyword, String text) implements Chunk {
 	
 	static Text read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
-		String keyword = in.readString(ChunkReader.Until.NUL, StandardCharsets.ISO_8859_1);
-		String text = in.readString(ChunkReader.Until.END, StandardCharsets.ISO_8859_1);
+		String keyword = in.readString(true, StandardCharsets.ISO_8859_1);
+		String text = in.readString(false, StandardCharsets.ISO_8859_1);
 		return new Text(keyword, text);
 	}
 	
