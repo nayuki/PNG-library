@@ -94,7 +94,7 @@ public record Pcal(
 		cout.writeUint8(parameters.length);
 		cout.writeString(unitName, StandardCharsets.ISO_8859_1, true);
 		for (int i = 0; i < parameters.length; i++)
-			cout.writeString(parameters[i], StandardCharsets.US_ASCII, i < parameters.length - 1);
+			cout.writeString(parameters[i], StandardCharsets.US_ASCII, (i < parameters.length - 1));
 		cout.finish();
 	}
 	
