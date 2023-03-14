@@ -11,7 +11,6 @@ package io.nayuki.png.image;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import java.util.Random;
-import org.junit.Assert;
 import org.junit.Test;
 import io.nayuki.png.TestUtil;
 
@@ -191,15 +190,11 @@ public final class BufferedPaletteImageTest {
 			int paletteLen = rand.nextInt(256) + 1;
 			var img = new BufferedPaletteImage(1, 1, DEFAULT_BIT_DEPTHS, new long[paletteLen]);
 			int val = rand.nextInt(1024) - 256;
-			boolean valid = 0 <= val && val < paletteLen;
-			try {
+			if (0 <= val && val < paletteLen)
 				img.setPixel(0, 0, val);
-				if (!valid)
-					Assert.fail("Expected exception");
-				assertEquals(val, img.getPixel(0, 0));
-			} catch (IllegalArgumentException e) {
-				if (valid)
-					Assert.fail("Unexpected exception");
+			else {
+				TestUtil.runExpect(IllegalArgumentException.class,
+					() -> img.setPixel(0, 0, val));
 			}
 		}
 	}
@@ -350,14 +345,12 @@ public final class BufferedPaletteImageTest {
 			
 			var img = new BufferedPaletteImage(1, 1, bitDepths, new long[1]);
 			assertArrayEquals(bitDepths, img.getBitDepths());
-			try {
-				long val = r << 48 | g << 32 | b << 16 | a << 0;
-				img.setPalette(new long[]{val});
-				if (!valid)
-					Assert.fail("Expected exception");
-			} catch (IllegalArgumentException e) {
-				if (valid)
-					Assert.fail("Unexpected exception");
+			var pal = new long[]{r << 48 | g << 32 | b << 16 | a << 0};
+			if (valid)
+				img.setPalette(pal);
+			else {
+				TestUtil.runExpect(IllegalArgumentException.class,
+					() -> img.setPalette(pal));
 			}
 		}
 	}

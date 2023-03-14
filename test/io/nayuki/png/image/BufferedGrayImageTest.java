@@ -11,7 +11,6 @@ package io.nayuki.png.image;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import java.util.Random;
-import org.junit.Assert;
 import org.junit.Test;
 import io.nayuki.png.TestUtil;
 
@@ -247,15 +246,12 @@ public final class BufferedGrayImageTest {
 			
 			var img = new BufferedGrayImage(1, 1, bitDepths);
 			assertArrayEquals(bitDepths, img.getBitDepths());
-			try {
-				int val = w << 16 | a << 0;
+			int val = w << 16 | a << 0;
+			if (valid)
 				img.setPixel(0, 0, val);
-				if (!valid)
-					Assert.fail("Expected exception");
-				assertEquals(val, img.getPixel(0, 0));
-			} catch (IllegalArgumentException e) {
-				if (valid)
-					Assert.fail("Unexpected exception");
+			else {
+				TestUtil.runExpect(IllegalArgumentException.class,
+					() -> img.setPixel(0, 0, val));
 			}
 		}
 	}
