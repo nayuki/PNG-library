@@ -44,12 +44,11 @@ public interface Chunk {
 	 * @throws IOException if an I/O exception occurs
 	 */
 	public static Optional<Chunk> read(InputStream in) throws IOException {
-		Objects.requireNonNull(in);
-		int b = in.read();
-		if (b == -1)
+		Optional<ChunkReader> temp = ChunkReader.tryNew(in);
+		if (temp.isEmpty())
 			return Optional.empty();
 		
-		var cin = new ChunkReader(b, in);
+		ChunkReader cin = temp.get();
 		Chunk result = switch (cin.getType()) {
 			case Actl.TYPE -> Actl.read(cin);
 			case Bkgd.TYPE -> Bkgd.read(cin);

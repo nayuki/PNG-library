@@ -15,11 +15,24 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
 
 final class ChunkReader {
+	
+	/*---- Factory ----*/
+	
+	public static Optional<ChunkReader> tryNew(InputStream in) throws IOException {
+		Objects.requireNonNull(in);
+		int b = in.read();
+		if (b == -1)
+			return Optional.empty();
+		return Optional.of(new ChunkReader(b, in));
+	}
+	
+	
 	
 	/*---- Fields ----*/
 	
@@ -33,7 +46,7 @@ final class ChunkReader {
 	
 	/*---- Constructor ----*/
 	
-	public ChunkReader(int lenByte0, InputStream in) throws IOException {
+	private ChunkReader(int lenByte0, InputStream in) throws IOException {
 		input = Objects.requireNonNull(in);
 		
 		dataRemaining = 3;
