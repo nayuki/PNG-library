@@ -8,8 +8,8 @@
 
 package io.nayuki.png.chunk;
 
-import static io.nayuki.png.Chunk.CompressionMethod.ZLIB_DEFLATE;
 import static io.nayuki.png.TestUtil.hexToBytes;
+import static io.nayuki.png.chunk.Chunk.CompressionMethod.ZLIB_DEFLATE;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;

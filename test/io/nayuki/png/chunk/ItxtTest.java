@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import org.junit.Test;
-import io.nayuki.png.Chunk;
 import io.nayuki.png.TestUtil;
 
 

@@ -14,7 +14,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
-import io.nayuki.png.Chunk;
 
 
 public final class ChunkWriter {

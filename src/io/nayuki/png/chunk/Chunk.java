@@ -6,7 +6,7 @@
  * https://www.nayuki.io/page/png-library
  */
 
-package io.nayuki.png;
+package io.nayuki.png.chunk;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -16,8 +16,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterOutputStream;
-import io.nayuki.png.chunk.ChunkReader;
-import io.nayuki.png.chunk.Util;
 
 
 /**

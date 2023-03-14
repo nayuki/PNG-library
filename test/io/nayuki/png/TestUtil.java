@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Random;
 import org.junit.Assert;
+import io.nayuki.png.chunk.Chunk;
 
 
 public final class TestUtil {

@@ -13,7 +13,6 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.Optional;
-import io.nayuki.png.Chunk;
 
 
 /**

@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import io.nayuki.png.chunk.Chunk;
 import io.nayuki.png.chunk.Custom;
 import io.nayuki.png.chunk.Ihdr;
 

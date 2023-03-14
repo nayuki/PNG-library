@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import io.nayuki.png.Chunk;
 
 
 /**

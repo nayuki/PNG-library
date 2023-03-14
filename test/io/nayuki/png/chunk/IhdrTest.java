@@ -8,7 +8,7 @@
 
 package io.nayuki.png.chunk;
 
-import static io.nayuki.png.Chunk.CompressionMethod.ZLIB_DEFLATE;
+import static io.nayuki.png.chunk.Chunk.CompressionMethod.ZLIB_DEFLATE;
 import static io.nayuki.png.chunk.Ihdr.FilterMethod.ADAPTIVE;
 import static io.nayuki.png.chunk.Ihdr.InterlaceMethod.ADAM7;
 import static io.nayuki.png.chunk.Ihdr.InterlaceMethod.NONE;

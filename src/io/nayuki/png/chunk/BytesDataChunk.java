@@ -10,7 +10,6 @@ package io.nayuki.png.chunk;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import io.nayuki.png.Chunk;
 
 
 /**
