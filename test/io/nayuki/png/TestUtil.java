@@ -27,14 +27,16 @@ public final class TestUtil {
 	}
 	
 	
-	public static void runExpect(Class<? extends Throwable> exception, Runnable func) {
+	public static void runExpect(Class<? extends Throwable> exception, ThrowableRunnable func) {
 		try {
 			func.run();
-			Assert.fail("Expected exception");
 		} catch (Throwable e) {
-			if (exception.isInstance(e));  // Pass
-			else  throw e;
+			if (exception.isInstance(e))
+				return;  // Pass
+			else
+				throw new AssertionError("Unexpected exception", e);
 		}
+		Assert.fail("Expected exception");
 	}
 	
 	
@@ -73,5 +75,11 @@ public final class TestUtil {
 	
 	
 	private TestUtil() {}
+	
+	
+	
+	public interface ThrowableRunnable {
+		public void run() throws Throwable;
+	}
 	
 }

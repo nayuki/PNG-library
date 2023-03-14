@@ -91,22 +91,18 @@ public final class ZtxtTest {
 			return;
 		
 		TestUtil.runExpect(IllegalArgumentException.class, () -> {
-			try {
-				var bout = new ByteArrayOutputStream(2_147_483_567);
-				bout.write(hexToBytes("789C"));
-				var blockData = new byte[0xFFFF];
-				Arrays.fill(blockData, (byte)'X');
-				for (int i = 0; i < 32765; i++) {
-					bout.write(hexToBytes("00FFFF0000"));
-					bout.write(blockData);
-				}
-				bout.write(hexToBytes("01B0FF4F00"));
-				bout.write(blockData, 0, 0xFFB0);
-				bout.write(hexToBytes("0056FF42"));
-				new Ztxt("x".repeat(79), ZLIB_DEFLATE, bout.toByteArray());
-			} catch (IOException e) {
-				throw new AssertionError("Unreachable exception", e);
+			var bout = new ByteArrayOutputStream(2_147_483_567);
+			bout.write(hexToBytes("789C"));
+			var blockData = new byte[0xFFFF];
+			Arrays.fill(blockData, (byte)'X');
+			for (int i = 0; i < 32765; i++) {
+				bout.write(hexToBytes("00FFFF0000"));
+				bout.write(blockData);
 			}
+			bout.write(hexToBytes("01B0FF4F00"));
+			bout.write(blockData, 0, 0xFFB0);
+			bout.write(hexToBytes("0056FF42"));
+			new Ztxt("x".repeat(79), ZLIB_DEFLATE, bout.toByteArray());
 		});
 	}
 	
