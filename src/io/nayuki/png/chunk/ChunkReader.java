@@ -98,7 +98,10 @@ public final class ChunkReader {
 	
 	
 	public int readInt32() throws IOException {
-		return readInt(4);
+		int result = readInt(4);
+		if (result == Integer.MIN_VALUE)
+			throw new IllegalArgumentException("Invalid int32 value (-2147483648)");
+		return result;
 	}
 	
 	

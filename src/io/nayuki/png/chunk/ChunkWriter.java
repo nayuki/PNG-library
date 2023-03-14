@@ -80,6 +80,8 @@ public final class ChunkWriter {
 	
 	
 	public void writeInt32(int val) throws IOException {
+		if (val == Integer.MIN_VALUE)
+			throw new IllegalArgumentException("Invalid int32 value (-2147483648)");
 		writeInt(val, 4);
 	}
 	
