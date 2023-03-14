@@ -38,7 +38,7 @@ final class ChunkWriter {
 		dataRemaining = 8;
 		writeInt32(dataLen);
 		checksum.reset();
-		writeString(type, StandardCharsets.US_ASCII);
+		writeString(type, StandardCharsets.US_ASCII, false);
 		dataRemaining = dataLen;
 	}
 	
@@ -94,8 +94,10 @@ final class ChunkWriter {
 	}
 	
 	
-	public void writeString(String s, Charset cs) throws IOException {
+	public void writeString(String s, Charset cs, boolean addNul) throws IOException {
 		write(s.getBytes(cs));
+		if (addNul)
+			writeUint8(0);
 	}
 	
 	

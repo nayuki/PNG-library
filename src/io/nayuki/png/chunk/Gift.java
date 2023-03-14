@@ -97,7 +97,7 @@ public record Gift(
 			cout.writeUint8((textForegroundColor >>> i) & 0xFF);
 		for (int i = 16; i >= 0; i -= 8)
 			cout.writeUint8((textBackgroundColor >>> i) & 0xFF);
-		cout.writeString(text, StandardCharsets.US_ASCII);
+		cout.writeString(text, StandardCharsets.US_ASCII, false);
 		cout.finish();
 	}
 	

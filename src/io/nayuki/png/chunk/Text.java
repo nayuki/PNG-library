@@ -51,9 +51,8 @@ public record Text(String keyword, String text) implements Chunk {
 	@Override public void writeChunk(OutputStream out) throws IOException {
 		int dataLen = Util.checkedLengthSum(keyword, Byte.BYTES, text);
 		var cout = new ChunkWriter(dataLen, TYPE, out);
-		cout.writeString(keyword, StandardCharsets.ISO_8859_1);
-		cout.writeUint8(0);
-		cout.writeString(text, StandardCharsets.ISO_8859_1);
+		cout.writeString(keyword, StandardCharsets.ISO_8859_1, true);
+		cout.writeString(text, StandardCharsets.ISO_8859_1, false);
 		cout.finish();
 	}
 	
