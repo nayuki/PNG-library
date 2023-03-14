@@ -28,13 +28,61 @@ import java.util.zip.InflaterOutputStream;
  */
 public interface Chunk {
 	
+	/**
+	 * Reads from the specified input stream and returns a chunk object representing
+	 * the data that is read, or empty if the end of stream is immediately
+	 * encountered. If the chunk type corresponds to a known class in this package
+	 * ({@link io.nayuki.png.chunk}), then this function returns a chunk of that type
+	 * (e.g. reading type "IHDR" will return an object of the class {@link Ihdr} or
+	 * throw an {@code IllegalArgumentException} if the data is invalid. Otherwise if
+	 * the chunk type is not of a known type, then a {@link Custom} chunk is returned.
+	 * @param in the input to read the chunk's data from (not {@code null})
+	 * @return a chunk object representing the data parsed from the chunk reader,
+	 * or empty if the end of stream is immediately encountered, not {@code null}
+	 * @throws NullPointerException if the input stream is {@code null}
+	 * @throws IllegalArgumentException if the chunk contains invalid data
+	 * @throws IOException if an I/O exception occurs
+	 */
 	public static Optional<Chunk> read(InputStream in) throws IOException {
 		Objects.requireNonNull(in);
 		int b = in.read();
 		if (b == -1)
 			return Optional.empty();
+		
 		var cin = new ChunkReader(b, in);
-		Chunk result = Util.readChunk(cin);
+		Chunk result = switch (cin.getType()) {
+			case Actl.TYPE -> Actl.read(cin);
+			case Bkgd.TYPE -> Bkgd.read(cin);
+			case Chrm.TYPE -> Chrm.read(cin);
+			case Dsig.TYPE -> Dsig.read(cin);
+			case Exif.TYPE -> Exif.read(cin);
+			case Fctl.TYPE -> Fctl.read(cin);
+			case Fdat.TYPE -> Fdat.read(cin);
+			case Gama.TYPE -> Gama.read(cin);
+			case Gifg.TYPE -> Gifg.read(cin);
+			case Gift.TYPE -> Gift.read(cin);
+			case Gifx.TYPE -> Gifx.read(cin);
+			case Hist.TYPE -> Hist.read(cin);
+			case Iccp.TYPE -> Iccp.read(cin);
+			case Idat.TYPE -> Idat.read(cin);
+			case Iend.TYPE -> Iend.SINGLETON;
+			case Ihdr.TYPE -> Ihdr.read(cin);
+			case Itxt.TYPE -> Itxt.read(cin);
+			case Offs.TYPE -> Offs.read(cin);
+			case Pcal.TYPE -> Pcal.read(cin);
+			case Phys.TYPE -> Phys.read(cin);
+			case Plte.TYPE -> Plte.read(cin);
+			case Sbit.TYPE -> Sbit.read(cin);
+			case Scal.TYPE -> Scal.read(cin);
+			case Splt.TYPE -> Splt.read(cin);
+			case Srgb.TYPE -> Srgb.read(cin);
+			case Ster.TYPE -> Ster.read(cin);
+			case Text.TYPE -> Text.read(cin);
+			case Time.TYPE -> Time.read(cin);
+			case Trns.TYPE -> Trns.read(cin);
+			case Ztxt.TYPE -> Ztxt.read(cin);
+			default -> Custom.read(cin);
+		};
 		cin.finish();
 		return Optional.of(result);
 	}
