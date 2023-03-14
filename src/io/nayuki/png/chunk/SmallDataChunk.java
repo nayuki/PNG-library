@@ -35,6 +35,11 @@ interface SmallDataChunk extends Chunk {
 	}
 	
 	
+	/**
+	 * This is an unstable method to support {@link #writeChunk(OutputStream)}.
+	 * This should be {@code protected} or package-private but
+	 * cannot due to the limitations of interface and record types.
+	 */
 	public abstract void writeData(ChunkWriter out) throws IOException;
 	
 }

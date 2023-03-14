@@ -17,6 +17,10 @@ import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
 
+/**
+ * Helper class for serializing chunks: Common header fields writing, manual
+ * writing of many field types, data length checking, CRC-32 handling.
+ */
 final class ChunkWriter {
 	
 	/*---- Fields ----*/

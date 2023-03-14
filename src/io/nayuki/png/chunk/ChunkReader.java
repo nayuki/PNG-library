@@ -20,6 +20,10 @@ import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
 
+/**
+ * Helper class for parsing chunks: Common header fields reading, manual
+ * reading of many field types, data length checking, CRC-32 handling.
+ */
 final class ChunkReader {
 	
 	/*---- Factory ----*/
