@@ -60,15 +60,15 @@ public record Pcal(
 	
 	static Pcal read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
-		String calibName = in.readString(true, StandardCharsets.ISO_8859_1);
+		String calibName = in.readString(StandardCharsets.ISO_8859_1, true);
 		int originalZero = in.readInt32();
 		int originalMax = in.readInt32();
 		EquationType equationType = in.readEnum(EquationType.values());
 		int numParameters = in.readUint8();
-		String unitName = in.readString(true, StandardCharsets.ISO_8859_1);
+		String unitName = in.readString(StandardCharsets.ISO_8859_1, true);
 		var parameters = new String[numParameters];
 		for (int i = 0; i < parameters.length; i++)
-			parameters[i] = in.readString((i < parameters.length - 1), StandardCharsets.US_ASCII);
+			parameters[i] = in.readString(StandardCharsets.US_ASCII, (i < parameters.length - 1));
 		return new Pcal(calibName, unitName, originalZero, originalMax, equationType, parameters);
 	}
 	

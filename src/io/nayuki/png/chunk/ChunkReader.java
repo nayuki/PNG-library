@@ -122,7 +122,7 @@ final class ChunkReader {
 	}
 	
 	
-	public String readString(boolean endByNul, Charset cs) throws IOException {
+	public String readString(Charset cs, boolean endByNul) throws IOException {
 		if (endByNul) {
 			var buf = new byte[1];
 			int bufLen = 0;

@@ -49,7 +49,7 @@ public record Splt(
 	
 	static Splt read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
-		String paletteName = in.readString(true, StandardCharsets.ISO_8859_1);
+		String paletteName = in.readString(StandardCharsets.ISO_8859_1, true);
 		int sampleDepth = in.readUint8();
 		byte[] data = in.readRemainingBytes();
 		return new Splt(paletteName, sampleDepth, data);

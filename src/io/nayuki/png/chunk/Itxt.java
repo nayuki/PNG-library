@@ -70,7 +70,7 @@ public record Itxt(
 	
 	static Itxt read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
-		String keyword = in.readString(true, StandardCharsets.ISO_8859_1);
+		String keyword = in.readString(StandardCharsets.ISO_8859_1, true);
 		int compFlag = in.readUint8();
 		int compMethod = in.readUint8();
 		if (compFlag == 0) {
@@ -81,8 +81,8 @@ public record Itxt(
 				throw new IllegalArgumentException("Unrecognized value for enumeration");
 		} else
 			throw new IllegalArgumentException("Compression flag out of range");
-		String language = in.readString(true, StandardCharsets.ISO_8859_1);
-		String transKeyword = in.readString(true, StandardCharsets.UTF_8);
+		String language = in.readString(StandardCharsets.ISO_8859_1, true);
+		String transKeyword = in.readString(StandardCharsets.UTF_8, true);
 		byte[] text = in.readRemainingBytes();
 		return new Itxt(keyword, language, transKeyword,
 			compFlag == 0 ? Optional.empty() : Optional.of(CompressionMethod.values()[compMethod]),
