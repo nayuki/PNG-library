@@ -43,15 +43,7 @@ public record Custom(String type, byte[] data) implements BytesDataChunk {
 	}
 	
 	
-	/**
-	 * Reads from the specified chunk reader, stores the byte data
-	 * and type string, and returns a new chunk object of this type.
-	 * @param in the chunk reader to read the chunk's data from (not {@code null})
-	 * @return a new {@code Custom} chunk object (not {@code null})
-	 * @throws NullPointerException if the input stream is {@code null}
-	 * @throws IOException if an I/O exception occurs
-	 */
-	public static Custom read(ChunkReader in) throws IOException {
+	static Custom read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
 		return new Custom(in.getType(), in.readRemainingBytes());
 	}

@@ -30,16 +30,7 @@ public record Dsig(byte[] data) implements BytesDataChunk {
 	}
 	
 	
-	/**
-	 * Reads from the specified chunk reader, parses the
-	 * fields, and returns a new chunk object of this type.
-	 * @param in the chunk reader to read the chunk's data from (not {@code null})
-	 * @return a new chunk object of this type (not {@code null})
-	 * @throws NullPointerException if the input stream is {@code null}
-	 * @throws IllegalArgumentException if the read data is invalid for this chunk type
-	 * @throws IOException if an I/O exception occurs
-	 */
-	public static Dsig read(ChunkReader in) throws IOException {
+	static Dsig read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
 		return new Dsig(in.readRemainingBytes());
 	}

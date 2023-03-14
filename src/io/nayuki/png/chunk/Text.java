@@ -33,16 +33,7 @@ public record Text(String keyword, String text) implements Chunk {
 	}
 	
 	
-	/**
-	 * Reads from the specified chunk reader, parses the
-	 * fields, and returns a new chunk object of this type.
-	 * @param in the chunk reader to read the chunk's data from (not {@code null})
-	 * @return a new chunk object of this type (not {@code null})
-	 * @throws NullPointerException if the input stream is {@code null}
-	 * @throws IllegalArgumentException if the read data is invalid for this chunk type
-	 * @throws IOException if an I/O exception occurs
-	 */
-	public static Text read(ChunkReader in) throws IOException {
+	static Text read(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
 		String keyword = in.readString(ChunkReader.Until.NUL, StandardCharsets.ISO_8859_1);
 		String text = in.readString(ChunkReader.Until.END, StandardCharsets.ISO_8859_1);
