@@ -18,7 +18,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 import java.util.zip.InflaterInputStream;
+import io.nayuki.png.chunk.Custom;
 import io.nayuki.png.chunk.Ihdr;
 import io.nayuki.png.chunk.Plte;
 import io.nayuki.png.chunk.Sbit;
@@ -87,6 +89,10 @@ public final class ImageDecoder {
 			inBitDepth = ihdr.bitDepth();
 			sbit = PngImage.getChunk(Sbit.class, png.afterIhdr);
 			trns = PngImage.getChunk(Trns.class, png.afterIhdr);
+			Stream.concat(png.afterIhdr.stream(), png.afterIdats.stream())
+				.filter(chk -> chk instanceof Custom && chk.isCritical())
+				.findFirst()
+				.ifPresent(chk -> { throw new IllegalArgumentException("Unrecognized critical chunk: " + chk.getType()); });
 		}
 		
 		
