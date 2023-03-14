@@ -219,10 +219,8 @@ public final class BufferedPaletteImageTest {
 		
 		var img = new BufferedPaletteImage(3, 2, new int[]{8, 8, 8, 8}, new long[8]);
 		for (int cs : CASES) {
-			try {
-				img.setPixel(0, 0, cs);
-				Assert.fail("Expected exception");
-			} catch (IllegalArgumentException e) {}  // Pass
+			TestUtil.runExpect(IllegalArgumentException.class,
+				() -> img.setPixel(0, 0, cs));
 		}
 	}
 	
