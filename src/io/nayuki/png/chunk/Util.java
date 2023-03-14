@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 /**
  * Utility functions for chunks. Not instantiable.
  */
-public final class Util {
+final class Util {
 	
 	// Throws an exception if the string is invalid.
 	static void checkKeyword(String s, boolean checkSpaces) {

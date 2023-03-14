@@ -19,7 +19,7 @@ import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
 
-public final class ChunkReader {
+final class ChunkReader {
 	
 	/*---- Fields ----*/
 	
