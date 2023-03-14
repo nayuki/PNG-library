@@ -10,6 +10,7 @@ package io.nayuki.png.chunk;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.zip.CRC32;
@@ -37,7 +38,7 @@ final class ChunkWriter {
 		dataRemaining = 8;
 		writeInt32(dataLen);
 		checksum.reset();
-		writeAscii(type);
+		writeString(type, StandardCharsets.US_ASCII);
 		dataRemaining = dataLen;
 	}
 	
@@ -93,18 +94,8 @@ final class ChunkWriter {
 	}
 	
 	
-	public void writeAscii(String s) throws IOException {
-		write(s.getBytes(StandardCharsets.US_ASCII));
-	}
-	
-	
-	public void writeIso8859_1(String s) throws IOException {
-		write(s.getBytes(StandardCharsets.ISO_8859_1));
-	}
-	
-	
-	public void writeUtf8(String s) throws IOException {
-		write(s.getBytes(StandardCharsets.UTF_8));
+	public void writeString(String s, Charset cs) throws IOException {
+		write(s.getBytes(cs));
 	}
 	
 	

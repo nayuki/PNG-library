@@ -111,13 +111,13 @@ public record Itxt(
 		int dataLen = Util.checkedLengthSum(keyword, 3 * Byte.BYTES, languageTag, Byte.BYTES,
 			text, Byte.BYTES, translatedKeyword.getBytes(StandardCharsets.UTF_8));
 		var cout = new ChunkWriter(dataLen, TYPE, out);
-		cout.writeIso8859_1(keyword);
+		cout.writeString(keyword, StandardCharsets.ISO_8859_1);
 		cout.writeUint8(0);
 		cout.writeUint8(compressionMethod.isPresent() ? 1 : 0);
 		cout.writeUint8(compressionMethod.map(cm -> cm.ordinal()).orElse(0));
-		cout.writeIso8859_1(languageTag);
+		cout.writeString(languageTag, StandardCharsets.ISO_8859_1);
 		cout.writeUint8(0);
-		cout.writeUtf8(translatedKeyword);
+		cout.writeString(translatedKeyword, StandardCharsets.UTF_8);
 		cout.writeUint8(0);
 		cout.write(text);
 		cout.finish();
