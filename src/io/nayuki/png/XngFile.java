@@ -22,10 +22,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import io.nayuki.png.chunk.ChunkReader;
 import io.nayuki.png.chunk.Custom;
 import io.nayuki.png.chunk.Ihdr;
-import io.nayuki.png.chunk.Util;
 
 
 /**
@@ -88,10 +86,9 @@ public record XngFile(Type type, List<Chunk> chunks) {
 	 */
 	public static XngFile read(InputStream in, boolean parse) throws IOException {
 		Objects.requireNonNull(in);
-		var bin = new BufferedInputStream(in);
 		
 		var sig = new byte[8];
-		new DataInputStream(bin).readFully(sig);
+		new DataInputStream(in).readFully(sig);
 		Type fileType = null;
 		for (Type t : Type.values()) {
 			if (Arrays.equals(t.signature, sig))
@@ -102,18 +99,10 @@ public record XngFile(Type type, List<Chunk> chunks) {
 		
 		List<Chunk> chunks = new ArrayList<>();
 		while (true) {
-			bin.mark(1);
-			if (bin.read() == -1)
+			Optional<? extends Chunk> chk = parse ? Chunk.read(in) : Custom.read(in);
+			if (chk.isEmpty())
 				break;
-			bin.reset();
-			
-			var cin = new ChunkReader(bin);
-			if (parse)
-				chunks.add(Util.readChunk(cin));
-			else {
-				chunks.add(Custom.read(cin));
-				cin.finish();
-			}
+			chunks.add(chk.get());
 		}
 		return new XngFile(fileType, chunks);
 	}

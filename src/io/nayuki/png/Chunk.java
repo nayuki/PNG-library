@@ -10,10 +10,14 @@ package io.nayuki.png;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterOutputStream;
+import io.nayuki.png.chunk.ChunkReader;
+import io.nayuki.png.chunk.Util;
 
 
 /**
@@ -25,6 +29,18 @@ import java.util.zip.InflaterOutputStream;
  * implement this interface can choose to have mutable or immutable instances.
  */
 public interface Chunk {
+	
+	public static Optional<Chunk> read(InputStream in) throws IOException {
+		Objects.requireNonNull(in);
+		int b = in.read();
+		if (b == -1)
+			return Optional.empty();
+		var cin = new ChunkReader(b, in);
+		Chunk result = Util.readChunk(cin);
+		cin.finish();
+		return Optional.of(result);
+	}
+	
 	
 	/**
 	 * Returns the type of this chunk, a length-4 ASCII uppercase/lowercase string.

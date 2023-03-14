@@ -9,7 +9,9 @@
 package io.nayuki.png.chunk;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
+import java.util.Optional;
 import io.nayuki.png.Chunk;
 
 
@@ -22,11 +24,23 @@ import io.nayuki.png.Chunk;
  */
 public record Custom(String type, byte[] data) implements BytesDataChunk {
 	
-	/*---- Constructor and factory ----*/
+	/*---- Constructor and factories ----*/
 	
 	public Custom {
 		Chunk.checkType(type);
 		Objects.requireNonNull(data);
+	}
+	
+	
+	public static Optional<Custom> read(InputStream in) throws IOException {
+		Objects.requireNonNull(in);
+		int b = in.read();
+		if (b == -1)
+			return Optional.empty();
+		var cin = new ChunkReader(b, in);
+		Custom result = read(cin);
+		cin.finish();
+		return Optional.of(result);
 	}
 	
 	

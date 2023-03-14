@@ -36,7 +36,7 @@ public final class Util {
 	 */
 	public static Chunk readChunk(ChunkReader in) throws IOException {
 		Objects.requireNonNull(in);
-		Chunk result = switch (in.getType()) {
+		return switch (in.getType()) {
 			case Actl.TYPE -> Actl.read(in);
 			case Bkgd.TYPE -> Bkgd.read(in);
 			case Chrm.TYPE -> Chrm.read(in);
@@ -69,8 +69,6 @@ public final class Util {
 			case Ztxt.TYPE -> Ztxt.read(in);
 			default -> Custom.read(in);
 		};
-		in.finish();
-		return result;
 	}
 	
 	

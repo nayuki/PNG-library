@@ -34,11 +34,11 @@ public final class ChunkReader {
 	
 	/*---- Constructor ----*/
 	
-	public ChunkReader(InputStream in) throws IOException {
+	public ChunkReader(int lenByte0, InputStream in) throws IOException {
 		input = Objects.requireNonNull(in);
 		
-		dataRemaining = 4;
-		int dataLen = readInt32();
+		dataRemaining = 3;
+		int dataLen = lenByte0 << 24 | readInt(dataRemaining);
 		if (dataLen < 0)
 			throw new IllegalArgumentException("Chunk data length out of range");
 		
