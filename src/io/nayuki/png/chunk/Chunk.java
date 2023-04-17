@@ -48,42 +48,41 @@ public interface Chunk {
 		if (temp.isEmpty())
 			return Optional.empty();
 		
-		ChunkReader cin = temp.get();
-		Chunk result = switch (cin.getType()) {
-			case Actl.TYPE -> Actl.read(cin);
-			case Bkgd.TYPE -> Bkgd.read(cin);
-			case Chrm.TYPE -> Chrm.read(cin);
-			case Dsig.TYPE -> Dsig.read(cin);
-			case Exif.TYPE -> Exif.read(cin);
-			case Fctl.TYPE -> Fctl.read(cin);
-			case Fdat.TYPE -> Fdat.read(cin);
-			case Gama.TYPE -> Gama.read(cin);
-			case Gifg.TYPE -> Gifg.read(cin);
-			case Gift.TYPE -> Gift.read(cin);
-			case Gifx.TYPE -> Gifx.read(cin);
-			case Hist.TYPE -> Hist.read(cin);
-			case Iccp.TYPE -> Iccp.read(cin);
-			case Idat.TYPE -> Idat.read(cin);
-			case Iend.TYPE -> Iend.SINGLETON;
-			case Ihdr.TYPE -> Ihdr.read(cin);
-			case Itxt.TYPE -> Itxt.read(cin);
-			case Offs.TYPE -> Offs.read(cin);
-			case Pcal.TYPE -> Pcal.read(cin);
-			case Phys.TYPE -> Phys.read(cin);
-			case Plte.TYPE -> Plte.read(cin);
-			case Sbit.TYPE -> Sbit.read(cin);
-			case Scal.TYPE -> Scal.read(cin);
-			case Splt.TYPE -> Splt.read(cin);
-			case Srgb.TYPE -> Srgb.read(cin);
-			case Ster.TYPE -> Ster.read(cin);
-			case Text.TYPE -> Text.read(cin);
-			case Time.TYPE -> Time.read(cin);
-			case Trns.TYPE -> Trns.read(cin);
-			case Ztxt.TYPE -> Ztxt.read(cin);
-			default -> Custom.read(cin);
-		};
-		cin.finish();
-		return Optional.of(result);
+		try (ChunkReader cin = temp.get()) {
+			return Optional.of(switch (cin.getType()) {
+				case Actl.TYPE -> Actl.read(cin);
+				case Bkgd.TYPE -> Bkgd.read(cin);
+				case Chrm.TYPE -> Chrm.read(cin);
+				case Dsig.TYPE -> Dsig.read(cin);
+				case Exif.TYPE -> Exif.read(cin);
+				case Fctl.TYPE -> Fctl.read(cin);
+				case Fdat.TYPE -> Fdat.read(cin);
+				case Gama.TYPE -> Gama.read(cin);
+				case Gifg.TYPE -> Gifg.read(cin);
+				case Gift.TYPE -> Gift.read(cin);
+				case Gifx.TYPE -> Gifx.read(cin);
+				case Hist.TYPE -> Hist.read(cin);
+				case Iccp.TYPE -> Iccp.read(cin);
+				case Idat.TYPE -> Idat.read(cin);
+				case Iend.TYPE -> Iend.SINGLETON;
+				case Ihdr.TYPE -> Ihdr.read(cin);
+				case Itxt.TYPE -> Itxt.read(cin);
+				case Offs.TYPE -> Offs.read(cin);
+				case Pcal.TYPE -> Pcal.read(cin);
+				case Phys.TYPE -> Phys.read(cin);
+				case Plte.TYPE -> Plte.read(cin);
+				case Sbit.TYPE -> Sbit.read(cin);
+				case Scal.TYPE -> Scal.read(cin);
+				case Splt.TYPE -> Splt.read(cin);
+				case Srgb.TYPE -> Srgb.read(cin);
+				case Ster.TYPE -> Ster.read(cin);
+				case Text.TYPE -> Text.read(cin);
+				case Time.TYPE -> Time.read(cin);
+				case Trns.TYPE -> Trns.read(cin);
+				case Ztxt.TYPE -> Ztxt.read(cin);
+				default -> Custom.read(cin);
+			});
+		}
 	}
 	
 	

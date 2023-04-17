@@ -45,10 +45,9 @@ public record Custom(String type, byte[] data) implements BytesDataChunk {
 		Optional<ChunkReader> temp = ChunkReader.tryNew(in);
 		if (temp.isEmpty())
 			return Optional.empty();
-		ChunkReader cin = temp.get();
-		Custom result = read(cin);
-		cin.finish();
-		return Optional.of(result);
+		try (ChunkReader cin = temp.get()) {
+			return Optional.of(read(cin));
+		}
 	}
 	
 	

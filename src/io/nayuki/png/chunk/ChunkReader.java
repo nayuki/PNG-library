@@ -24,7 +24,7 @@ import java.util.zip.Checksum;
  * Helper class for parsing chunks: Common header fields reading, manual
  * reading of many field types, data length checking, CRC-32 handling.
  */
-final class ChunkReader {
+final class ChunkReader implements AutoCloseable {
 	
 	/*---- Factory ----*/
 	
@@ -170,7 +170,7 @@ final class ChunkReader {
 	}
 	
 	
-	public void finish() throws IOException {
+	public void close() throws IOException {
 		if (input == null)
 			throw new IllegalStateException("Already finished");
 		if (dataRemaining > 0)
