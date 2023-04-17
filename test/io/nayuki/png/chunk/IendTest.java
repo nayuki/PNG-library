@@ -14,13 +14,13 @@ import io.nayuki.png.TestUtil;
 
 public final class IendTest {
 	
-	@Test public void testWriteChunkData() {
-		TestUtil.assertDataEquals("", Iend.SINGLETON);
+	@Test public void testWriteChunk() {
+		TestUtil.assertChunkBytesEqual("00000000 49454E44 AE426082", Iend.SINGLETON);
 	}
 	
 	
-	@Test public void testWriteChunk() {
-		TestUtil.assertChunkBytesEqual("00000000 49454E44 AE426082", Iend.SINGLETON);
+	@Test public void testWriteChunkData() {
+		TestUtil.assertDataEquals("", Iend.SINGLETON);
 	}
 	
 }

@@ -45,6 +45,12 @@ public final class PcalTest {
 	}
 	
 	
+	@Test public void testWriteChunk() {
+		TestUtil.assertChunkBytesEqual("0000002E 7043414C 416E676C65 00 1004868A FFFFE68F 01 03 415243204D494E555445 00 2B322E31652D34 00 38 00 2D2E3937652B303536 9C40D6D9",
+			new Pcal("Angle", "ARC MINUTE", 268732042, -6513, EquationType.BASE_E_EXPONENTIAL, "+2.1e-4", "8", "-.97e+056"));
+	}
+	
+	
 	@Test public void testWriteChunkData() {
 		TestUtil.assertDataEquals("616C6566 00 00000000 0000FFFF 00 02 6D65747265 00 31 00 32",
 			new Pcal("alef", "metre", 0, 65535, EquationType.LINEAR, "1", "2"));
@@ -57,12 +63,6 @@ public final class PcalTest {
 		
 		TestUtil.assertDataEquals("64616C6574 00 80000001 7FFFFFFF 03 04 616D70657265 00 31652D3939 00 322E 00 352E3737 00 2B342E36652B32",
 			new Pcal("dalet", "ampere", Integer.MIN_VALUE + 1, Integer.MAX_VALUE, EquationType.HYPERBOLIC, "1e-99", "2.", "5.77", "+4.6e+2"));
-	}
-	
-	
-	@Test public void testWriteChunk() {
-		TestUtil.assertChunkBytesEqual("0000002E 7043414C 416E676C65 00 1004868A FFFFE68F 01 03 415243204D494E555445 00 2B322E31652D34 00 38 00 2D2E3937652B303536 9C40D6D9",
-			new Pcal("Angle", "ARC MINUTE", 268732042, -6513, EquationType.BASE_E_EXPONENTIAL, "+2.1e-4", "8", "-.97e+056"));
 	}
 	
 }

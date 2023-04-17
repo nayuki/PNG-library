@@ -15,14 +15,14 @@ import io.nayuki.png.chunk.Ster.Mode;
 
 public final class SterTest {
 	
-	@Test public void testWriteChunkData() {
-		TestUtil.assertDataEquals("00", new Ster(Mode.CROSS_FUSE_LAYOUT    ));
-		TestUtil.assertDataEquals("01", new Ster(Mode.DIVERGING_FUSE_LAYOUT));
+	@Test public void testWriteChunk() {
+		TestUtil.assertChunkBytesEqual("00000001 73544552 01 B5E4B59C", new Ster(Mode.DIVERGING_FUSE_LAYOUT));
 	}
 	
 	
-	@Test public void testWriteChunk() {
-		TestUtil.assertChunkBytesEqual("00000001 73544552 01 B5E4B59C", new Ster(Mode.DIVERGING_FUSE_LAYOUT));
+	@Test public void testWriteChunkData() {
+		TestUtil.assertDataEquals("00", new Ster(Mode.CROSS_FUSE_LAYOUT    ));
+		TestUtil.assertDataEquals("01", new Ster(Mode.DIVERGING_FUSE_LAYOUT));
 	}
 	
 }

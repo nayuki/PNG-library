@@ -29,17 +29,17 @@ public final class OffsTest {
 	}
 	
 	
+	@Test public void testWriteChunk() {
+		TestUtil.assertChunkBytesEqual("00000009 6F464673 B404CBCE 2E884CC4 00 2E1AF44F", new Offs(-1274754098, 780684484, UnitSpecifier.PIXEL));
+	}
+	
+	
 	@Test public void testWriteChunkData() {
 		TestUtil.assertDataEquals("00000000 00000000 00", new Offs(          0,           0, UnitSpecifier.PIXEL     ));
 		TestUtil.assertDataEquals("00000002 FFFFFFFF 01", new Offs(          2,          -1, UnitSpecifier.MICROMETRE));
 		TestUtil.assertDataEquals("FFFB34D1 00287D95 00", new Offs(    -314159,     2653589, UnitSpecifier.PIXEL     ));
 		TestUtil.assertDataEquals("7FFFFFFF 7FFFFFFF 01", new Offs( 2147483647,  2147483647, UnitSpecifier.MICROMETRE));
 		TestUtil.assertDataEquals("80000001 80000001 00", new Offs(-2147483647, -2147483647, UnitSpecifier.PIXEL     ));
-	}
-	
-	
-	@Test public void testWriteChunk() {
-		TestUtil.assertChunkBytesEqual("00000009 6F464673 B404CBCE 2E884CC4 00 2E1AF44F", new Offs(-1274754098, 780684484, UnitSpecifier.PIXEL));
 	}
 	
 }

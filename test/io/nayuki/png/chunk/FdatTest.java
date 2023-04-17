@@ -20,16 +20,16 @@ public final class FdatTest {
 	}
 	
 	
+	@Test public void testWriteChunk() {
+		TestUtil.assertChunkBytesEqual("00000011 66644154 00000141 789C010200FDFF010000040002 4D82D736",
+			new Fdat(321, TestUtil.hexToBytes("789C010200FDFF010000040002")));
+	}
+	
+	
 	@Test public void testWriteChunkData() {
 		TestUtil.assertDataEquals("00000000 1337C0DE9876", new Fdat(0, TestUtil.hexToBytes("1337C0DE9876")));
 		TestUtil.assertDataEquals("0000000A", new Fdat(10, TestUtil.hexToBytes("")));
 		TestUtil.assertDataEquals("7FFFFFFF 0000000000000000", new Fdat(Integer.MAX_VALUE, new byte[8]));
-	}
-	
-	
-	@Test public void testWriteChunk() {
-		TestUtil.assertChunkBytesEqual("00000011 66644154 00000141 789C010200FDFF010000040002 4D82D736",
-			new Fdat(321, TestUtil.hexToBytes("789C010200FDFF010000040002")));
 	}
 	
 }

@@ -33,16 +33,16 @@ public final class GifgTest {
 	}
 	
 	
+	@Test public void testWriteChunk() {
+		TestUtil.assertChunkBytesEqual("00000004 67494667 01 00 0002 CA3E0204", new Gifg(1, false, 2));
+	}
+	
+	
 	@Test public void testWriteChunkData() {
 		TestUtil.assertDataEquals("00 00 0001", new Gifg(0, false,      1));
 		TestUtil.assertDataEquals("01 01 8421", new Gifg(1, true , 0x8421));
 		TestUtil.assertDataEquals("02 00 0147", new Gifg(2, false,    327));
 		TestUtil.assertDataEquals("03 01 FFFF", new Gifg(3, true , 0xFFFF));
-	}
-	
-	
-	@Test public void testWriteChunk() {
-		TestUtil.assertChunkBytesEqual("00000004 67494667 01 00 0002 CA3E0204", new Gifg(1, false, 2));
 	}
 	
 }

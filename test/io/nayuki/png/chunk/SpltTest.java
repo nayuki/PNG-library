@@ -89,15 +89,15 @@ public final class SpltTest {
 	}
 	
 	
-	@Test public void testWriteChunkData() {
-		TestUtil.assertDataEquals("666F6F626172 00 08 001234556677 89ABCDEF1011",
-			new Splt("foobar", 8, TestUtil.hexToBytes("001234556677 89ABCDEF1011")));
-	}
-	
-	
 	@Test public void testWriteChunk() {
 		TestUtil.assertChunkBytesEqual("00000010 73504C54 51555834 00 10 FFEEEE3D00547A818256 E6D23504",
 			new Splt("QUX4", 16, TestUtil.hexToBytes("FFEEEE3D00547A818256")));
+	}
+	
+	
+	@Test public void testWriteChunkData() {
+		TestUtil.assertDataEquals("666F6F626172 00 08 001234556677 89ABCDEF1011",
+			new Splt("foobar", 8, TestUtil.hexToBytes("001234556677 89ABCDEF1011")));
 	}
 	
 }

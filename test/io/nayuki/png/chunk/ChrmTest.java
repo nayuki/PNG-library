@@ -88,15 +88,15 @@ public final class ChrmTest {
 	}
 	
 	
-	@Test public void testWriteChunkData() {
-		TestUtil.assertDataEquals("00000001 0000B18F 000186A0 7FFFFFFF 002FEFD8 00006A2F 00000000 00035B60",
-			new Chrm(1, 45455, 100000, 2147483647, 3141592, 27183, 0, 220000));
-	}
-	
-	
 	@Test public void testWriteChunk() {
 		TestUtil.assertChunkBytesEqual("00000020 6348524D 00000009 0000001B 0000276D 0EB9EA98 0006ED4D 7608BC41 0000000F 0000000E 5B866230",
 			new Chrm(9, 27, 10093, 247065240, 453965, 1980283969, 15, 14));
+	}
+	
+	
+	@Test public void testWriteChunkData() {
+		TestUtil.assertDataEquals("00000001 0000B18F 000186A0 7FFFFFFF 002FEFD8 00006A2F 00000000 00035B60",
+			new Chrm(1, 45455, 100000, 2147483647, 3141592, 27183, 0, 220000));
 	}
 	
 }

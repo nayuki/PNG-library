@@ -58,18 +58,18 @@ public final class FctlTest {
 	}
 	
 	
+	@Test public void testWriteChunk() {
+		TestUtil.assertChunkBytesEqual("0000001A 6663544C 00007AB7 0000039E 0331B721 00000950 00001878 8428 031B 01 00 AB886FB9",
+			new Fctl(31415, 926, 53589793, 2384, 6264, 33832, 795, Fctl.DisposeOperation.BACKGROUND, Fctl.BlendOperation.SOURCE));
+	}
+	
+	
 	@Test public void testWriteChunkData() {
 		TestUtil.assertDataEquals("00000000 00000003 00000002 00000004 00000001 0005 0006 00 00",
 			new Fctl(0, 3, 2, 4, 1, 5, 6, Fctl.DisposeOperation.NONE, Fctl.BlendOperation.SOURCE));
 		
 		TestUtil.assertDataEquals("04BBEF58 0000004F 0000002A 00000035 00000044 FFFE FFFF 02 01",
 			new Fctl(79425368, 79, 42, 53, 68, 0xFFFE, 0xFFFF, Fctl.DisposeOperation.PREVIOUS, Fctl.BlendOperation.OVER));
-	}
-	
-	
-	@Test public void testWriteChunk() {
-		TestUtil.assertChunkBytesEqual("0000001A 6663544C 00007AB7 0000039E 0331B721 00000950 00001878 8428 031B 01 00 AB886FB9",
-			new Fctl(31415, 926, 53589793, 2384, 6264, 33832, 795, Fctl.DisposeOperation.BACKGROUND, Fctl.BlendOperation.SOURCE));
 	}
 	
 }

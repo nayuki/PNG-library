@@ -50,15 +50,15 @@ public final class TextTest {
 	}
 	
 	
-	@Test public void testWriteChunkData() {
-		TestUtil.assertDataEquals("410062E9", new Text("A", "bé"));
-		TestUtil.assertDataEquals("6B6579 00 2076616C20207565", new Text("key", " val  ue"));
-	}
-	
-	
 	@Test public void testWriteChunk() {
 		TestUtil.assertChunkBytesEqual("0000001E 74455874 74686520515549434B2062726F776E 00 466F58204A756D7073206F764572 690D26EF",
 			new Text("the QUICK brown", "FoX Jumps ovEr"));
+	}
+	
+	
+	@Test public void testWriteChunkData() {
+		TestUtil.assertDataEquals("410062E9", new Text("A", "bé"));
+		TestUtil.assertDataEquals("6B6579 00 2076616C20207565", new Text("key", " val  ue"));
 	}
 	
 }

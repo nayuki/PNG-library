@@ -76,16 +76,16 @@ public final class GamaTest {
 	}
 	
 	
+	@Test public void testWriteChunk() {
+		TestUtil.assertChunkBytesEqual("00000004 67414D41 000004E8 4198CF03", new Gama(1256));
+	}
+	
+	
 	@Test public void testWriteChunkData() {
 		TestUtil.assertDataEquals("00000001", new Gama(         1));
 		TestUtil.assertDataEquals("0000B18F", new Gama(     45455));
 		TestUtil.assertDataEquals("000186A0", new Gama(    100000));
 		TestUtil.assertDataEquals("7FFFFFFF", new Gama(2147483647));
-	}
-	
-	
-	@Test public void testWriteChunk() {
-		TestUtil.assertChunkBytesEqual("00000004 67414D41 000004E8 4198CF03", new Gama(1256));
 	}
 	
 }

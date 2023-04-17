@@ -29,6 +29,12 @@ public final class HistTest {
 	}
 	
 	
+	@Test public void testWriteChunk() {
+		TestUtil.assertChunkBytesEqual("0000000A 68495354 016A 2821 01EF 5E0B 0001 832B5A43",
+			new Hist(new int[]{0x016A, 0x2821, 0x01EF, 0x5E0B, 0x0001}));
+	}
+	
+	
 	@Test public void testWriteChunkData() {
 		for (int len = 1; len <= 256; len++) {
 			var bytes = new byte[len * 2];
@@ -40,12 +46,6 @@ public final class HistTest {
 			}
 			TestUtil.assertDataEquals(bytes, new Hist(ints));
 		}
-	}
-	
-	
-	@Test public void testWriteChunk() {
-		TestUtil.assertChunkBytesEqual("0000000A 68495354 016A 2821 01EF 5E0B 0001 832B5A43",
-			new Hist(new int[]{0x016A, 0x2821, 0x01EF, 0x5E0B, 0x0001}));
 	}
 	
 }

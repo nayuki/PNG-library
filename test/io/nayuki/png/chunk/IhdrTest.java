@@ -103,6 +103,12 @@ public final class IhdrTest {
 	}
 	
 	
+	@Test public void testWriteChunk() {
+		TestUtil.assertChunkBytesEqual("0000000D 49484452 001A4646 00000057 08 03 00 00 01 21AF252F",
+			new Ihdr(1721926, 87, 8, ColorType.INDEXED_COLOR, ZLIB_DEFLATE, ADAPTIVE, ADAM7));
+	}
+	
+	
 	@Test public void testWriteChunkData() {
 		TestUtil.assertDataEquals("00000001 00000001 08 02 00 00 00",  new Ihdr(         1,          1,  8, ColorType.TRUE_COLOR           , ZLIB_DEFLATE, ADAPTIVE, NONE ));
 		TestUtil.assertDataEquals("00010000 00001000 10 02 00 00 01",  new Ihdr(     65536,       4096, 16, ColorType.TRUE_COLOR           , ZLIB_DEFLATE, ADAPTIVE, ADAM7));
@@ -119,12 +125,6 @@ public final class IhdrTest {
 		TestUtil.assertDataEquals("00000002 00000008 02 03 00 00 00",  new Ihdr(         2,          8,  2, ColorType.INDEXED_COLOR        , ZLIB_DEFLATE, ADAPTIVE, NONE ));
 		TestUtil.assertDataEquals("40000000 01000000 04 03 00 00 01",  new Ihdr(1073741824,   16777216,  4, ColorType.INDEXED_COLOR        , ZLIB_DEFLATE, ADAPTIVE, ADAM7));
 		TestUtil.assertDataEquals("00000007 7FFFFFFF 08 03 00 00 00",  new Ihdr(         7, 2147483647,  8, ColorType.INDEXED_COLOR        , ZLIB_DEFLATE, ADAPTIVE, NONE ));
-	}
-	
-	
-	@Test public void testWriteChunk() {
-		TestUtil.assertChunkBytesEqual("0000000D 49484452 001A4646 00000057 08 03 00 00 01 21AF252F",
-			new Ihdr(1721926, 87, 8, ColorType.INDEXED_COLOR, ZLIB_DEFLATE, ADAPTIVE, ADAM7));
 	}
 	
 }

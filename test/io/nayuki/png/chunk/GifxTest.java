@@ -30,6 +30,13 @@ public final class GifxTest {
 	}
 	
 	
+	@Test public void testWriteChunk() {
+		// All examples are random data and not real application extensions
+		TestUtil.assertChunkBytesEqual("00000010 67494678 6D4BF433D588EFB2 D50E4A FB34A6BE4D 7CB82263",
+			new Gifx(hexToBytes("6D4BF433D588EFB2"), hexToBytes("D50E4A"), hexToBytes("FB34A6BE4D")));
+	}
+	
+	
 	@Test public void testWriteChunkData() {
 		// All examples are random data and not real application extensions
 		TestUtil.assertDataEquals("EA03D5DF6B0554D3 E96F24",
@@ -37,13 +44,6 @@ public final class GifxTest {
 		
 		TestUtil.assertDataEquals("DB18421B804105AF 2A4827 DDEB522337B8C5E23DA3CA8A",
 			new Gifx(hexToBytes("DB18421B804105AF"), hexToBytes("2A4827"), hexToBytes("DDEB522337B8C5E23DA3CA8A")));
-	}
-	
-	
-	@Test public void testWriteChunk() {
-		// All examples are random data and not real application extensions
-		TestUtil.assertChunkBytesEqual("00000010 67494678 6D4BF433D588EFB2 D50E4A FB34A6BE4D 7CB82263",
-			new Gifx(hexToBytes("6D4BF433D588EFB2"), hexToBytes("D50E4A"), hexToBytes("FB34A6BE4D")));
 	}
 	
 }

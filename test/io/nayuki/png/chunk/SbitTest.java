@@ -60,6 +60,11 @@ public final class SbitTest {
 	}
 	
 	
+	@Test public void testWriteChunk() {
+		TestUtil.assertChunkBytesEqual("00000004 73424954 0C 06 0D 01 FD5F9234", new Sbit(new byte[]{12, 6, 13, 1}));
+	}
+	
+	
 	@Test public void testWriteChunkData() {
 		String[] CASES = {
 			"01",
@@ -83,11 +88,6 @@ public final class SbitTest {
 			byte[] b = hexToBytes(cs);
 			TestUtil.assertDataEquals(b, new Sbit(b));
 		}
-	}
-	
-	
-	@Test public void testWriteChunk() {
-		TestUtil.assertChunkBytesEqual("00000004 73424954 0C 06 0D 01 FD5F9234", new Sbit(new byte[]{12, 6, 13, 1}));
 	}
 	
 }
