@@ -29,9 +29,9 @@ interface SmallDataChunk extends Chunk {
 		}
 		byte[] temp = bout.toByteArray();
 		byte[] data = Arrays.copyOfRange(temp, 8, temp.length);
-		var cout = new ChunkWriter(data.length, getType(), out);
-		cout.write(data);
-		cout.finish();
+		try (var cout = new ChunkWriter(data.length, getType(), out)) {
+			cout.write(data);
+		}
 	}
 	
 	

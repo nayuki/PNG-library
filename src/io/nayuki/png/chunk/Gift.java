@@ -86,19 +86,19 @@ public record Gift(
 	
 	@Override public void writeChunk(OutputStream out) throws IOException {
 		int dataLen = Util.checkedLengthSum(4 * Integer.BYTES, 2 * Byte.BYTES, 2 * 3 * Byte.BYTES, text);
-		var cout = new ChunkWriter(dataLen, TYPE, out);
-		cout.writeInt32(textGridLeft  );
-		cout.writeInt32(textGridTop   );
-		cout.writeInt32(textGridWidth );
-		cout.writeInt32(textGridHeight);
-		cout.writeUint8(characterCellWidth );
-		cout.writeUint8(characterCellHeight);
-		for (int i = 16; i >= 0; i -= 8)
-			cout.writeUint8((textForegroundColor >>> i) & 0xFF);
-		for (int i = 16; i >= 0; i -= 8)
-			cout.writeUint8((textBackgroundColor >>> i) & 0xFF);
-		cout.writeString(text, StandardCharsets.US_ASCII, false);
-		cout.finish();
+		try (var cout = new ChunkWriter(dataLen, TYPE, out)) {
+			cout.writeInt32(textGridLeft  );
+			cout.writeInt32(textGridTop   );
+			cout.writeInt32(textGridWidth );
+			cout.writeInt32(textGridHeight);
+			cout.writeUint8(characterCellWidth );
+			cout.writeUint8(characterCellHeight);
+			for (int i = 16; i >= 0; i -= 8)
+				cout.writeUint8((textForegroundColor >>> i) & 0xFF);
+			for (int i = 16; i >= 0; i -= 8)
+				cout.writeUint8((textBackgroundColor >>> i) & 0xFF);
+			cout.writeString(text, StandardCharsets.US_ASCII, false);
+		}
 	}
 	
 }

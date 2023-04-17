@@ -19,9 +19,9 @@ import java.io.OutputStream;
 interface BytesDataChunk extends Chunk {
 	
 	@Override public default void writeChunk(OutputStream out) throws IOException {
-		var cout = new ChunkWriter(data().length, getType(), out);
-		cout.write(data());
-		cout.finish();
+		try (var cout = new ChunkWriter(data().length, getType(), out)) {
+			cout.write(data());
+		}
 	}
 	
 	

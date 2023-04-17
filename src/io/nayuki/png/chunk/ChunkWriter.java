@@ -21,7 +21,7 @@ import java.util.zip.Checksum;
  * Helper class for serializing chunks: Common header fields writing, manual
  * writing of many field types, data length checking, CRC-32 handling.
  */
-final class ChunkWriter {
+final class ChunkWriter implements AutoCloseable {
 	
 	/*---- Fields ----*/
 	
@@ -105,7 +105,7 @@ final class ChunkWriter {
 	}
 	
 	
-	public void finish() throws IOException {
+	public void close() throws IOException {
 		if (output == null)
 			throw new IllegalStateException("Already finished");
 		if (dataRemaining > 0)

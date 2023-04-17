@@ -61,11 +61,11 @@ public record Scal(
 	
 	@Override public void writeChunk(OutputStream out) throws IOException {
 		int dataLen = Util.checkedLengthSum(Byte.BYTES, pixelWidth, Byte.BYTES, pixelHeight);
-		var cout = new ChunkWriter(dataLen, TYPE, out);
-		cout.writeUint8(unitSpecifier.ordinal() + 1);
-		cout.writeString(pixelWidth, StandardCharsets.US_ASCII, true);
-		cout.writeString(pixelHeight, StandardCharsets.US_ASCII, false);
-		cout.finish();
+		try (var cout = new ChunkWriter(dataLen, TYPE, out)) {
+			cout.writeUint8(unitSpecifier.ordinal() + 1);
+			cout.writeString(pixelWidth, StandardCharsets.US_ASCII, true);
+			cout.writeString(pixelHeight, StandardCharsets.US_ASCII, false);
+		}
 	}
 	
 	

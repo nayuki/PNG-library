@@ -86,16 +86,16 @@ public record Pcal(
 		int dataLen = Util.checkedLengthSum(calibrationName, 1, 2 * Integer.BYTES,
 			2 * Byte.BYTES, unitName, params.length, Util.checkedLengthSum(params));
 		
-		var cout = new ChunkWriter(dataLen, TYPE, out);
-		cout.writeString(calibrationName, StandardCharsets.ISO_8859_1, true);
-		cout.writeInt32(originalZero);
-		cout.writeInt32(originalMax);
-		cout.writeUint8(equationType);
-		cout.writeUint8(parameters.length);
-		cout.writeString(unitName, StandardCharsets.ISO_8859_1, true);
-		for (int i = 0; i < parameters.length; i++)
-			cout.writeString(parameters[i], StandardCharsets.US_ASCII, (i < parameters.length - 1));
-		cout.finish();
+		try (var cout = new ChunkWriter(dataLen, TYPE, out)) {
+			cout.writeString(calibrationName, StandardCharsets.ISO_8859_1, true);
+			cout.writeInt32(originalZero);
+			cout.writeInt32(originalMax);
+			cout.writeUint8(equationType);
+			cout.writeUint8(parameters.length);
+			cout.writeString(unitName, StandardCharsets.ISO_8859_1, true);
+			for (int i = 0; i < parameters.length; i++)
+				cout.writeString(parameters[i], StandardCharsets.US_ASCII, (i < parameters.length - 1));
+		}
 	}
 	
 	

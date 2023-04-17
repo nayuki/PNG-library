@@ -110,14 +110,14 @@ public record Itxt(
 	@Override public void writeChunk(OutputStream out) throws IOException {
 		int dataLen = Util.checkedLengthSum(keyword, 3 * Byte.BYTES, languageTag, Byte.BYTES,
 			text, Byte.BYTES, translatedKeyword.getBytes(StandardCharsets.UTF_8));
-		var cout = new ChunkWriter(dataLen, TYPE, out);
-		cout.writeString(keyword, StandardCharsets.ISO_8859_1, true);
-		cout.writeUint8(compressionMethod.isPresent() ? 1 : 0);
-		cout.writeUint8(compressionMethod.map(cm -> cm.ordinal()).orElse(0));
-		cout.writeString(languageTag, StandardCharsets.ISO_8859_1, true);
-		cout.writeString(translatedKeyword, StandardCharsets.UTF_8, true);
-		cout.write(text);
-		cout.finish();
+		try (var cout = new ChunkWriter(dataLen, TYPE, out)) {
+			cout.writeString(keyword, StandardCharsets.ISO_8859_1, true);
+			cout.writeUint8(compressionMethod.isPresent() ? 1 : 0);
+			cout.writeUint8(compressionMethod.map(cm -> cm.ordinal()).orElse(0));
+			cout.writeString(languageTag, StandardCharsets.ISO_8859_1, true);
+			cout.writeString(translatedKeyword, StandardCharsets.UTF_8, true);
+			cout.write(text);
+		}
 	}
 	
 }
