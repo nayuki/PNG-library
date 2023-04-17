@@ -93,9 +93,9 @@ public final class PngImage {
 	 * @throws IllegalArgumentException if multiple chunks match the type
 	 */
 	@SafeVarargs
-	public static <T> Optional<T> getChunk(Class<T> type, List<Chunk>... lists) {
+	public static <T> Optional<T> getChunk(Class<T> type, List<? extends Chunk>... lists) {
 		Optional<T> result = Optional.empty();
-		for (List<Chunk> lst : lists) {
+		for (List<? extends Chunk> lst : lists) {
 			for (Chunk chk : lst) {
 				if (type.isInstance(chk)) {
 					if (result.isPresent())
@@ -117,9 +117,9 @@ public final class PngImage {
 	 * @return a list (not {@code null}) of all the chunks matching the type
 	 */
 	@SafeVarargs
-	public static <T> List<T> getChunks(Class<T> type, List<Chunk>... lists) {
+	public static <T> List<T> getChunks(Class<T> type, List<? extends Chunk>... lists) {
 		List<T> result = new ArrayList<>();
-		for (List<Chunk> lst : lists) {
+		for (List<? extends Chunk> lst : lists) {
 			for (Chunk chk : lst) {
 				if (type.isInstance(chk))
 					result.add(type.cast(chk));
