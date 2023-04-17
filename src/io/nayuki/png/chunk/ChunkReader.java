@@ -60,8 +60,7 @@ final class ChunkReader {
 		
 		checksum.reset();
 		dataRemaining = 4;
-		readFully(buffer, 0, 4);
-		type = new String(buffer, 0, 4, StandardCharsets.US_ASCII);
+		type = readString(StandardCharsets.US_ASCII, false);
 		Chunk.checkType(type);
 		
 		dataRemaining = dataLen;
