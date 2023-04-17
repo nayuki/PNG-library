@@ -50,7 +50,7 @@ public final class TextTest {
 	}
 	
 	
-	@Test public void testGetData() {
+	@Test public void testWriteChunkData() {
 		TestUtil.assertDataEquals("410062E9", new Text("A", "bé"));
 		TestUtil.assertDataEquals("6B6579 00 2076616C20207565", new Text("key", " val  ue"));
 	}

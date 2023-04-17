@@ -32,7 +32,7 @@ public final class CustomTest {
 	}
 	
 	
-	@Test public void testGetData() {
+	@Test public void testWriteChunkData() {
 		TestUtil.assertDataEquals("AABC10", new Custom("asDf", TestUtil.hexToBytes("AABC10")));
 	}
 	

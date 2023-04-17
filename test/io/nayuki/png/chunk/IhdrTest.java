@@ -103,7 +103,7 @@ public final class IhdrTest {
 	}
 	
 	
-	@Test public void testGetData() {
+	@Test public void testWriteChunkData() {
 		TestUtil.assertDataEquals("00000001 00000001 08 02 00 00 00",  new Ihdr(         1,          1,  8, ColorType.TRUE_COLOR           , ZLIB_DEFLATE, ADAPTIVE, NONE ));
 		TestUtil.assertDataEquals("00010000 00001000 10 02 00 00 01",  new Ihdr(     65536,       4096, 16, ColorType.TRUE_COLOR           , ZLIB_DEFLATE, ADAPTIVE, ADAM7));
 		TestUtil.assertDataEquals("00000003 00000002 08 06 00 00 01",  new Ihdr(         3,          2,  8, ColorType.TRUE_COLOR_WITH_ALPHA, ZLIB_DEFLATE, ADAPTIVE, ADAM7));

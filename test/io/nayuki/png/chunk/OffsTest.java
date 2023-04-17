@@ -29,7 +29,7 @@ public final class OffsTest {
 	}
 	
 	
-	@Test public void testGetData() {
+	@Test public void testWriteChunkData() {
 		TestUtil.assertDataEquals("00000000 00000000 00", new Offs(          0,           0, UnitSpecifier.PIXEL     ));
 		TestUtil.assertDataEquals("00000002 FFFFFFFF 01", new Offs(          2,          -1, UnitSpecifier.MICROMETRE));
 		TestUtil.assertDataEquals("FFFB34D1 00287D95 00", new Offs(    -314159,     2653589, UnitSpecifier.PIXEL     ));

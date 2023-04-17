@@ -58,7 +58,7 @@ public final class FctlTest {
 	}
 	
 	
-	@Test public void testGetData() {
+	@Test public void testWriteChunkData() {
 		TestUtil.assertDataEquals("00000000 00000003 00000002 00000004 00000001 0005 0006 00 00",
 			new Fctl(0, 3, 2, 4, 1, 5, 6, Fctl.DisposeOperation.NONE, Fctl.BlendOperation.SOURCE));
 		

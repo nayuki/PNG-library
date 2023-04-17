@@ -76,7 +76,7 @@ public final class GamaTest {
 	}
 	
 	
-	@Test public void testGetData() {
+	@Test public void testWriteChunkData() {
 		TestUtil.assertDataEquals("00000001", new Gama(         1));
 		TestUtil.assertDataEquals("0000B18F", new Gama(     45455));
 		TestUtil.assertDataEquals("000186A0", new Gama(    100000));

@@ -89,7 +89,7 @@ public final class SpltTest {
 	}
 	
 	
-	@Test public void testGetData() {
+	@Test public void testWriteChunkData() {
 		TestUtil.assertDataEquals("666F6F626172 00 08 001234556677 89ABCDEF1011",
 			new Splt("foobar", 8, TestUtil.hexToBytes("001234556677 89ABCDEF1011")));
 	}

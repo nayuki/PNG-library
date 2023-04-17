@@ -77,7 +77,7 @@ public final class GiftTest {
 	}
 	
 	
-	@Test public void testGetData() {
+	@Test public void testWriteChunkData() {
 		TestUtil.assertDataEquals("00000000 00000003 00000002 00000004 01 05 000006 000007",
 			new Gift(0, 3, 2, 4, 1, 5, 6, 7, ""));
 		

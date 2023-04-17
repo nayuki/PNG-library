@@ -30,7 +30,7 @@ public final class ActlTest {
 	}
 	
 	
-	@Test public void testGetData() {
+	@Test public void testWriteChunkData() {
 		TestUtil.assertDataEquals("00000001 00000000", new Actl(1, 0));
 		TestUtil.assertDataEquals("00000005 00000002", new Actl(5, 2));
 		TestUtil.assertDataEquals("00000652 7FFFFFFF", new Actl(1618, Integer.MAX_VALUE));

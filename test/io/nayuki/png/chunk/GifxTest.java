@@ -30,7 +30,7 @@ public final class GifxTest {
 	}
 	
 	
-	@Test public void testGetData() {
+	@Test public void testWriteChunkData() {
 		// All examples are random data and not real application extensions
 		TestUtil.assertDataEquals("EA03D5DF6B0554D3 E96F24",
 			new Gifx(hexToBytes("EA03D5DF6B0554D3"), hexToBytes("E96F24"), hexToBytes("")));

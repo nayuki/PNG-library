@@ -81,7 +81,7 @@ public final class IccpTest {
 	}
 	
 	
-	@Test public void testGetData() {
+	@Test public void testWriteChunkData() {
 		// The decompressed data is not a valid ICCP profile
 		TestUtil.assertDataEquals("4D6F6E69746F72 00 00 789C030000000001",
 			new Iccp("Monitor", ZLIB_DEFLATE, TestUtil.hexToBytes("789C030000000001")));

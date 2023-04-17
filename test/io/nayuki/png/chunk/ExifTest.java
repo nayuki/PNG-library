@@ -14,7 +14,7 @@ import io.nayuki.png.TestUtil;
 
 public final class ExifTest {
 	
-	@Test public void testGetData() {
+	@Test public void testWriteChunkData() {
 		// All examples are random data and not real Exif profiles
 		TestUtil.assertDataEquals("19C4EAEC2AA8CC7BB5B17DFDCDF665EECE5B", new Exif(TestUtil.hexToBytes("19C4EAEC2AA8CC7BB5B17DFDCDF665EECE5B")));
 	}

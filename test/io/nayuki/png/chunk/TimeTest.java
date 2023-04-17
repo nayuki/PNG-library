@@ -127,7 +127,7 @@ public final class TimeTest {
 	}
 	
 	
-	@Test public void testGetData() {
+	@Test public void testWriteChunkData() {
 		TestUtil.assertDataEquals("07CF 0C 1F 17 3B 3B", new Time(1999, 12, 31, 23, 59, 59));
 		TestUtil.assertDataEquals("07D0 01 01 00 00 00", new Time(2000,  1,  1,  0,  0,  0));
 		TestUtil.assertDataEquals("07F6 01 13 03 0E 07", new Time(2038,  1, 19,  3, 14,  7));

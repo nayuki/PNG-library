@@ -29,7 +29,7 @@ public final class HistTest {
 	}
 	
 	
-	@Test public void testGetData() {
+	@Test public void testWriteChunkData() {
 		for (int len = 1; len <= 256; len++) {
 			var bytes = new byte[len * 2];
 			var ints = new int[len];

@@ -51,7 +51,7 @@ public final class ScalTest {
 	}
 	
 	
-	@Test public void testGetData() {
+	@Test public void testWriteChunkData() {
 		TestUtil.assertDataEquals("01 37 00 2B2E3031652B35", new Scal(UnitSpecifier.METRE, "7", "+.01e+5"));
 		TestUtil.assertDataEquals("02 39392E6530 00 322E3433652D3037", new Scal(UnitSpecifier.RADIAN, "99.e0", "2.43e-07"));
 	}

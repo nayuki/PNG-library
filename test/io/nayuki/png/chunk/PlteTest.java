@@ -62,7 +62,7 @@ public final class PlteTest {
 	}
 	
 	
-	@Test public void testGetData() {
+	@Test public void testWriteChunkData() {
 		String[] CASES = {
 			"000000",
 			"010203",

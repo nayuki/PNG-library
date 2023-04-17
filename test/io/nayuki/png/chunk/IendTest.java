@@ -14,7 +14,7 @@ import io.nayuki.png.TestUtil;
 
 public final class IendTest {
 	
-	@Test public void testGetData() {
+	@Test public void testWriteChunkData() {
 		TestUtil.assertDataEquals("", Iend.SINGLETON);
 	}
 	

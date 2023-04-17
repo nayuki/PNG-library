@@ -45,7 +45,7 @@ public final class PcalTest {
 	}
 	
 	
-	@Test public void testGetData() {
+	@Test public void testWriteChunkData() {
 		TestUtil.assertDataEquals("616C6566 00 00000000 0000FFFF 00 02 6D65747265 00 31 00 32",
 			new Pcal("alef", "metre", 0, 65535, EquationType.LINEAR, "1", "2"));
 		

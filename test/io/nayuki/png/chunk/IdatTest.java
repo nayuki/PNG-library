@@ -14,7 +14,7 @@ import io.nayuki.png.TestUtil;
 
 public final class IdatTest {
 	
-	@Test public void testGetData() {
+	@Test public void testWriteChunkData() {
 		TestUtil.assertDataEquals("789C010200FDFF010000040002", new Idat(TestUtil.hexToBytes("789C010200FDFF010000040002")));
 	}
 	

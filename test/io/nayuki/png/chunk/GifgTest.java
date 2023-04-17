@@ -33,7 +33,7 @@ public final class GifgTest {
 	}
 	
 	
-	@Test public void testGetData() {
+	@Test public void testWriteChunkData() {
 		TestUtil.assertDataEquals("00 00 0001", new Gifg(0, false,      1));
 		TestUtil.assertDataEquals("01 01 8421", new Gifg(1, true , 0x8421));
 		TestUtil.assertDataEquals("02 00 0147", new Gifg(2, false,    327));

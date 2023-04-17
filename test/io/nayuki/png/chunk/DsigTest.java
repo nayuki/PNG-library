@@ -14,7 +14,7 @@ import io.nayuki.png.TestUtil;
 
 public final class DsigTest {
 	
-	@Test public void testGetData() {
+	@Test public void testWriteChunkData() {
 		// All examples are random data and not real digital signatures
 		TestUtil.assertDataEquals("18B8894CCF0C0271B989B47C769BEE210C89F08FA2", new Dsig(TestUtil.hexToBytes("18B8894CCF0C0271B989B47C769BEE210C89F08FA2")));
 	}

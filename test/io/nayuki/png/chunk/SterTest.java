@@ -15,7 +15,7 @@ import io.nayuki.png.chunk.Ster.Mode;
 
 public final class SterTest {
 	
-	@Test public void testGetData() {
+	@Test public void testWriteChunkData() {
 		TestUtil.assertDataEquals("00", new Ster(Mode.CROSS_FUSE_LAYOUT    ));
 		TestUtil.assertDataEquals("01", new Ster(Mode.DIVERGING_FUSE_LAYOUT));
 	}

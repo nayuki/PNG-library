@@ -60,7 +60,7 @@ public final class SbitTest {
 	}
 	
 	
-	@Test public void testGetData() {
+	@Test public void testWriteChunkData() {
 		String[] CASES = {
 			"01",
 			"02",

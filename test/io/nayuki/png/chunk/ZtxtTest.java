@@ -113,7 +113,7 @@ public final class ZtxtTest {
 	}
 	
 	
-	@Test public void testGetData() {
+	@Test public void testWriteChunkData() {
 		TestUtil.assertDataEquals("6B6579 00 00 789C53284BCC5150284D05000AD3027E",
 			new Ztxt("key", ZLIB_DEFLATE, hexToBytes("789C 53284BCC5150284D0500 0AD3027E")));
 		
