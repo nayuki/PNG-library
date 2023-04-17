@@ -38,7 +38,12 @@ public record Time(
 	public Time {
 		if (!(0 <= year   && year   <= Short.MAX_VALUE)) throw new IllegalArgumentException("Year out of range"  );
 		if (!(1 <= month  && month  <= 12             )) throw new IllegalArgumentException("Month out of range" );
-		if (!(1 <= day    && day    <= 31             )) throw new IllegalArgumentException("Day out of range"   );
+		int maxDay;
+		if (month == 2)
+			maxDay = (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)) ? 29 : 28;
+		else
+			maxDay = (4 * month + 3) / 7 - (4 * month + 6) / 7 + 31;
+		if (!(1 <= day    && day    <= maxDay         )) throw new IllegalArgumentException("Day out of range"   );
 		if (!(0 <= hour   && hour   <= 23             )) throw new IllegalArgumentException("Hour out of range"  );
 		if (!(0 <= minute && minute <= 59             )) throw new IllegalArgumentException("Minute out of range");
 		if (!(0 <= second && second <= 60             )) throw new IllegalArgumentException("Second out of range");
