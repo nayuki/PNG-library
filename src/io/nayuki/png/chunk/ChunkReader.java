@@ -148,7 +148,9 @@ final class ChunkReader implements AutoCloseable {
 				int b = input.read();
 				if (b == -1)
 					throw new EOFException();
-				else if (b == 0)
+				checksum.update(b);
+				dataRemaining--;
+				if (b == 0)
 					break;
 				else {
 					if (bufLen >= buf.length) {
