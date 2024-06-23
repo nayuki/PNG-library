@@ -152,16 +152,14 @@ final class ChunkReader implements AutoCloseable {
 				dataRemaining--;
 				if (b == 0)
 					break;
-				else {
-					if (bufLen >= buf.length) {
-						int newLen = (int)Math.min((long)buf.length * 2, Integer.MAX_VALUE - 8);
-						if (newLen <= buf.length)
-							throw new IllegalArgumentException("String too long");
-						buf = Arrays.copyOf(buf, newLen);
-					}
-					buf[bufLen] = (byte)b;
-					bufLen++;
+				if (bufLen >= buf.length) {
+					int newLen = (int)Math.min((long)buf.length * 2, Integer.MAX_VALUE - 8);
+					if (newLen <= buf.length)
+						throw new IllegalArgumentException("String too long");
+					buf = Arrays.copyOf(buf, newLen);
 				}
+				buf[bufLen] = (byte)b;
+				bufLen++;
 			}
 			return new String(buf, 0, bufLen, cs);
 		} else {
