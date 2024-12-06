@@ -73,6 +73,7 @@ public record Scal(
 	/*---- Enumeration ----*/
 	
 	public enum UnitSpecifier {
+		// Value 0 is undefined
 		METRE,  // Value 1
 		RADIAN,  // Value 2
 	}
