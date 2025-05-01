@@ -77,8 +77,8 @@ public record Itxt(
 			if (compMethod != 0)
 				throw new IllegalArgumentException("Invalid compression method");
 		} else if (compFlag == 1) {
-			if (compMethod > CompressionMethod.values().length)
-				throw new IllegalArgumentException("Unrecognized value for enumeration");
+			if (compMethod >= CompressionMethod.values().length)
+				throw new IllegalArgumentException("Unknown compression method");
 		} else
 			throw new IllegalArgumentException("Compression flag out of range");
 		String language = in.readString(StandardCharsets.ISO_8859_1, true);
