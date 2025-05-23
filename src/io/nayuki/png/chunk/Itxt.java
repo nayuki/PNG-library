@@ -77,7 +77,7 @@ public record Itxt(
 			if (compMethod != 0)
 				throw new IllegalArgumentException("Invalid compression method");
 		} else if (compFlag == 1) {
-			if (compMethod > CompressionMethod.values().length)
+			if (compMethod >= CompressionMethod.values().length)
 				throw new IllegalArgumentException("Unrecognized value for enumeration");
 		} else
 			throw new IllegalArgumentException("Compression flag out of range");
