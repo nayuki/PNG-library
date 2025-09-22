@@ -30,7 +30,7 @@ public record Phys(
 	/*---- Constructor and factory ----*/
 	
 	public Phys {
-		if (pixelsPerUnitX <= 0 || pixelsPerUnitY <= 0)
+		if (pixelsPerUnitX < 0 || pixelsPerUnitY < 0)
 			throw new IllegalArgumentException("Non-positive physical density");
 		Objects.requireNonNull(unitSpecifier);
 	}
