@@ -241,10 +241,14 @@ public final class PngImage {
 		"iCCP",
 		"IEND",
 		"IHDR",
+		"oFFs",
+		"pCAL",
 		"pHYs",
 		"PLTE",
 		"sBIT",
+		"sCAL",
 		"sRGB",
+		"sTER",
 		"tIME",
 		"tRNS"));
 	
