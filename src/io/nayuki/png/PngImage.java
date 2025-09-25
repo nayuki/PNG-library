@@ -178,6 +178,8 @@ public final class PngImage {
 						yield State.DURING_IDATS;
 					} else if (chunk instanceof Iend)
 						throw new IllegalArgumentException("Unexpected IEND chunk");
+					else if (AFTER_IDAT_CHUNK_TYPES.contains(chunk.getType()))
+						throw new IllegalArgumentException("Unexpected " + chunk.getType() + " chunk before IDAT");
 					else {
 						afterIhdr.add(chunk);
 						yield State.AFTER_IHDR;
@@ -192,6 +194,8 @@ public final class PngImage {
 						yield State.DURING_IDATS;
 					} else if (chunk instanceof Iend)
 						yield State.AFTER_IEND;
+					else if (BEFORE_IDAT_CHUNK_TYPES.contains(chunk.getType()))
+						throw new IllegalArgumentException("Unexpected " + chunk.getType() + " chunk after IDAT");
 					else {
 						afterIdats.add(chunk);
 						yield State.AFTER_IDATS;
@@ -205,6 +209,8 @@ public final class PngImage {
 						yield State.AFTER_IEND;
 					else if (chunk instanceof Idat)
 						throw new IllegalArgumentException("Non-consecutive IDAT chunk");
+					else if (BEFORE_IDAT_CHUNK_TYPES.contains(chunk.getType()))
+						throw new IllegalArgumentException("Unexpected " + chunk.getType() + " chunk after IDAT");
 					else {
 						afterIdats.add(chunk);
 						yield State.AFTER_IDATS;
@@ -232,7 +238,7 @@ public final class PngImage {
 	}
 	
 	
-	private static final Set<String> UNIQUE_CHUNK_TYPES = new HashSet<>(Arrays.asList(
+	private static final Set<String> UNIQUE_CHUNK_TYPES = Set.of(
 		"acTL",
 		"bKGD",
 		"cHRM",
@@ -250,21 +256,44 @@ public final class PngImage {
 		"sRGB",
 		"sTER",
 		"tIME",
-		"tRNS"));
+		"tRNS");
 	
 	
-	private static final Set<String> BEFORE_PLTE_CHUNK_TYPES = new HashSet<>(Arrays.asList(
+	private static final Set<String> BEFORE_IDAT_CHUNK_TYPES = Set.of(
+		"acTL",
+		"bKGD",
+		"cHRM",
+		"eXIF",
+		"gAMA",
+		"hIST",
+		"iCCP",
+		"oFFs",
+		"pCAL",
+		"pHYs",
+		"sBIT",
+		"sCAL",
+		"sPTL",
+		"sRGB",
+		"sTER",
+		"tRNS");
+	
+	
+	private static final Set<String> AFTER_IDAT_CHUNK_TYPES = Set.of(
+		"fdAT");
+	
+	
+	private static final Set<String> BEFORE_PLTE_CHUNK_TYPES = Set.of(
 		"cHRM",
 		"gAMA",
 		"iCCP",
 		"sBIT",
-		"sRGB"));
+		"sRGB");
 	
 	
-	private static final Set<String> AFTER_PLTE_CHUNK_TYPES = new HashSet<>(Arrays.asList(
+	private static final Set<String> AFTER_PLTE_CHUNK_TYPES = Set.of(
 		"bKGD",
 		"hIST",
-		"tRNS"));
+		"tRNS");
 	
 	
 	/**
