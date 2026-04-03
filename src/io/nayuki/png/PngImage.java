@@ -177,6 +177,8 @@ public final class PngImage {
 						yield State.DURING_IDATS;
 					} else if (chunk instanceof Iend)
 						throw new IllegalArgumentException("Unexpected IEND chunk");
+					else if (AFTER_IDAT_CHUNK_TYPES.contains(chunk.getType()))
+						throw new IllegalArgumentException("Unexpected " + chunk.getType() + " chunk before IDAT");
 					else {
 						afterIhdr.add(chunk);
 						yield State.AFTER_IHDR;
@@ -277,6 +279,10 @@ public final class PngImage {
 		"sRGB",
 		"sTER",
 		"tRNS");
+	
+	
+	private static final Set<String> AFTER_IDAT_CHUNK_TYPES = Set.of(
+		"fdAT");
 	
 	
 	private static final Set<String> BEFORE_PLTE_CHUNK_TYPES = Set.of(
