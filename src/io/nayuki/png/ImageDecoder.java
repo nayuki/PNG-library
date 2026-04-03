@@ -362,7 +362,7 @@ public final class ImageDecoder {
 			int[] outBitDepths = result.getBitDepths();
 			int wShift = inBitDepth - outBitDepths[0];
 			int aShift = inBitDepth - outBitDepths[1];
-			boolean hasAlpha = outBitDepths[1] > 0;
+			boolean hasAlpha = outBitDepths[1] > 0 && transparentColor == -1;
 			int mode = inBitDepth >= 8 ? (inBitDepth / 8 - 1) * 2 + (hasAlpha ? 1 : 0) : 4;
 			
 			int filterStride = Math.ceilDiv(inBitDepth * (hasAlpha ? 2 : 1), 8);
