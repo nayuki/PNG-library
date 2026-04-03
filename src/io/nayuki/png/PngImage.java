@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -232,7 +231,7 @@ public final class PngImage {
 	}
 	
 	
-	private static final Set<String> UNIQUE_CHUNK_TYPES = new HashSet<>(Arrays.asList(
+	private static final Set<String> UNIQUE_CHUNK_TYPES = Set.of(
 		"acTL",
 		"bKGD",
 		"cHRM",
@@ -254,21 +253,21 @@ public final class PngImage {
 		"sRGB",
 		"sTER",
 		"tIME",
-		"tRNS"));
+		"tRNS");
 	
 	
-	private static final Set<String> BEFORE_PLTE_CHUNK_TYPES = new HashSet<>(Arrays.asList(
+	private static final Set<String> BEFORE_PLTE_CHUNK_TYPES = Set.of(
 		"cHRM",
 		"gAMA",
 		"iCCP",
 		"sBIT",
-		"sRGB"));
+		"sRGB");
 	
 	
-	private static final Set<String> AFTER_PLTE_CHUNK_TYPES = new HashSet<>(Arrays.asList(
+	private static final Set<String> AFTER_PLTE_CHUNK_TYPES = Set.of(
 		"bKGD",
 		"hIST",
-		"tRNS"));
+		"tRNS");
 	
 	
 	/**
