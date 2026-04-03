@@ -265,7 +265,7 @@ public final class PngImage {
 		"cHRM",
 		"cICP",
 		"cLLI",
-		"eXIF",
+		"eXIf",
 		"gAMA",
 		"hIST",
 		"iCCP",
