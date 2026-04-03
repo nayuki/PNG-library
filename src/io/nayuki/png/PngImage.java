@@ -151,10 +151,10 @@ public final class PngImage {
 		Set<String> seenChunkTypes = new HashSet<>();
 		for (Chunk chunk : chunks) {
 			String type = chunk.getType();
-			if (!seenChunkTypes.add(type) && UNIQUE_CHUNK_TYPES.contains(type))
-				throw new IllegalArgumentException("Duplicate " + type + " chunk");
-			else if (hasIend)
+			if (hasIend)
 				throw new IllegalArgumentException("Unexpected chunk after IEND");
+			else if (!seenChunkTypes.add(type) && UNIQUE_CHUNK_TYPES.contains(type))
+				throw new IllegalArgumentException("Duplicate " + type + " chunk");
 			else if (ihdr.isEmpty()) {
 				if (!(chunk instanceof Ihdr chk))
 					throw new IllegalArgumentException("Expected IHDR chunk");
