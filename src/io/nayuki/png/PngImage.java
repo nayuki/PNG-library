@@ -172,8 +172,8 @@ public final class PngImage {
 				}
 				
 				case AFTER_IHDR -> {
-					if (chunk instanceof Idat chk1) {
-						idats.add(chk1);
+					if (chunk instanceof Idat chk) {
+						idats.add(chk);
 						yield State.DURING_IDATS;
 					} else if (chunk instanceof Iend)
 						throw new IllegalArgumentException("Unexpected IEND chunk");
