@@ -165,23 +165,16 @@ public final class PngImage {
 				if (!(chunk instanceof Ihdr chk))
 					throw new IllegalArgumentException("Expected IHDR chunk");
 				ihdr = Optional.of(chk);
-			} else if (idats.isEmpty()) {
-				if (chunk instanceof Idat chk)
-					idats.add(chk);
-				else if (chunk instanceof Iend)
+			} else if (chunk instanceof Idat chk) {
+				if (!afterIdats.isEmpty())
+					throw new IllegalArgumentException("Non-consecutive IDAT chunk");
+				idats.add(chk);
+			} else if (chunk instanceof Iend) {
+				if (idats.isEmpty())
 					throw new IllegalArgumentException("Unexpected IEND chunk");
-				else
-					afterIhdr.add(chunk);
-			} else {
-				if (chunk instanceof Idat chk) {
-					if (!afterIdats.isEmpty())
-						throw new IllegalArgumentException("Non-consecutive IDAT chunk");
-					idats.add(chk);
-				} else if (chunk instanceof Iend)
-					hasIend = true;
-				else
-					afterIdats.add(chunk);
-			}
+				hasIend = true;
+			} else
+				(idats.isEmpty() ? afterIhdr : afterIdats).add(chunk);
 		}
 		if (ihdr.isEmpty() || idats.isEmpty() || !hasIend)
 			throw new IllegalArgumentException("Missing some required chunks");
