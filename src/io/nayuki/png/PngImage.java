@@ -177,8 +177,8 @@ public final class PngImage {
 						yield State.DURING_IDATS;
 					} else if (chunk instanceof Iend)
 						throw new IllegalArgumentException("Unexpected IEND chunk");
-					else if (AFTER_IDAT_CHUNK_TYPES.contains(chunk.getType()))
-						throw new IllegalArgumentException("Unexpected " + chunk.getType() + " chunk before IDAT");
+					else if (AFTER_IDAT_CHUNK_TYPES.contains(type))
+						throw new IllegalArgumentException("Unexpected " + type + " chunk before IDAT");
 					else {
 						afterIhdr.add(chunk);
 						yield State.AFTER_IHDR;
@@ -191,8 +191,8 @@ public final class PngImage {
 						yield State.DURING_IDATS;
 					} else if (chunk instanceof Iend)
 						yield State.AFTER_IEND;
-					else if (BEFORE_IDAT_CHUNK_TYPES.contains(chunk.getType()))
-						throw new IllegalArgumentException("Unexpected " + chunk.getType() + " chunk after IDAT");
+					else if (BEFORE_IDAT_CHUNK_TYPES.contains(type))
+						throw new IllegalArgumentException("Unexpected " + type + " chunk after IDAT");
 					else {
 						afterIdats.add(chunk);
 						yield State.AFTER_IDATS;
@@ -204,8 +204,8 @@ public final class PngImage {
 						yield State.AFTER_IEND;
 					else if (chunk instanceof Idat)
 						throw new IllegalArgumentException("Non-consecutive IDAT chunk");
-					else if (BEFORE_IDAT_CHUNK_TYPES.contains(chunk.getType()))
-						throw new IllegalArgumentException("Unexpected " + chunk.getType() + " chunk after IDAT");
+					else if (BEFORE_IDAT_CHUNK_TYPES.contains(type))
+						throw new IllegalArgumentException("Unexpected " + type + " chunk after IDAT");
 					else {
 						afterIdats.add(chunk);
 						yield State.AFTER_IDATS;
