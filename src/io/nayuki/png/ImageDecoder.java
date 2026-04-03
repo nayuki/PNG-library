@@ -269,7 +269,7 @@ public final class ImageDecoder {
 							g = row[i + 1] & 0xFF;
 							b = row[i + 2] & 0xFF;
 							temp = (long)r << 48 | (long)g << 32 | (long)b << 16;
-							a = temp != transparentColor ? 0xFF : 0x00;
+							a = temp != transparentColor ? 0xFF : 0;
 						}
 						case 1 -> {
 							r = row[i + 0] & 0xFF;
@@ -282,7 +282,7 @@ public final class ImageDecoder {
 							g = (row[i + 2] & 0xFF) << 8 | (row[i + 3] & 0xFF) << 0;
 							b = (row[i + 4] & 0xFF) << 8 | (row[i + 5] & 0xFF) << 0;
 							temp = (long)r << 48 | (long)g << 32 | (long)b << 16;
-							a = temp != transparentColor ? 0xFFFF : 0x00;
+							a = temp != transparentColor ? 0xFFFF : 0;
 						}
 						case 3 -> {
 							r = (row[i + 0] & 0xFF) << 8 | (row[i + 1] & 0xFF) << 0;
@@ -378,7 +378,7 @@ public final class ImageDecoder {
 							case 0 -> {
 								w = row[i + 0] & 0xFF;
 								temp = w << 16;
-								a = temp != transparentColor ? 0xFF : 0x00;
+								a = temp != transparentColor ? 0xFF : 0;
 							}
 							case 1 -> {
 								w = row[i + 0] & 0xFF;
@@ -387,7 +387,7 @@ public final class ImageDecoder {
 							case 2 -> {
 								w = (row[i + 0] & 0xFF) << 8 | (row[i + 1] & 0xFF) << 0;
 								temp = w << 16;
-								a = temp != transparentColor ? 0xFFFF : 0x00;
+								a = temp != transparentColor ? 0xFFFF : 0;
 							}
 							case 3 -> {
 								w = (row[i + 0] & 0xFF) << 8 | (row[i + 1] & 0xFF) << 0;
