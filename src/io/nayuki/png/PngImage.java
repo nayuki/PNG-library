@@ -191,6 +191,8 @@ public final class PngImage {
 						yield State.DURING_IDATS;
 					} else if (chunk instanceof Iend)
 						yield State.AFTER_IEND;
+					else if (BEFORE_IDAT_CHUNK_TYPES.contains(chunk.getType()))
+						throw new IllegalArgumentException("Unexpected " + chunk.getType() + " chunk after IDAT");
 					else {
 						afterIdats.add(chunk);
 						yield State.AFTER_IDATS;
@@ -204,6 +206,8 @@ public final class PngImage {
 						yield State.AFTER_IEND;
 					else if (chunk instanceof Idat)
 						throw new IllegalArgumentException("Non-consecutive IDAT chunk");
+					else if (BEFORE_IDAT_CHUNK_TYPES.contains(chunk.getType()))
+						throw new IllegalArgumentException("Unexpected " + chunk.getType() + " chunk after IDAT");
 					else {
 						afterIdats.add(chunk);
 						yield State.AFTER_IDATS;
@@ -253,6 +257,29 @@ public final class PngImage {
 		"sRGB",
 		"sTER",
 		"tIME",
+		"tRNS");
+	
+	
+	private static final Set<String> BEFORE_IDAT_CHUNK_TYPES = Set.of(
+		"acTL",
+		"bKGD",
+		"cHRM",
+		"cICP",
+		"cLLI",
+		"eXIF",
+		"gAMA",
+		"hIST",
+		"iCCP",
+		"mDCV",
+		"oFFs",
+		"pCAL",
+		"pHYs",
+		"PLTE",
+		"sBIT",
+		"sCAL",
+		"sPTL",
+		"sRGB",
+		"sTER",
 		"tRNS");
 	
 	
