@@ -262,13 +262,12 @@ public final class ImageDecoder {
 				
 				for (int x = 0, i = filterStride; x < subwidth; x++, i += filterStride) {
 					int r, g, b, a;
-					long temp;
 					switch (mode) {
 						case 0 -> {
 							r = row[i + 0] & 0xFF;
 							g = row[i + 1] & 0xFF;
 							b = row[i + 2] & 0xFF;
-							temp = (long)r << 48 | (long)g << 32 | (long)b << 16;
+							long temp = (long)r << 48 | (long)g << 32 | (long)b << 16;
 							a = temp != transparentColor ? 0xFF : 0;
 						}
 						case 1 -> {
@@ -281,7 +280,7 @@ public final class ImageDecoder {
 							r = (row[i + 0] & 0xFF) << 8 | (row[i + 1] & 0xFF) << 0;
 							g = (row[i + 2] & 0xFF) << 8 | (row[i + 3] & 0xFF) << 0;
 							b = (row[i + 4] & 0xFF) << 8 | (row[i + 5] & 0xFF) << 0;
-							temp = (long)r << 48 | (long)g << 32 | (long)b << 16;
+							long temp = (long)r << 48 | (long)g << 32 | (long)b << 16;
 							a = temp != transparentColor ? 0xFFFF : 0;
 						}
 						case 3 -> {
@@ -373,11 +372,11 @@ public final class ImageDecoder {
 				
 				if (mode < 4) {
 					for (int x = 0, i = filterStride; x < subwidth; x++, i += filterStride) {
-						int w, a, temp;
+						int w, a;
 						switch (mode) {
 							case 0 -> {
 								w = row[i + 0] & 0xFF;
-								temp = w << 16;
+								long temp = w << 16;
 								a = temp != transparentColor ? 0xFF : 0;
 							}
 							case 1 -> {
@@ -386,7 +385,7 @@ public final class ImageDecoder {
 							}
 							case 2 -> {
 								w = (row[i + 0] & 0xFF) << 8 | (row[i + 1] & 0xFF) << 0;
-								temp = w << 16;
+								long temp = w << 16;
 								a = temp != transparentColor ? 0xFFFF : 0;
 							}
 							case 3 -> {
