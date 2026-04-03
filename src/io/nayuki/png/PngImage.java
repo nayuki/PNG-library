@@ -26,7 +26,6 @@ import io.nayuki.png.chunk.Chunk;
 import io.nayuki.png.chunk.Idat;
 import io.nayuki.png.chunk.Iend;
 import io.nayuki.png.chunk.Ihdr;
-import io.nayuki.png.chunk.Plte;
 
 
 /**
@@ -148,89 +147,48 @@ public final class PngImage {
 	
 	
 	private PngImage(List<Chunk> chunks) {
-		enum State {
-			BEFORE_IHDR,
-			AFTER_IHDR,
-			DURING_IDATS,
-			AFTER_IDATS,
-			AFTER_IEND,
-		}
-		State state = State.BEFORE_IHDR;
+		boolean hasIend = false;
 		Set<String> seenChunkTypes = new HashSet<>();
 		for (Chunk chunk : chunks) {
 			String type = chunk.getType();
 			if (!seenChunkTypes.add(type) && UNIQUE_CHUNK_TYPES.contains(type))
 				throw new IllegalArgumentException("Duplicate " + type + " chunk");
-			
-			state = switch (state) {
-				case BEFORE_IHDR -> {
-					if (chunk instanceof Ihdr chk) {
-						ihdr = Optional.of(chk);
-						yield State.AFTER_IHDR;
-					} else
-						throw new IllegalArgumentException("Expected IHDR chunk");
+			else if (hasIend)
+				throw new IllegalArgumentException("Unexpected chunk after IEND");
+			else if (ihdr.isEmpty()) {
+				if (!(chunk instanceof Ihdr chk))
+					throw new IllegalArgumentException("Expected IHDR chunk");
+				ihdr = Optional.of(chk);
+			} else if (idats.isEmpty()) {
+				if (chunk instanceof Idat chk)
+					idats.add(chk);
+				else if (chunk instanceof Iend)
+					throw new IllegalArgumentException("Unexpected IEND chunk");
+				else if (AFTER_IDAT_CHUNK_TYPES.contains(type))
+					throw new IllegalArgumentException("Unexpected " + type + " chunk before IDAT");
+				else {
+					boolean hasPlte = seenChunkTypes.contains("PLTE");
+					if (!hasPlte && AFTER_PLTE_CHUNK_TYPES.contains(type))
+						throw new IllegalArgumentException("Unexpected " + type + " chunk before PLTE");
+					if (hasPlte && BEFORE_PLTE_CHUNK_TYPES.contains(type))
+						throw new IllegalArgumentException("Unexpected " + type + " chunk after PLTE");
+					afterIhdr.add(chunk);
 				}
-				
-				case AFTER_IHDR -> {
-					if (chunk instanceof Idat chk) {
-						idats.add(chk);
-						yield State.DURING_IDATS;
-					} else if (chunk instanceof Iend)
-						throw new IllegalArgumentException("Unexpected IEND chunk");
-					else if (AFTER_IDAT_CHUNK_TYPES.contains(type))
-						throw new IllegalArgumentException("Unexpected " + type + " chunk before IDAT");
-					else {
-						afterIhdr.add(chunk);
-						yield State.AFTER_IHDR;
-					}
-				}
-				
-				case DURING_IDATS -> {
-					if (chunk instanceof Idat chk) {
-						idats.add(chk);
-						yield State.DURING_IDATS;
-					} else if (chunk instanceof Iend)
-						yield State.AFTER_IEND;
-					else if (BEFORE_IDAT_CHUNK_TYPES.contains(type))
-						throw new IllegalArgumentException("Unexpected " + type + " chunk after IDAT");
-					else {
-						afterIdats.add(chunk);
-						yield State.AFTER_IDATS;
-					}
-				}
-				
-				case AFTER_IDATS -> {
-					if (chunk instanceof Iend)
-						yield State.AFTER_IEND;
-					else if (chunk instanceof Idat)
+			} else {
+				if (chunk instanceof Idat chk) {
+					if (!afterIdats.isEmpty())
 						throw new IllegalArgumentException("Non-consecutive IDAT chunk");
-					else if (BEFORE_IDAT_CHUNK_TYPES.contains(type))
-						throw new IllegalArgumentException("Unexpected " + type + " chunk after IDAT");
-					else {
-						afterIdats.add(chunk);
-						yield State.AFTER_IDATS;
-					}
-				}
-				
-				case AFTER_IEND ->
-					throw new IllegalArgumentException("Unexpected chunk after IEND");
-			};
-		}
-		if (state != State.AFTER_IEND)
-			throw new IllegalArgumentException("Missing some required chunks");
-		
-		if (PngImage.getChunk(Plte.class, afterIhdr).isPresent()) {
-			boolean seenPlte = false;
-			for (Chunk chk : afterIhdr) {
-				String type = chk.getType();
-				if (chk instanceof Plte)
-					seenPlte = true;
-				else if (!seenPlte && AFTER_PLTE_CHUNK_TYPES.contains(type))
-					throw new IllegalArgumentException("Unexpected " + type + " chunk before PLTE");
-				else if (seenPlte && BEFORE_PLTE_CHUNK_TYPES.contains(type))
-					throw new IllegalArgumentException("Unexpected " + type + " chunk after PLTE");
+					idats.add(chk);
+				} else if (chunk instanceof Iend)
+					hasIend = true;
+				else if (BEFORE_IDAT_CHUNK_TYPES.contains(type))
+					throw new IllegalArgumentException("Unexpected " + type + " chunk after IDAT");
+				else
+					afterIdats.add(chunk);
 			}
 		}
+		if (ihdr.isEmpty() || idats.isEmpty() || !hasIend)
+			throw new IllegalArgumentException("Missing some required chunks");
 	}
 	
 	
