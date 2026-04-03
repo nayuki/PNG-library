@@ -17,8 +17,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -155,7 +157,11 @@ public final class PngImage {
 				throw new IllegalArgumentException("Unexpected chunk after IEND");
 			else if (!seenChunkTypes.add(type) && UNIQUE_CHUNK_TYPES.contains(type))
 				throw new IllegalArgumentException("Duplicate " + type + " chunk");
-			else if (ihdr.isEmpty()) {
+			for (String t : NOT_BEFORE_CHUNK_TYPES.getOrDefault(type, Set.of())) {
+				if (seenChunkTypes.contains(t))
+					throw new IllegalArgumentException("Unexpected " + t + " chunk before " + type);
+			}
+			if (ihdr.isEmpty()) {
 				if (!(chunk instanceof Ihdr chk))
 					throw new IllegalArgumentException("Expected IHDR chunk");
 				ihdr = Optional.of(chk);
@@ -164,16 +170,8 @@ public final class PngImage {
 					idats.add(chk);
 				else if (chunk instanceof Iend)
 					throw new IllegalArgumentException("Unexpected IEND chunk");
-				else if (AFTER_IDAT_CHUNK_TYPES.contains(type))
-					throw new IllegalArgumentException("Unexpected " + type + " chunk before IDAT");
-				else {
-					boolean hasPlte = seenChunkTypes.contains("PLTE");
-					if (!hasPlte && AFTER_PLTE_CHUNK_TYPES.contains(type))
-						throw new IllegalArgumentException("Unexpected " + type + " chunk before PLTE");
-					if (hasPlte && BEFORE_PLTE_CHUNK_TYPES.contains(type))
-						throw new IllegalArgumentException("Unexpected " + type + " chunk after PLTE");
+				else
 					afterIhdr.add(chunk);
-				}
 			} else {
 				if (chunk instanceof Idat chk) {
 					if (!afterIdats.isEmpty())
@@ -181,8 +179,6 @@ public final class PngImage {
 					idats.add(chk);
 				} else if (chunk instanceof Iend)
 					hasIend = true;
-				else if (BEFORE_IDAT_CHUNK_TYPES.contains(type))
-					throw new IllegalArgumentException("Unexpected " + type + " chunk after IDAT");
 				else
 					afterIdats.add(chunk);
 			}
@@ -217,45 +213,48 @@ public final class PngImage {
 		"tRNS");
 	
 	
-	private static final Set<String> BEFORE_IDAT_CHUNK_TYPES = Set.of(
-		"acTL",
-		"bKGD",
-		"cHRM",
-		"cICP",
-		"cLLI",
-		"eXIf",
-		"gAMA",
-		"hIST",
-		"iCCP",
-		"mDCV",
-		"oFFs",
-		"pCAL",
-		"pHYs",
-		"PLTE",
-		"sBIT",
-		"sCAL",
-		"sPTL",
-		"sRGB",
-		"sTER",
-		"tRNS");
+	// Each entry (k, vs) means each v must not precede k
+	private static final Map<String,Set<String>> NOT_BEFORE_CHUNK_TYPES = new HashMap<>();
 	
-	
-	private static final Set<String> AFTER_IDAT_CHUNK_TYPES = Set.of(
-		"fdAT");
-	
-	
-	private static final Set<String> BEFORE_PLTE_CHUNK_TYPES = Set.of(
-		"cHRM",
-		"gAMA",
-		"iCCP",
-		"sBIT",
-		"sRGB");
-	
-	
-	private static final Set<String> AFTER_PLTE_CHUNK_TYPES = Set.of(
-		"bKGD",
-		"hIST",
-		"tRNS");
+	static {
+		// Each entry {x, y} means that if both x and y exist in the chunk list, then x must precede y
+		String[][] CHUNK_ORDERING_CONSTRAINTS = {
+			{"cHRM", "PLTE"},
+			{"gAMA", "PLTE"},
+			{"iCCP", "PLTE"},
+			{"sBIT", "PLTE"},
+			{"sRGB", "PLTE"},
+			
+			{"PLTE", "bKGD"},
+			{"PLTE", "hIST"},
+			{"PLTE", "tRNS"},
+			
+			{"acTL", "IDAT"},
+			{"bKGD", "IDAT"},
+			{"cHRM", "IDAT"},
+			{"cICP", "IDAT"},
+			{"cLLI", "IDAT"},
+			{"eXIf", "IDAT"},
+			{"gAMA", "IDAT"},
+			{"hIST", "IDAT"},
+			{"iCCP", "IDAT"},
+			{"mDCV", "IDAT"},
+			{"oFFs", "IDAT"},
+			{"pCAL", "IDAT"},
+			{"pHYs", "IDAT"},
+			{"PLTE", "IDAT"},
+			{"sBIT", "IDAT"},
+			{"sCAL", "IDAT"},
+			{"sPTL", "IDAT"},
+			{"sRGB", "IDAT"},
+			{"sTER", "IDAT"},
+			{"tRNS", "IDAT"},
+			
+			{"IDAT", "fdAT"},
+		};
+		for (String[] entry : CHUNK_ORDERING_CONSTRAINTS)
+			NOT_BEFORE_CHUNK_TYPES.computeIfAbsent(entry[0], k -> new HashSet<>()).add(entry[1]);
+	}
 	
 	
 	/**
