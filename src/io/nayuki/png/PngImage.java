@@ -184,9 +184,7 @@ public final class PngImage {
 				}
 				
 				case DURING_IDATS -> {
-					if (chunk instanceof Plte)
-						throw new IllegalArgumentException("Unexpected PLTE chunk");
-					else if (chunk instanceof Idat chk) {
+					if (chunk instanceof Idat chk) {
 						idats.add(chk);
 						yield State.DURING_IDATS;
 					} else if (chunk instanceof Iend)
@@ -200,9 +198,7 @@ public final class PngImage {
 				}
 				
 				case AFTER_IDATS -> {
-					if (chunk instanceof Plte)
-						throw new IllegalArgumentException("Unexpected PLTE chunk");
-					else if (chunk instanceof Iend)
+					if (chunk instanceof Iend)
 						yield State.AFTER_IEND;
 					else if (chunk instanceof Idat)
 						throw new IllegalArgumentException("Non-consecutive IDAT chunk");
