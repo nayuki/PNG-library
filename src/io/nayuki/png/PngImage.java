@@ -222,12 +222,13 @@ public final class PngImage {
 		if (PngImage.getChunk(Plte.class, afterIhdr).isPresent()) {
 			boolean seenPlte = false;
 			for (Chunk chk : afterIhdr) {
+				String type = chk.getType();
 				if (chk instanceof Plte)
 					seenPlte = true;
-				else if (!seenPlte && AFTER_PLTE_CHUNK_TYPES.contains(chk.getType()))
-					throw new IllegalArgumentException("Unexpected " + chk.getType() + " chunk before PLTE");
-				else if (seenPlte && BEFORE_PLTE_CHUNK_TYPES.contains(chk.getType()))
-					throw new IllegalArgumentException("Unexpected " + chk.getType() + " chunk after PLTE");
+				else if (!seenPlte && AFTER_PLTE_CHUNK_TYPES.contains(type))
+					throw new IllegalArgumentException("Unexpected " + type + " chunk before PLTE");
+				else if (seenPlte && BEFORE_PLTE_CHUNK_TYPES.contains(type))
+					throw new IllegalArgumentException("Unexpected " + type + " chunk after PLTE");
 			}
 		}
 	}
